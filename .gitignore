@@ -1,15 +1,4 @@
 node_modules
 dist
-build
+.angular
 .env
-.DS_Store
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-coverage
-**/node_modules
-**/.vscode
-**/.idea
-**/dist
-**/build
-**/out
