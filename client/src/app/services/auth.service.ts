@@ -4,9 +4,15 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthResponse, User } from '../models/auth.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(this.getStoredUser());
+
+  private currentUserSubject = new BehaviorSubject<User | null>(
+    this.getStoredUser()
+  );
+
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -21,23 +27,52 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email, password }).pipe(
-      map((response) => {
-        localStorage.setItem('inventory_token', response.token);
-        localStorage.setItem('inventory_user', JSON.stringify(response.user));
+    return this.http.post<AuthResponse>(
+      `${environment.apiUrl}/auth/login`,
+      {
+        email,
+        password
+      }
+    ).pipe(
+      map((response: AuthResponse) => {
+
+        localStorage.setItem(
+          'inventory_token',
+          response.token
+        );
+
+        localStorage.setItem(
+          'inventory_user',
+          JSON.stringify(response.user)
+        );
+
         this.currentUserSubject.next(response.user);
+
         return response.user;
       })
     );
   }
 
-  register(name: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/auth/register`, { name, email, password });
+  register(
+    name: string,
+    email: string,
+    password: string
+  ): Observable<any> {
+
+    return this.http.post(
+      `${environment.apiUrl}/auth/register`,
+      {
+        name,
+        email,
+        password
+      }
+    );
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('inventory_token');
     localStorage.removeItem('inventory_user');
+
     this.currentUserSubject.next(null);
   }
 
@@ -47,6 +82,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const user = this.currentUserSubject.value;
+
     return user?.role === 'admin';
   }
 }

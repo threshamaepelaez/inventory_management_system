@@ -18,7 +18,7 @@ import { Product } from '../models/product.model';
             <h1 class="text-3xl font-semibold">{{ product.name }}</h1>
             <p class="mt-4 text-slate-600">{{ product.description }}</p>
             <div class="mt-6 space-y-3 text-lg text-slate-700">
-              <p><strong>Price:</strong> ${{ product.price }}</p>
+              <p><strong>Price:</strong> $ {{ product.price }}</p>
               <p><strong>Quantity:</strong> {{ product.quantity }}</p>
               <p><strong>Created:</strong> {{ product.created_at | date:'medium' }}</p>
             </div>

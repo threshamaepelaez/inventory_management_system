@@ -6,54 +6,138 @@ import pool from '../config/db';
 const jwtSecret = process.env.JWT_SECRET || 'supersecretkey';
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1d';
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { name, email, password } = req.body;
+// =======================
+// REGISTER USER
+// =======================
+export const register = async (
+req: Request,
+res: Response,
+next: NextFunction
+) => {
+try {
+console.log('REGISTER BODY:', req.body);
 
-    const [existingRows] = await pool.execute('SELECT id FROM users WHERE email = ?', [email]);
-    const existing: any[] = existingRows as any[];
+const requestBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body;
+const name = requestBody.name || req.query.name;
+const email = requestBody.email || req.query.email;
+const password = requestBody.password || req.query.password;
 
-    if (existing.length > 0) {
-      return res.status(400).json({ message: 'Email already registered' });
-    }
+// Validate required fields
+if (!name || !email || !password) {
+  return res.status(400).json({
+    message: 'Name, email and password are required',
+  });
+}
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const [result] = await pool.execute(
-      'INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())',
-      [name, email, hashedPassword, 'user']
-    );
+// Check if email already exists
+const [existingRows] = await pool.execute(
+  'SELECT id FROM users WHERE email = ?',
+  [email]
+);
 
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    next(error);
-  }
+const existingUsers = existingRows as any[];
+
+if (existingUsers.length > 0) {
+  return res.status(400).json({
+    message: 'Email already registered',
+  });
+}
+
+// Hash password
+const hashedPassword = await bcrypt.hash(password, 10);
+
+// Insert user
+await pool.execute(
+  'INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())',
+  [name, email, hashedPassword, 'user']
+);
+
+return res.status(201).json({
+  message: 'User registered successfully',
+});
+
+} catch (error) {
+next(error);
+}
 };
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { email, password } = req.body;
-    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
-    const users: any[] = rows as any[];
+// =======================
+// LOGIN USER
+// =======================
+export const login = async (
+req: Request,
+res: Response,
+next: NextFunction
+) => {
+try {
+console.log('LOGIN BODY:', req.body);
+console.log('LOGIN HEADERS:', req.headers['content-type']);
 
-    if (users.length === 0) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+const requestBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body;
+const email = requestBody.email || req.query.email;
+const password = requestBody.password || req.query.password;
 
-    const user = users[0];
-    const validPassword = await bcrypt.compare(password, user.password);
+// Validate fields
+if (!email || !password) {
+  return res.status(400).json({
+    message: 'Email and password are required',
+  });
+}
 
-    if (!validPassword) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+// Find user
+const [rows] = await pool.execute(
+  'SELECT * FROM users WHERE email = ?',
+  [email]
+);
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role, name: user.name },
-      jwtSecret,
-      { expiresIn: jwtExpiresIn }
-    );
+const users = rows as any[];
 
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-  } catch (error) {
-    next(error);
-  }
+if (users.length === 0) {
+  return res.status(401).json({
+    message: 'Invalid credentials',
+  });
+}
+
+const user = users[0];
+
+// Compare password
+const validPassword = await bcrypt.compare(
+  password,
+  user.password
+);
+
+if (!validPassword) {
+  return res.status(401).json({
+    message: 'Invalid credentials',
+  });
+}
+
+// Generate JWT token
+const token = jwt.sign(
+  {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    name: user.name,
+  },
+  jwtSecret,
+  {
+    expiresIn: jwtExpiresIn,
+  } as jwt.SignOptions
+);
+
+return res.status(200).json({
+  message: 'Login successful',
+  token,
+  user: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  },
+});
+
+} catch (error) {
+next(error);
+}
 };

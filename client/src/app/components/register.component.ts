@@ -63,7 +63,7 @@ export class RegisterComponent {
         this.success = 'Registered successfully. Redirecting to login...';
         setTimeout(() => this.router.navigate(['/login']), 1200);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error?.message || 'Unable to register';
         this.loading = false;
       }

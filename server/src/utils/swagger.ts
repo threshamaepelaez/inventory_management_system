@@ -1,4 +1,6 @@
 import YAML from 'yamljs';
 import path from 'path';
 
-export const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
+const swaggerPath = path.resolve(__dirname, './swagger.yaml');
+
+export const swaggerDocument = YAML.load(swaggerPath);

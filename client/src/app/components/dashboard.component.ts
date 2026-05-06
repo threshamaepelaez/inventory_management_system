@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../services/product.service';
+import { Product } from '../models/product.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,65 +10,142 @@ import { ProductService } from '../services/product.service';
   template: `
     <div class="space-y-6">
       <h1 class="text-3xl font-semibold">Dashboard</h1>
-      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div class="rounded-3xl bg-indigo-600 p-6 text-white shadow-lg">
-          <h2 class="text-sm uppercase tracking-[0.2em]">Total Products</h2>
-          <p class="mt-4 text-4xl font-bold">{{ totalProducts }}</p>
+
+      <div class="grid gap-6 md:grid-cols-4">
+
+        <div class="rounded-3xl bg-indigo-600 p-6 text-white shadow">
+          <p class="text-sm uppercase tracking-wider">
+            Total Products
+          </p>
+
+          <h2 class="mt-3 text-4xl font-bold">
+            {{ totalProducts }}
+          </h2>
         </div>
-        <div class="rounded-3xl bg-amber-500 p-6 text-white shadow-lg">
-          <h2 class="text-sm uppercase tracking-[0.2em]">Low Stock</h2>
-          <p class="mt-4 text-4xl font-bold">{{ lowStock }}</p>
+
+        <div class="rounded-3xl bg-amber-500 p-6 text-white shadow">
+          <p class="text-sm uppercase tracking-wider">
+            Low Stock
+          </p>
+
+          <h2 class="mt-3 text-4xl font-bold">
+            {{ lowStock }}
+          </h2>
         </div>
-        <div class="rounded-3xl bg-rose-500 p-6 text-white shadow-lg">
-          <h2 class="text-sm uppercase tracking-[0.2em]">Out of Stock</h2>
-          <p class="mt-4 text-4xl font-bold">{{ outOfStock }}</p>
+
+        <div class="rounded-3xl bg-rose-500 p-6 text-white shadow">
+          <p class="text-sm uppercase tracking-wider">
+            Out Of Stock
+          </p>
+
+          <h2 class="mt-3 text-4xl font-bold">
+            {{ outOfStock }}
+          </h2>
         </div>
-        <div class="rounded-3xl bg-slate-800 p-6 text-white shadow-lg">
-          <h2 class="text-sm uppercase tracking-[0.2em]">Recent Products</h2>
-          <p class="mt-4 text-4xl font-bold">{{ recentProducts }}</p>
+
+        <div class="rounded-3xl bg-slate-900 p-6 text-white shadow">
+          <p class="text-sm uppercase tracking-wider">
+            Recent Products
+          </p>
+
+          <h2 class="mt-3 text-4xl font-bold">
+            {{ recentProducts.length }}
+          </h2>
         </div>
+
       </div>
-      <section class="rounded-3xl bg-white p-6 shadow-sm">
-        <h2 class="mb-4 text-xl font-semibold">Recent products</h2>
-        <div *ngIf="products.length === 0" class="text-slate-500">No products found.</div>
-        <ul *ngIf="products.length > 0" class="space-y-3">
-          <li *ngFor="let product of products" class="rounded-3xl border border-slate-200 p-4 hover:border-indigo-500">
-            <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-              <div>
-                <h3 class="text-lg font-semibold">{{ product.name }}</h3>
-                <p class="text-sm text-slate-500">{{ product.description }}</p>
-              </div>
-              <div class="space-x-3 text-sm text-slate-600">
-                <span>Qty: {{ product.quantity }}</span>
-                <span>Price: ${{ product.price }}</span>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </section>
+
+      <div class="rounded-3xl bg-white p-6 shadow-sm">
+        <h2 class="mb-4 text-xl font-semibold">
+          Recent products
+        </h2>
+
+        <div
+          *ngIf="recentProducts.length === 0"
+          class="text-slate-500"
+        >
+          No products found.
+        </div>
+
+        <div
+          *ngFor="let product of recentProducts"
+          class="flex items-center justify-between border-b py-3"
+        >
+          <div>
+            <p class="font-medium">
+              {{ product.name }}
+            </p>
+
+            <p class="text-sm text-slate-500">
+              {{ product.description }}
+            </p>
+          </div>
+
+          <div class="text-right">
+            <p class="font-semibold">
+              ₱ {{ product.price }}
+            </p>
+
+            <p class="text-sm text-slate-500">
+              Qty: {{ product.quantity }}
+            </p>
+          </div>
+        </div>
+
+      </div>
     </div>
   `
 })
 export class DashboardComponent implements OnInit {
+
   totalProducts = 0;
   lowStock = 0;
   outOfStock = 0;
-  recentProducts = 0;
-  products: any[] = [];
 
-  constructor(private productService: ProductService) {}
+  recentProducts: Product[] = [];
 
-  ngOnInit() {
-    this.loadMetrics();
+  constructor(
+    private productService: ProductService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadDashboard();
   }
 
-  loadMetrics() {
-    this.productService.getProducts('', 1, 10).subscribe((response) => {
-      this.totalProducts = response.meta.total;
-      this.products = response.items.slice(0, 5);
-      this.recentProducts = this.products.length;
-      this.lowStock = response.items.filter((item) => item.quantity > 0 && item.quantity <= 5).length;
-      this.outOfStock = response.items.filter((item) => item.quantity === 0).length;
-    });
+  loadDashboard(): void {
+
+    this.productService
+      .getProducts()
+      .subscribe({
+
+        next: (response: any) => {
+
+          const items: Product[] =
+            response.items || response || [];
+
+          this.totalProducts = items.length;
+
+          this.lowStock = items.filter(
+            (item) =>
+              item.quantity > 0 &&
+              item.quantity <= 5
+          ).length;
+
+          this.outOfStock = items.filter(
+            (item) =>
+              item.quantity === 0
+          ).length;
+
+          this.recentProducts =
+            items.slice(0, 5);
+        },
+
+        error: (error) => {
+          console.error(
+            'Dashboard load error:',
+            error
+          );
+        }
+      });
   }
 }

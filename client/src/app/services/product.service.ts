@@ -1,59 +1,96 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Product, ProductListResponse } from '../models/product.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductService {
+
+  private apiUrl = `${environment.apiUrl}/products`;
+
   constructor(private http: HttpClient) {}
 
-  private getAuthHeaders(): { headers: HttpHeaders } {
-    const token = localStorage.getItem('inventory_token');
-    return {
-      headers: new HttpHeaders({ Authorization: `Bearer ${token || ''}` })
-    };
-  }
+  private getAuthHeaders(): HttpHeaders {
 
-  getProducts(search = '', page = 1, limit = 10, available = ''): Observable<ProductListResponse> {
-    let params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
-    if (search) params = params.set('search', search);
-    if (available) params = params.set('available', available);
-    return this.http.get<ProductListResponse>(`${environment.apiUrl}/products`, {
-      ...this.getAuthHeaders(),
-      params
+    const token = localStorage.getItem('inventory_token');
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
     });
   }
 
-  getProduct(id: number): Observable<Product> {
-    return this.http.get<Product>(`${environment.apiUrl}/products/${id}`, this.getAuthHeaders());
+  // GET ALL PRODUCTS
+  getProducts(): Observable<any> {
+
+    return this.http.get(this.apiUrl);
   }
 
-  saveProduct(product: Partial<Product>, file?: File): Observable<any> {
+  // GET SINGLE PRODUCT
+  getProduct(id: number): Observable<any> {
+
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  // CREATE PRODUCT
+  saveProduct(product: any, file?: File): Observable<any> {
+
     const formData = new FormData();
-    formData.append('name', product.name || '');
-    formData.append('description', product.description || '');
-    formData.append('price', `${product.price || 0}`);
-    formData.append('quantity', `${product.quantity || 0}`);
+
+    formData.append('name', product.name);
+    formData.append('description', product.description);
+    formData.append('price', product.price);
+    formData.append('quantity', product.quantity);
+
     if (file) {
       formData.append('image', file);
     }
-    return this.http.post(`${environment.apiUrl}/products`, formData, this.getAuthHeaders());
+
+    return this.http.post(
+      this.apiUrl,
+      formData,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
-  updateProduct(id: number, product: Partial<Product>, file?: File): Observable<any> {
+  // UPDATE PRODUCT
+  updateProduct(
+    id: number,
+    product: any,
+    file?: File
+  ): Observable<any> {
+
     const formData = new FormData();
-    formData.append('name', product.name || '');
-    formData.append('description', product.description || '');
-    formData.append('price', `${product.price || 0}`);
-    formData.append('quantity', `${product.quantity || 0}`);
+
+    formData.append('name', product.name);
+    formData.append('description', product.description);
+    formData.append('price', product.price);
+    formData.append('quantity', product.quantity);
+
     if (file) {
       formData.append('image', file);
     }
-    return this.http.put(`${environment.apiUrl}/products/${id}`, formData, this.getAuthHeaders());
+
+    return this.http.put(
+      `${this.apiUrl}/${id}`,
+      formData,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
+  // DELETE PRODUCT
   deleteProduct(id: number): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}/products/${id}`, this.getAuthHeaders());
+
+    return this.http.delete(
+      `${this.apiUrl}/${id}`,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 }

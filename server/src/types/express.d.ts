@@ -9,6 +9,13 @@ declare global {
         name: string;
         role: string;
       };
+      file?: {
+        filename: string;
+        originalname: string;
+        mimetype: string;
+        size: number;
+        path: string;
+      };
     }
   }
 }

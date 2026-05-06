@@ -1,110 +1,122 @@
-import { Request, Response, NextFunction } from 'express';
-import path from 'path';
+import { Request, Response } from 'express';
 import pool from '../config/db';
 
-export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+export const getProducts = async (req: Request, res: Response) => {
   try {
-    const search = (req.query.search as string) || '';
-    const minQty = Number(req.query.minQty || 0);
-    const maxQty = Number(req.query.maxQty || 0);
-    const page = Number(req.query.page || 1);
-    const limit = Number(req.query.limit || 10);
-    const offset = (page - 1) * limit;
+    const [rows]: any = await pool.query(
+      'SELECT * FROM products ORDER BY created_at DESC'
+    );
 
-    let query = 'SELECT * FROM products WHERE name LIKE ? OR description LIKE ?';
-    const params: Array<string | number> = [`%${search}%`, `%${search}%`];
-
-    if (req.query.available === 'low') {
-      query += ' AND quantity BETWEEN 1 AND 5';
-    }
-    if (req.query.available === 'out') {
-      query += ' AND quantity = 0';
-    }
-    if (minQty) {
-      query += ' AND quantity >= ?';
-      params.push(minQty);
-    }
-    if (maxQty) {
-      query += ' AND quantity <= ?';
-      params.push(maxQty);
-    }
-
-    const [countRows] = await pool.execute('SELECT COUNT(*) as total FROM (' + query + ') as count_table', params);
-    const total = (countRows as any)[0].total as number;
-
-    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-    params.push(limit, offset);
-
-    const [rows] = await pool.execute(query, params);
-    const items = rows as any[];
-
-    res.json({ items, meta: { total, page, limit } });
+    res.status(200).json({
+      items: rows,
+      total: rows.length,
+      page: 1,
+      totalPages: 1
+    });
   } catch (error) {
-    next(error);
+    console.error('Get products error:', error);
+
+    res.status(500).json({
+      message: 'Failed to fetch products'
+    });
   }
 };
 
-export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const [rows] = await pool.execute('SELECT * FROM products WHERE id = ?', [req.params.id]);
-    const products: any[] = rows as any[];
-
-    if (products.length === 0) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    res.json(products[0]);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
+export const createProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, quantity } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
 
-    const [result] = await pool.execute(
-      'INSERT INTO products (name, description, price, quantity, image, created_at) VALUES (?, ?, ?, ?, ?, NOW())',
+    const image = req.file ? req.file.filename : null;
+
+    const [result]: any = await pool.query(
+      `INSERT INTO products 
+      (name, description, price, quantity, image)
+      VALUES (?, ?, ?, ?, ?)`,
       [name, description, price, quantity, image]
     );
 
-    res.status(201).json({ message: 'Product created successfully', productId: (result as any).insertId });
+    res.status(201).json({
+      message: 'Product created successfully',
+      productId: result.insertId
+    });
   } catch (error) {
-    next(error);
+    console.error('Create product error:', error);
+
+    res.status(500).json({
+      message: 'Failed to create product'
+    });
   }
 };
 
-export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+export const getProductById = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, quantity } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const { id } = req.params;
 
-    const existingQuery = 'SELECT * FROM products WHERE id = ?';
-    const [existingRows] = await pool.execute(existingQuery, [req.params.id]);
-    const existing: any[] = existingRows as any[];
+    const [rows]: any = await pool.query(
+      'SELECT * FROM products WHERE id = ?',
+      [id]
+    );
 
-    if (existing.length === 0) {
+    const product = rows[0];
+
+    if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    const updatedImage = image ?? existing[0].image;
-    await pool.execute(
-      'UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, image = ? WHERE id = ?',
-      [name, description, price, quantity, updatedImage, req.params.id]
-    );
-
-    res.json({ message: 'Product updated successfully' });
+    res.status(200).json(product);
   } catch (error) {
-    next(error);
+    console.error('Get product by id error:', error);
+
+    res.status(500).json({
+      message: 'Failed to fetch product'
+    });
   }
 };
 
-export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+export const updateProduct = async (req: Request, res: Response) => {
   try {
-    await pool.execute('DELETE FROM products WHERE id = ?', [req.params.id]);
-    res.json({ message: 'Product deleted successfully' });
+    const { id } = req.params;
+
+    const { name, description, price, quantity } = req.body;
+
+    const image = req.file ? req.file.filename : req.body.image || null;
+
+    await pool.query(
+      `UPDATE products
+      SET name = ?, description = ?, price = ?, quantity = ?, image = ?
+      WHERE id = ?`,
+      [name, description, price, quantity, image, id]
+    );
+
+    res.status(200).json({
+      message: 'Product updated successfully'
+    });
   } catch (error) {
-    next(error);
+    console.error('Update product error:', error);
+
+    res.status(500).json({
+      message: 'Failed to update product'
+    });
+  }
+};
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      'DELETE FROM products WHERE id = ?',
+      [id]
+    );
+
+    res.status(200).json({
+      message: 'Product deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete product error:', error);
+
+    res.status(500).json({
+      message: 'Failed to delete product'
+    });
   }
 };

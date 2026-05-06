@@ -1,27 +1,42 @@
-import { Router } from 'express';
-import multer from 'multer';
-import path from 'path';
+import express from 'express';
+
 import {
-  createProduct,
-  deleteProduct,
-  getProductById,
   getProducts,
-  updateProduct
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct
 } from '../controllers/product.controller';
-import { verifyToken, authorizeRoles } from '../middleware/auth.middleware';
 
-const router = Router();
-const uploadDir = path.join(__dirname, '../uploads');
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-});
-const upload = multer({ storage });
+import {
+  verifyToken,
+  authorizeRoles
+} from '../middleware/auth.middleware';
 
-router.get('/', verifyToken, getProducts);
-router.get('/:id', verifyToken, getProductById);
-router.post('/', verifyToken, authorizeRoles('admin'), upload.single('image'), createProduct);
-router.put('/:id', verifyToken, authorizeRoles('admin'), upload.single('image'), updateProduct);
-router.delete('/:id', verifyToken, authorizeRoles('admin'), deleteProduct);
+const router = express.Router();
+
+router.get('/', getProducts);
+router.get('/:id', getProductById);
+
+router.post(
+  '/',
+  verifyToken,
+  authorizeRoles('admin'),
+  createProduct
+);
+
+router.put(
+  '/:id',
+  verifyToken,
+  authorizeRoles('admin'),
+  updateProduct
+);
+
+router.delete(
+  '/:id',
+  verifyToken,
+  authorizeRoles('admin'),
+  deleteProduct
+);
 
 export default router;

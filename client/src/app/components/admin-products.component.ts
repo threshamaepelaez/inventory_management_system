@@ -2,99 +2,372 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductFormComponent } from './product-form.component';
 import { ProductService } from '../services/product.service';
-import { Product } from '../models/product.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-admin-products',
   standalone: true,
   imports: [CommonModule, ProductFormComponent],
+
   template: `
-    <div class="space-y-6">
+  <div class="min-h-screen bg-gradient-to-br from-slate-100 via-white to-indigo-100 p-6">
+
+    <div class="mx-auto max-w-7xl space-y-8">
+
+      <!-- HEADER -->
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
         <div>
-          <h1 class="text-3xl font-semibold">Admin Product Management</h1>
-          <p class="text-sm text-slate-500">Create, edit, and delete inventory items.</p>
+          <h1 class="text-4xl font-black tracking-tight text-slate-800">
+            Inventory Management
+          </h1>
+
+          <p class="mt-2 text-slate-500">
+            Manage products beautifully.
+          </p>
         </div>
-        <button (click)="newProduct()" class="rounded-2xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700">Add Product</button>
+
+        <button
+          type="button"
+          (click)="newProduct()"
+          class="rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-xl transition hover:scale-105"
+        >
+          + Add Product
+        </button>
+
       </div>
 
-      <section *ngIf="showForm" class="rounded-3xl bg-white p-6 shadow-sm">
-        <app-product-form [product]="activeProduct" (saved)="onSave($event)" (cancel)="cancelEdit()"></app-product-form>
+      <!-- FORM -->
+      <section
+        *ngIf="showForm"
+        class="rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl"
+      >
+
+        <app-product-form
+          [product]="activeProduct"
+          (saved)="onSave($event)"
+          (cancel)="cancelEdit()"
+        >
+        </app-product-form>
+
       </section>
 
-      <div class="overflow-x-auto rounded-3xl bg-white p-4 shadow-sm">
-        <table class="min-w-full divide-y divide-slate-200 text-sm text-left text-slate-700">
-          <thead class="border-b border-slate-200">
-            <tr>
-              <th class="px-4 py-3">Name</th>
-              <th class="px-4 py-3">Quantity</th>
-              <th class="px-4 py-3">Price</th>
-              <th class="px-4 py-3">Image</th>
-              <th class="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-            <tr *ngFor="let item of products">
-              <td class="px-4 py-4">{{ item.name }}</td>
-              <td class="px-4 py-4">{{ item.quantity }}</td>
-              <td class="px-4 py-4">${{ item.price }}</td>
-              <td class="px-4 py-4">{{ item.image ? 'Uploaded' : 'None' }}</td>
-              <td class="px-4 py-4 space-x-2">
-                <button (click)="editProduct(item)" class="rounded-2xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">Edit</button>
-                <button (click)="removeProduct(item.id)" class="rounded-2xl bg-rose-500 px-4 py-2 text-white hover:bg-rose-600">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- TABLE -->
+      <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+
+        <div class="border-b bg-slate-50 px-6 py-5">
+          <h2 class="text-xl font-bold text-slate-800">
+            Product Inventory
+          </h2>
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="min-w-full">
+
+            <thead class="bg-slate-100 text-slate-700">
+
+              <tr>
+                <th class="px-6 py-4 text-left font-semibold">Product</th>
+                <th class="px-6 py-4 text-left font-semibold">Quantity</th>
+                <th class="px-6 py-4 text-left font-semibold">Price</th>
+                <th class="px-6 py-4 text-left font-semibold">Image</th>
+                <th class="px-6 py-4 text-left font-semibold">Actions</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr
+                *ngFor="let item of products"
+                class="border-b transition hover:bg-indigo-50"
+              >
+
+                <!-- PRODUCT -->
+                <td class="px-6 py-5">
+
+                  <div class="flex items-center gap-4">
+
+                    <div
+                      class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 font-bold text-white"
+                    >
+                      {{ item.name.charAt(0).toUpperCase() }}
+                    </div>
+
+                    <div>
+
+                      <p class="font-bold text-slate-800">
+                        {{ item.name }}
+                      </p>
+
+                      <p class="text-sm text-slate-400">
+                        Inventory Item
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+                <!-- QUANTITY -->
+                <td class="px-6 py-5">
+
+                  <span
+                    class="rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-700"
+                  >
+                    {{ item.quantity }}
+                  </span>
+
+                </td>
+
+                <!-- PRICE -->
+                <td class="px-6 py-5 font-semibold text-slate-700">
+                  ₱ {{ item.price }}
+                </td>
+
+                <!-- IMAGE -->
+                <td class="px-6 py-5">
+
+                  <img
+                    *ngIf="item.image"
+                    [src]="item.image"
+                    class="h-16 w-16 rounded-2xl object-cover"
+                  />
+
+                  <span
+                    *ngIf="!item.image"
+                    class="text-slate-400"
+                  >
+                    No Image
+                  </span>
+
+                </td>
+
+                <!-- ACTIONS -->
+                <td class="px-6 py-5">
+
+                  <div class="flex gap-3">
+
+                    <button
+                      type="button"
+                      (click)="editProduct(item)"
+                      class="rounded-xl bg-slate-900 px-5 py-2 font-medium text-white"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      (click)="removeProduct(item.id)"
+                      class="rounded-xl bg-rose-500 px-5 py-2 font-medium text-white"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+              <!-- EMPTY -->
+              <tr *ngIf="products.length === 0">
+
+                <td
+                  colspan="5"
+                  class="px-6 py-16 text-center text-slate-400"
+                >
+                  No products found.
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
       </div>
+
     </div>
+
+  </div>
   `
 })
 export class AdminProductsComponent implements OnInit {
-  products: Product[] = [];
-  activeProduct: Product | null = null;
+
+  products: any[] = [];
+  activeProduct: any = null;
   showForm = false;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadProducts();
   }
 
-  loadProducts() {
-    this.productService.getProducts('', 1, 20).subscribe((result) => (this.products = result.items));
+  loadProducts(): void {
+
+    this.productService
+      .getProducts()
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log('PRODUCT RESPONSE:', response);
+
+          const rawProducts = Array.isArray(response)
+            ? response
+            : response.items ||
+              response.products ||
+              [];
+
+          this.products = rawProducts.map((item: any) => {
+            const normalized = this.normalizeProduct(item);
+            return {
+              ...normalized,
+              image: this.buildImageUrl(normalized.image)
+            };
+          });
+        },
+
+        error: (error: any) => {
+          console.error('LOAD ERROR:', error);
+        }
+      });
   }
 
-  newProduct() {
+  private buildImageUrl(image: string | null): string | null {
+    if (!image) {
+      return null;
+    }
+
+    if (image.startsWith('http')) {
+      return image;
+    }
+
+    return `${environment.apiUrl.replace(/\/api$/, '')}/uploads/${image}`;
+  }
+
+  private normalizeProduct(item: any): any {
+    const findKey = (keys: string[]) => keys.find(key => item[key] !== undefined && item[key] !== null);
+
+    const nameKey = findKey(['name', 'product_name', 'title', 'Name', 'productName', 'productTitle']);
+    const quantityKey = findKey(['quantity', 'stock', 'qty', 'Quantity', 'stock_quantity', 'qty_count']);
+    const priceKey = findKey(['price', 'product_price', 'amount', 'Price', 'cost']);
+    const imageKey = findKey(['image', 'image_url', 'Image', 'imageUrl']);
+    const idKey = findKey(['id', 'product_id', 'ID']);
+
+    return {
+      id: item[idKey ?? 'id'] ?? null,
+      name: nameKey ? item[nameKey] : 'Product',
+      quantity: quantityKey ? item[quantityKey] : 0,
+      price: priceKey ? item[priceKey] : 0,
+      image: imageKey ? item[imageKey] : null
+    };
+  }
+
+  newProduct(): void {
+
     this.activeProduct = null;
     this.showForm = true;
   }
 
-  editProduct(product: Product) {
+  editProduct(product: any): void {
+
     this.activeProduct = product;
     this.showForm = true;
   }
 
-  cancelEdit() {
+  cancelEdit(): void {
+
     this.showForm = false;
     this.activeProduct = null;
   }
 
-  onSave(event: { product: Partial<Product>; file?: File }) {
+  onSave(event: { product: any; file?: File }): void {
+
+    console.log('SAVE EVENT:', event);
+
     if (this.activeProduct) {
-      this.productService.updateProduct(this.activeProduct.id, event.product, event.file).subscribe(() => {
-        this.showForm = false;
-        this.loadProducts();
-      });
+
+      this.productService
+        .updateProduct(
+          this.activeProduct.id,
+          event.product,
+          event.file
+        )
+        .subscribe({
+
+          next: (response: any) => {
+
+            console.log('UPDATED:', response);
+
+            this.showForm = false;
+            this.activeProduct = null;
+
+            this.loadProducts();
+          },
+
+          error: (error: any) => {
+            console.error('UPDATE ERROR:', error);
+          }
+        });
+
     } else {
-      this.productService.saveProduct(event.product, event.file).subscribe(() => {
-        this.showForm = false;
-        this.loadProducts();
-      });
+
+      this.productService
+        .saveProduct(
+          event.product,
+          event.file
+        )
+        .subscribe({
+
+          next: (response: any) => {
+
+            console.log('CREATED:', response);
+
+            this.showForm = false;
+
+            this.loadProducts();
+          },
+
+          error: (error: any) => {
+            console.error('CREATE ERROR:', error);
+          }
+        });
     }
   }
 
-  removeProduct(id: number) {
-    this.productService.deleteProduct(id).subscribe(() => this.loadProducts());
+  removeProduct(id: number): void {
+
+    const confirmDelete = confirm(
+      'Delete this product?'
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    this.productService
+      .deleteProduct(id)
+      .subscribe({
+
+        next: () => {
+
+          console.log('DELETED');
+
+          this.loadProducts();
+        },
+
+        error: (error: any) => {
+          console.error('DELETE ERROR:', error);
+        }
+      });
   }
 }

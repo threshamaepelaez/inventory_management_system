@@ -1,95 +1,184 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Product } from '../models/product.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
+
   template: `
-    <div class="rounded-3xl bg-slate-50 p-6 shadow-sm">
-      <h2 class="mb-4 text-2xl font-semibold">{{ product ? 'Edit product' : 'Create product' }}</h2>
-      <form [formGroup]="productForm" (ngSubmit)="save()" class="space-y-4">
-        <div class="grid gap-4 md:grid-cols-2">
-          <label class="block">
-            <span class="text-sm font-medium text-slate-700">Name</span>
-            <input formControlName="name" type="text" class="mt-2 w-full" />
-          </label>
-          <label class="block">
-            <span class="text-sm font-medium text-slate-700">Price</span>
-            <input formControlName="price" type="number" class="mt-2 w-full" />
-          </label>
-        </div>
-        <label class="block">
-          <span class="text-sm font-medium text-slate-700">Description</span>
-          <textarea formControlName="description" rows="4" class="mt-2 w-full"></textarea>
+  <div class="space-y-6">
+
+    <h2 class="text-3xl font-bold text-slate-800">
+      {{ product ? 'Edit Product' : 'Create Product' }}
+    </h2>
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+      <!-- NAME -->
+      <div>
+        <label class="mb-2 block font-semibold text-slate-700">
+          Product Name
         </label>
-        <div class="grid gap-4 md:grid-cols-2">
-          <label class="block">
-            <span class="text-sm font-medium text-slate-700">Quantity</span>
-            <input formControlName="quantity" type="number" class="mt-2 w-full" />
-          </label>
-          <label class="block">
-            <span class="text-sm font-medium text-slate-700">Image</span>
-            <input type="file" (change)="changeFile($event)" class="mt-2 w-full" />
-          </label>
-        </div>
-        <div *ngIf="preview" class="rounded-3xl border border-slate-200 p-3">
-          <p class="text-sm text-slate-500">Preview</p>
-          <img [src]="preview" alt="Preview" class="mt-2 h-48 w-full rounded-3xl object-cover" />
-        </div>
-        <div class="flex gap-3">
-          <button type="submit" class="rounded-2xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700">{{ product ? 'Update' : 'Create' }}</button>
-          <button type="button" (click)="cancel.emit()" class="rounded-2xl bg-slate-200 px-6 py-3 text-slate-700 hover:bg-slate-300">Cancel</button>
-        </div>
-      </form>
+
+        <input
+          id="productName"
+          name="productName"
+          type="text"
+          [(ngModel)]="form.name"
+          class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
+          placeholder="Enter product name"
+        />
+      </div>
+
+      <!-- PRICE -->
+      <div>
+        <label class="mb-2 block font-semibold text-slate-700">
+          Price
+        </label>
+
+        <input
+          id="price"
+          name="price"
+          type="number"
+          [(ngModel)]="form.price"
+          class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
+          placeholder="Enter price"
+        />
+      </div>
+
     </div>
+
+    <!-- DESCRIPTION -->
+    <div>
+
+      <label class="mb-2 block font-semibold text-slate-700">
+        Description
+      </label>
+
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="form.description"
+        rows="5"
+        class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
+        placeholder="Enter description"
+      >
+      </textarea>
+
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+      <!-- QUANTITY -->
+      <div>
+
+        <label class="mb-2 block font-semibold text-slate-700">
+          Quantity
+        </label>
+
+        <input
+          id="quantity"
+          name="quantity"
+          type="number"
+          [(ngModel)]="form.quantity"
+          class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
+          placeholder="Enter quantity"
+        />
+
+      </div>
+
+      <!-- IMAGE -->
+      <div>
+
+        <label class="mb-2 block font-semibold text-slate-700">
+          Image
+        </label>
+
+        <input
+          id="image"
+          name="image"
+          type="file"
+          (change)="onFileSelected($event)"
+          class="w-full rounded-2xl border border-slate-300 px-4 py-4"
+        />
+
+      </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="flex gap-4">
+
+      <button
+        type="button"
+        (click)="submitForm()"
+        class="cursor-pointer rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 font-bold text-white shadow-xl transition hover:scale-105"
+      >
+        {{ product ? 'Update Product' : 'Create Product' }}
+      </button>
+
+      <button
+        type="button"
+        (click)="cancel.emit()"
+        class="cursor-pointer rounded-2xl bg-slate-200 px-8 py-4 font-bold text-slate-700"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
   `
 })
-export class ProductFormComponent implements OnChanges {
-  @Input() product: Product | null = null;
-  @Output() saved = new EventEmitter<{ product: Partial<Product>; file?: File }>();
+export class ProductFormComponent {
+
+  @Input() product: any;
+
+  @Output() saved = new EventEmitter<any>();
+
   @Output() cancel = new EventEmitter<void>();
 
-  preview = '';
-  file?: File;
+  selectedFile?: File;
 
-  productForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    price: new FormControl(0, [Validators.required, Validators.min(0)]),
-    quantity: new FormControl(0, [Validators.required, Validators.min(0)])
-  });
+  form = {
+    name: '',
+    description: '',
+    price: 0,
+    quantity: 0
+  };
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.product && this.product) {
-      this.productForm.patchValue({
-        name: this.product.name,
-        description: this.product.description,
-        price: this.product.price,
-        quantity: this.product.quantity
-      });
-      this.preview = this.product.image || '';
-    }
-  }
+  ngOnInit(): void {
 
-  changeFile(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.preview = reader.result as string;
+    if (this.product) {
+
+      this.form = {
+        name: this.product.name || '',
+        description: this.product.description || '',
+        price: this.product.price || 0,
+        quantity: this.product.quantity || 0
       };
-      reader.readAsDataURL(this.file);
     }
   }
 
-  save() {
-    if (this.productForm.invalid) {
-      return;
+  onFileSelected(event: any): void {
+
+    if (event.target.files.length > 0) {
+
+      this.selectedFile = event.target.files[0];
     }
-    this.saved.emit({ product: this.productForm.value, file: this.file });
+  }
+
+  submitForm(): void {
+
+    console.log('FORM SUBMITTED');
+
+    console.log(this.form);
+
+    this.saved.emit({
+      product: this.form,
+      file: this.selectedFile
+    });
   }
 }
