@@ -1,128 +1,127 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
+
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  FormsModule
+} from '@angular/forms';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
 
   template: `
-  <div class="space-y-6">
 
-    <h2 class="text-3xl font-bold text-slate-800">
+  <div class="space-y-4">
+
+    <h2 class="text-2xl font-bold">
+
       {{ product ? 'Edit Product' : 'Create Product' }}
+
     </h2>
 
-    <div class="grid gap-6 md:grid-cols-2">
+    <!-- NAME -->
+    <div>
 
-      <!-- NAME -->
-      <div>
-        <label class="mb-2 block font-semibold text-slate-700">
-          Product Name
-        </label>
+      <label>Name</label>
 
-        <input
-          id="productName"
-          name="productName"
-          type="text"
-          [(ngModel)]="form.name"
-          class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
-          placeholder="Enter product name"
-        />
-      </div>
-
-      <!-- PRICE -->
-      <div>
-        <label class="mb-2 block font-semibold text-slate-700">
-          Price
-        </label>
-
-        <input
-          id="price"
-          name="price"
-          type="number"
-          [(ngModel)]="form.price"
-          class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
-          placeholder="Enter price"
-        />
-      </div>
+      <input
+        type="text"
+        [(ngModel)]="form.name"
+        name="name"
+        class="w-full border p-3 rounded"
+      />
 
     </div>
 
     <!-- DESCRIPTION -->
     <div>
 
-      <label class="mb-2 block font-semibold text-slate-700">
-        Description
-      </label>
+      <label>Description</label>
 
       <textarea
-        id="description"
-        name="description"
         [(ngModel)]="form.description"
-        rows="5"
-        class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
-        placeholder="Enter description"
-      >
-      </textarea>
+        name="description"
+        class="w-full border p-3 rounded"
+      ></textarea>
 
     </div>
 
-    <div class="grid gap-6 md:grid-cols-2">
+    <!-- PRICE -->
+    <div>
 
-      <!-- QUANTITY -->
-      <div>
+      <label>Price</label>
 
-        <label class="mb-2 block font-semibold text-slate-700">
-          Quantity
-        </label>
+      <input
+        type="number"
+        [(ngModel)]="form.price"
+        name="price"
+        class="w-full border p-3 rounded"
+      />
 
-        <input
-          id="quantity"
-          name="quantity"
-          type="number"
-          [(ngModel)]="form.quantity"
-          class="w-full rounded-2xl border border-slate-300 px-4 py-4 outline-none focus:border-indigo-500"
-          placeholder="Enter quantity"
-        />
+    </div>
 
-      </div>
+    <!-- QUANTITY -->
+    <div>
 
-      <!-- IMAGE -->
-      <div>
+      <label>Quantity</label>
 
-        <label class="mb-2 block font-semibold text-slate-700">
-          Image
-        </label>
+      <input
+        type="number"
+        [(ngModel)]="form.quantity"
+        name="quantity"
+        class="w-full border p-3 rounded"
+      />
 
-        <input
-          id="image"
-          name="image"
-          type="file"
-          (change)="onFileSelected($event)"
-          class="w-full rounded-2xl border border-slate-300 px-4 py-4"
-        />
+    </div>
 
-      </div>
+    <!-- IMAGE -->
+    <div>
+
+      <label>Image</label>
+
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        class="w-full border p-3 rounded"
+      />
+
+      <p class="text-sm text-gray-500 mt-1">
+        {{ selectedFile ? selectedFile.name : 'No file selected' }}
+      </p>
 
     </div>
 
     <!-- BUTTONS -->
-    <div class="flex gap-4">
+    <div class="flex gap-3">
 
       <button
         type="button"
         (click)="submitForm()"
-        class="cursor-pointer rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 font-bold text-white shadow-xl transition hover:scale-105"
+        class="bg-blue-600 text-white px-6 py-3 rounded"
       >
-        {{ product ? 'Update Product' : 'Create Product' }}
+        {{ product ? 'Update' : 'Create' }}
       </button>
 
       <button
         type="button"
         (click)="cancel.emit()"
-        class="cursor-pointer rounded-2xl bg-slate-200 px-8 py-4 font-bold text-slate-700"
+        class="bg-gray-300 px-6 py-3 rounded"
       >
         Cancel
       </button>
@@ -130,17 +129,18 @@ import { FormsModule } from '@angular/forms';
     </div>
 
   </div>
+
   `
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnInit, OnChanges {
 
   @Input() product: any;
 
-  @Output() saved = new EventEmitter<any>();
+  @Output() saved =
+    new EventEmitter<any>();
 
-  @Output() cancel = new EventEmitter<void>();
-
-  selectedFile?: File;
+  @Output() cancel =
+    new EventEmitter<void>();
 
   form = {
     name: '',
@@ -149,36 +149,55 @@ export class ProductFormComponent {
     quantity: 0
   };
 
+  selectedFile: File | null = null;
+
   ngOnInit(): void {
+    this.syncFormWithProduct();
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['product']) {
+      this.syncFormWithProduct();
+    }
+  }
+
+  private syncFormWithProduct(): void {
     if (this.product) {
-
       this.form = {
         name: this.product.name || '',
         description: this.product.description || '',
         price: this.product.price || 0,
         quantity: this.product.quantity || 0
       };
+    } else {
+      this.form = {
+        name: '',
+        description: '',
+        price: 0,
+        quantity: 0
+      };
+      this.selectedFile = null;
     }
   }
 
   onFileSelected(event: any): void {
 
-    if (event.target.files.length > 0) {
+    const file = event.target.files[0];
 
-      this.selectedFile = event.target.files[0];
+    if (file) {
+
+      this.selectedFile = file;
     }
   }
 
   submitForm(): void {
 
-    console.log('FORM SUBMITTED');
-
-    console.log(this.form);
+    console.log('FORM DATA:', this.form);
 
     this.saved.emit({
       product: this.form,
       file: this.selectedFile
     });
   }
+
 }

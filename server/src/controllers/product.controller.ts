@@ -26,7 +26,7 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, quantity } = req.body;
 
-    const image = req.file ? req.file.filename : null;
+    const image = req.file?.filename || null;
 
     const [result]: any = await pool.query(
       `INSERT INTO products 
@@ -79,7 +79,16 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const { name, description, price, quantity } = req.body;
 
-    const image = req.file ? req.file.filename : req.body.image || null;
+    let image = req.file ? req.file.filename : null;
+
+    // If no new file uploaded, keep existing image
+    if (!req.file) {
+      const [rows]: any = await pool.query(
+        'SELECT image FROM products WHERE id = ?',
+        [id]
+      );
+      image = rows[0]?.image || null;
+    }
 
     await pool.query(
       `UPDATE products

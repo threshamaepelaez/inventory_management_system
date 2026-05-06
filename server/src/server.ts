@@ -36,11 +36,6 @@ app.use(express.urlencoded({
   extended: true
 }));
 
-app.use(express.text({
-  type: '*/*',
-  limit: '50mb'
-}));
-
 /* LOGGER */
 app.use(requestLogger);
 

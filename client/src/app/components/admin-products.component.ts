@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ProductFormComponent } from './product-form.component';
 import { ProductService } from '../services/product.service';
 import { environment } from '../../environments/environment';
@@ -7,7 +8,16 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [CommonModule, ProductFormComponent],
+  imports: [CommonModule, FormsModule, ProductFormComponent],
+
+  styles: [`
+    button {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+      position: relative;
+      z-index: 10;
+    }
+  `],
 
   template: `
   <div class="min-h-screen bg-gradient-to-br from-slate-100 via-white to-indigo-100 p-6">
@@ -56,9 +66,20 @@ import { environment } from '../../environments/environment';
       <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
 
         <div class="border-b bg-slate-50 px-6 py-5">
-          <h2 class="text-xl font-bold text-slate-800">
-            Product Inventory
-          </h2>
+          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <h2 class="text-xl font-bold text-slate-800">
+              Product Inventory
+            </h2>
+
+            <div class="flex items-center gap-4">
+              <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                placeholder="Search products..."
+                class="rounded-xl border border-slate-300 px-4 py-2 focus:border-indigo-500 focus:outline-none"
+              />
+            </div>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -80,7 +101,7 @@ import { environment } from '../../environments/environment';
             <tbody>
 
               <tr
-                *ngFor="let item of products"
+                *ngFor="let item of filteredProducts"
                 class="border-b transition hover:bg-indigo-50"
               >
 
@@ -173,13 +194,13 @@ import { environment } from '../../environments/environment';
               </tr>
 
               <!-- EMPTY -->
-              <tr *ngIf="products.length === 0">
+              <tr *ngIf="filteredProducts.length === 0">
 
                 <td
                   colspan="5"
                   class="px-6 py-16 text-center text-slate-400"
                 >
-                  No products found.
+                  {{ searchTerm ? 'No products match your search.' : 'No products found.' }}
                 </td>
 
               </tr>
@@ -202,10 +223,21 @@ export class AdminProductsComponent implements OnInit {
   products: any[] = [];
   activeProduct: any = null;
   showForm = false;
+  searchTerm = '';
 
   constructor(
     private productService: ProductService
   ) {}
+
+  get filteredProducts(): any[] {
+    if (!this.searchTerm) {
+      return this.products;
+    }
+
+    return this.products.filter(product =>
+      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
 
   ngOnInit(): void {
     this.loadProducts();

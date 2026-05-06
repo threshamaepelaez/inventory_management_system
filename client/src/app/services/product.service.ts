@@ -1,39 +1,53 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import {
+  HttpClient,
+  HttpHeaders
+} from '@angular/common/http';
+
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+
+import { environment }
+from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private apiUrl = `${environment.apiUrl}/products`;
+  private apiUrl =
+    `${environment.apiUrl}/products`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   private getAuthHeaders(): HttpHeaders {
 
-    const token = localStorage.getItem('inventory_token');
+    const token =
+      localStorage.getItem(
+        'inventory_token'
+      );
 
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
   }
 
-  // GET ALL PRODUCTS
   getProducts(): Observable<any> {
 
-    return this.http.get(this.apiUrl);
+    return this.http.get(
+      this.apiUrl
+    );
   }
 
-  // GET SINGLE PRODUCT
   getProduct(id: number): Observable<any> {
 
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(
+      `${this.apiUrl}/${id}`
+    );
   }
 
-  // CREATE PRODUCT
   saveProduct(product: any, file?: File): Observable<any> {
 
     const formData = new FormData();
@@ -56,7 +70,6 @@ export class ProductService {
     );
   }
 
-  // UPDATE PRODUCT
   updateProduct(
     id: number,
     product: any,
@@ -83,7 +96,6 @@ export class ProductService {
     );
   }
 
-  // DELETE PRODUCT
   deleteProduct(id: number): Observable<any> {
 
     return this.http.delete(
@@ -93,4 +105,5 @@ export class ProductService {
       }
     );
   }
+
 }
