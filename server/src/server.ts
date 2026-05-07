@@ -21,53 +21,107 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 /* =========================
-   MIDDLEWARE
+   CORS FIX
 ========================= */
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'http://localhost:4200',
+      'https://inventory-management-system-gilt-eight.vercel.app'
+    ],
 
-/* FIX 413 PAYLOAD TOO LARGE */
-app.use(express.json({
-  limit: '50mb'
-}));
+    methods: [
+      'GET',
+      'POST',
+      'PUT',
+      'DELETE',
+      'OPTIONS'
+    ],
 
-app.use(express.urlencoded({
-  limit: '50mb',
-  extended: true
-}));
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization'
+    ],
 
-/* LOGGER */
+    credentials: true
+  })
+);
+
+/* =========================
+   BODY PARSER
+========================= */
+
+app.use(
+  express.json({
+    limit: '50mb'
+  })
+);
+
+app.use(
+  express.urlencoded({
+    limit: '50mb',
+    extended: true
+  })
+);
+
+/* =========================
+   LOGGER
+========================= */
+
 app.use(requestLogger);
 
-/* STATIC FILES */
+/* =========================
+   STATIC FILES
+========================= */
+
 app.use(
   '/uploads',
-  express.static(path.join(__dirname, 'uploads'))
+  express.static(
+    path.join(__dirname, 'uploads')
+  )
 );
 
 /* =========================
    ROUTES
 ========================= */
 
-app.use('/api/auth', authRoutes);
+app.use(
+  '/api/auth',
+  authRoutes
+);
 
-app.use('/api/products', productRoutes);
+app.use(
+  '/api/products',
+  productRoutes
+);
 
-/* SWAGGER */
+/* =========================
+   SWAGGER
+========================= */
+
 app.use(
   '/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument)
 );
 
-/* ROOT */
-app.get('/', (req, res) => {
+/* =========================
+   ROOT ROUTE
+========================= */
 
-  res.send('Inventory Management API Running');
+app.get('/', (_req, res) => {
+
+  res.send(
+    'Inventory Management API Running'
+  );
 
 });
 
-/* ERROR HANDLER */
+/* =========================
+   ERROR HANDLER
+========================= */
+
 app.use(errorHandler);
 
 /* =========================
@@ -75,16 +129,23 @@ app.use(errorHandler);
 ========================= */
 
 pool.getConnection()
+
   .then((connection) => {
 
-    console.log('✅ Database Connected');
+    console.log(
+      '✅ Database Connected'
+    );
 
     connection.release();
 
   })
+
   .catch((error) => {
 
-    console.error('❌ Database connection failed:', error);
+    console.error(
+      '❌ Database connection failed:',
+      error
+    );
 
   });
 
@@ -94,7 +155,9 @@ pool.getConnection()
 
 app.listen(PORT, () => {
 
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(
+    `🚀 Server running on http://localhost:${PORT}`
+  );
 
   console.log(
     `📘 Swagger docs available at http://localhost:${PORT}/api-docs`
