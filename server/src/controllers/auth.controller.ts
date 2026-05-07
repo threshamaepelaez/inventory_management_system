@@ -3,7 +3,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool from '../config/db';
 
-const jwtSecret = process.env.JWT_SECRET || 'supersecretkey';
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1d';
 
 // =======================
@@ -15,8 +18,6 @@ res: Response,
 next: NextFunction
 ) => {
 try {
-console.log('REGISTER BODY:', req.body);
-
 const requestBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body;
 const name = requestBody.name || req.query.name;
 const email = requestBody.email || req.query.email;
@@ -70,9 +71,6 @@ res: Response,
 next: NextFunction
 ) => {
 try {
-console.log('LOGIN BODY:', req.body);
-console.log('LOGIN HEADERS:', req.headers['content-type']);
-
 const requestBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body;
 const email = requestBody.email || req.query.email;
 const password = requestBody.password || req.query.password;

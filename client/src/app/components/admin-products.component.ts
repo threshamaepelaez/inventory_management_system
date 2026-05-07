@@ -251,8 +251,6 @@ export class AdminProductsComponent implements OnInit {
 
         next: (response: any) => {
 
-          console.log('PRODUCT RESPONSE:', response);
-
           const rawProducts = Array.isArray(response)
             ? response
             : response.items ||
@@ -324,8 +322,6 @@ export class AdminProductsComponent implements OnInit {
 
   onSave(event: { product: any; file?: File }): void {
 
-    console.log('SAVE EVENT:', event);
-
     if (this.activeProduct) {
 
       this.productService
@@ -337,8 +333,6 @@ export class AdminProductsComponent implements OnInit {
         .subscribe({
 
           next: (response: any) => {
-
-            console.log('UPDATED:', response);
 
             this.showForm = false;
             this.activeProduct = null;
@@ -361,10 +355,6 @@ export class AdminProductsComponent implements OnInit {
         .subscribe({
 
           next: (response: any) => {
-
-            console.log('CREATED:', response);
-
-            this.showForm = false;
 
             this.loadProducts();
           },
@@ -391,8 +381,6 @@ export class AdminProductsComponent implements OnInit {
       .subscribe({
 
         next: () => {
-
-          console.log('DELETED');
 
           this.loadProducts();
         },

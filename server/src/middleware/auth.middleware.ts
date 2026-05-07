@@ -19,7 +19,10 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'supersecretkey';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      return res.status(500).json({ message: 'Server configuration error' });
+    }
     const decoded = jwt.verify(token, secret) as JwtPayload;
     req.user = decoded;
     next();

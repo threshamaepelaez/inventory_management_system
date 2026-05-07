@@ -29,47 +29,51 @@
   <!-- LOADING -->
   <div
     *ngIf="loading"
-    class="rounded-[2rem] bg-slate-950/90 p-6 text-slate-200 shadow-2xl ring-1 ring-white/10"
+    class="rounded-[2rem] bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-center shadow-2xl ring-1 ring-white/10"
   >
-    Loading products...
+    <div class="flex flex-col items-center gap-4">
+      <div class="h-8 w-8 animate-spin rounded-full border-4 border-slate-600 border-t-indigo-500"></div>
+      <p class="text-slate-200">Loading products...</p>
+    </div>
   </div>
 
   <!-- ERROR -->
   <div
     *ngIf="error"
-    class="rounded-[2rem] bg-rose-500/10 p-6 text-rose-200 shadow-lg ring-1 ring-rose-500/20"
+    class="rounded-[2rem] bg-rose-500/10 p-6 text-rose-200 shadow-lg ring-1 ring-rose-500/20 border border-rose-500/20"
   >
-    {{ error }}
+    <p class="font-semibold">⚠️ Unable to load products</p>
+    <p class="text-sm mt-1">{{ error }}</p>
   </div>
 
   <!-- PRODUCTS TABLE -->
   <div
     *ngIf="!loading && !error"
-    class="overflow-hidden rounded-[2rem] bg-white/95 shadow-2xl ring-1 ring-slate-900/10"
+    class="overflow-x-auto rounded-[2rem] bg-white/95 shadow-2xl ring-1 ring-slate-900/10"
   >
 
-    <table class="min-w-full divide-y divide-slate-200">
+    <table class="w-full divide-y divide-slate-200">
 
       <!-- TABLE HEADER -->
       <thead
-        class="bg-slate-50 text-left text-sm uppercase tracking-wide text-slate-600"
+        class="bg-gradient-to-r from-slate-50 to-slate-100 text-left text-xs font-bold uppercase tracking-wider text-slate-600"
       >
 
         <tr>
 
-          <th class="px-4 py-3">
+          <th class="px-4 py-3 md:px-6">
             Image
           </th>
 
-          <th class="px-4 py-3">
+          <th class="px-4 py-3 md:px-6">
             Name
           </th>
 
-          <th class="px-4 py-3">
+          <th class="px-4 py-3 md:px-6">
             Quantity
           </th>
 
-          <th class="px-4 py-3">
+          <th class="px-4 py-3 md:px-6">
             Price
           </th>
 
@@ -85,23 +89,24 @@
         <!-- PRODUCT ROW -->
         <tr
           *ngFor="let product of products"
-          class="transition hover:bg-slate-50"
+          class="transition hover:bg-indigo-50/50"
         >
 
           <!-- PRODUCT IMAGE -->
-          <td class="px-4 py-4">
+          <td class="px-4 py-4 md:px-6">
 
             <img
               *ngIf="product.image"
-              [src]="'https://inventory-management-system1-ptf7.onrender.com/uploads/' + product.image"
-              alt="Product Image"
-              class="h-20 w-20 rounded-xl border border-slate-200 object-cover shadow"
+              [src]="product.image"
+              alt="{{ product.name }}"
+              class="h-16 w-16 md:h-20 md:w-20 rounded-lg border border-slate-200 object-cover shadow-sm hover:shadow-md transition"
+              loading="lazy"
             />
 
             <!-- NO IMAGE -->
             <div
               *ngIf="!product.image"
-              class="flex h-20 w-20 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400"
+              class="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400 font-medium"
             >
               No Image
             </div>
@@ -109,18 +114,21 @@
           </td>
 
           <!-- PRODUCT NAME -->
-          <td class="px-4 py-4 font-semibold text-slate-900">
+          <td class="px-4 py-4 md:px-6 font-semibold text-slate-900 truncate">
             {{ product.name }}
           </td>
 
           <!-- PRODUCT QUANTITY -->
-          <td class="px-4 py-4 text-slate-700">
-            {{ product.quantity }}
+          <td class="px-4 py-4 md:px-6 text-slate-700">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                  [ngClass]="product.quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+              {{ product.quantity }}
+            </span>
           </td>
 
           <!-- PRODUCT PRICE -->
-          <td class="px-4 py-4 text-slate-700">
-            ₹ {{ product.price }}
+          <td class="px-4 py-4 md:px-6 text-slate-700 font-semibold">
+            ₹ {{ product.price | number:'1.2-2' }}
           </td>
 
         </tr>
@@ -130,8 +138,13 @@
 
           <td
             colspan="4"
-            class="px-4 py-6 text-center text-slate-500"
+            class="px-4 py-12 text-center"
           >
+            <div class="flex flex-col items-center gap-2 text-slate-500">
+              <span class="text-4xl">📦</span>
+              <p class="font-medium">No products available</p>
+              <p class="text-sm">Start by creating your first product</p>
+            </div>
             No products found.
           </td>
 

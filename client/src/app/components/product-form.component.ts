@@ -192,8 +192,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   submitForm(): void {
 
-    console.log('FORM DATA:', this.form);
-
     this.saved.emit({
       product: this.form,
       file: this.selectedFile

@@ -32,8 +32,6 @@ export class ProductsComponent implements OnInit {
 
       next: (response: any) => {
 
-        console.log('Products:', response);
-
         const rawProducts = Array.isArray(response)
           ? response
           : response.items || response.products || response.data || response || [];

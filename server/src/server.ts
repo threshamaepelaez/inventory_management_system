@@ -11,7 +11,6 @@ import { requestLogger } from './middleware/logger.middleware';
 
 import swaggerUi from 'swagger-ui-express';
 import { swaggerDocument } from './utils/swagger';
-
 import pool from './config/db';
 
 dotenv.config();
@@ -130,7 +129,7 @@ app.use(errorHandler);
 
 pool.getConnection()
 
-  .then((connection) => {
+  .then((connection: any) => {
 
     console.log(
       '✅ Database Connected'
@@ -140,7 +139,7 @@ pool.getConnection()
 
   })
 
-  .catch((error) => {
+  .catch((error: any) => {
 
     console.error(
       '❌ Database connection failed:',
