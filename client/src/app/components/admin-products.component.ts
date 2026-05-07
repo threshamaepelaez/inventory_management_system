@@ -440,9 +440,7 @@ isAdmin = false;
       !this.formData.category
     ) {
 
-      alert(
-        'Please fill required fields'
-      );
+      
 
       return;
 
@@ -508,9 +506,7 @@ isAdmin = false;
 
             this.imagePreview = null;
 
-            alert(
-              'Product updated successfully'
-            );
+            
 
           },
 
@@ -518,9 +514,7 @@ isAdmin = false;
 
             console.log(err);
 
-            alert(
-              'Failed to update product'
-            );
+            
 
           }
 
@@ -548,9 +542,7 @@ isAdmin = false;
 
             this.imagePreview = null;
 
-            alert(
-              'Product created successfully'
-            );
+            
 
           },
 
@@ -558,9 +550,7 @@ isAdmin = false;
 
             console.log(err);
 
-            alert(
-              'Failed to create product'
-            );
+            
 
           }
 
@@ -591,9 +581,7 @@ isAdmin = false;
 
           this.loadProducts();
 
-          alert(
-            'Product deleted successfully'
-          );
+          
 
         },
 
@@ -601,10 +589,7 @@ isAdmin = false;
 
           console.log(err);
 
-          alert(
-            'Failed to delete product'
-          );
-
+         
         }
 
       });
