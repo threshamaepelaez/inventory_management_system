@@ -24,15 +24,12 @@ const PORT = process.env.PORT || 5000;
    CORS
 ========================= */
 
-app.use(
-  cors({
-
-    origin: [
-      'http://localhost:4200',
-      'https://inventory-management-system-gilt-eight.vercel.app'
-    ],
-
-    methods: [
+app.use(cors({
+  origin: [
+    'http://localhost:4200',
+    'https://inventory-management-system-qjmd.vercel.app'
+  ],
+methods: [
       'GET',
       'POST',
       'PUT',
@@ -45,10 +42,12 @@ app.use(
       'Authorization'
     ],
 
-    credentials: true
+  credentials: true
+}));
 
-  })
-);
+    
+
+    
 
 /* =========================
    BODY PARSER
