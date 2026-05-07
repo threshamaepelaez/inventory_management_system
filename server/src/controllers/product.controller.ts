@@ -1,10 +1,24 @@
 import { Request, Response } from 'express';
+
 import pool from '../config/db';
 
-export const getProducts = async (req: Request, res: Response) => {
+/* =========================
+   GET ALL PRODUCTS
+========================= */
+
+export const getProducts = async (
+  req: Request,
+  res: Response
+) => {
+
   try {
+
     const [rows]: any = await pool.query(
-      'SELECT * FROM products ORDER BY created_at DESC'
+      `
+      SELECT *
+      FROM products
+      ORDER BY created_at DESC
+      `
     );
 
     res.status(200).json({
@@ -13,119 +27,302 @@ export const getProducts = async (req: Request, res: Response) => {
       page: 1,
       totalPages: 1
     });
+
   } catch (error) {
-    console.error('Get products error:', error);
+
+    console.error(
+      'Get products error:',
+      error
+    );
 
     res.status(500).json({
       message: 'Failed to fetch products'
     });
+
   }
+
 };
 
-export const createProduct = async (req: Request, res: Response) => {
+/* =========================
+   CREATE PRODUCT
+========================= */
+
+export const createProduct = async (
+  req: any,
+  res: Response
+) => {
+
   try {
-    const { name, description, price, quantity } = req.body;
 
-    const image = req.file?.filename || null;
+    const {
+      name,
+      description,
+      price,
+      quantity
+    } = req.body;
 
-    const [result]: any = await pool.query(
-      `INSERT INTO products 
-      (name, description, price, quantity, image)
-      VALUES (?, ?, ?, ?, ?)`,
-      [name, description, price, quantity, image]
-    );
+    const image =
+      req.file?.filename || null;
+
+    const [result]: any =
+      await pool.query(
+
+        `
+        INSERT INTO products
+        (
+          name,
+          description,
+          price,
+          quantity,
+          image
+        )
+        VALUES (?, ?, ?, ?, ?)
+        `,
+
+        [
+          name,
+          description,
+          price,
+          quantity,
+          image
+        ]
+
+      );
 
     res.status(201).json({
-      message: 'Product created successfully',
-      productId: result.insertId
+
+      message:
+        'Product created successfully',
+
+      productId:
+        result.insertId
+
     });
+
   } catch (error) {
-    console.error('Create product error:', error);
+
+    console.error(
+      'Create product error:',
+      error
+    );
 
     res.status(500).json({
-      message: 'Failed to create product'
+      message:
+        'Failed to create product'
     });
+
   }
+
 };
 
-export const getProductById = async (req: Request, res: Response) => {
+/* =========================
+   GET PRODUCT BY ID
+========================= */
+
+export const getProductById = async (
+  req: Request,
+  res: Response
+) => {
+
   try {
+
     const { id } = req.params;
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM products WHERE id = ?',
-      [id]
-    );
+    const [rows]: any =
+      await pool.query(
+
+        `
+        SELECT *
+        FROM products
+        WHERE id = ?
+        `,
+
+        [id]
+
+      );
 
     const product = rows[0];
 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+
+      return res.status(404).json({
+        message: 'Product not found'
+      });
+
     }
 
     res.status(200).json(product);
+
   } catch (error) {
-    console.error('Get product by id error:', error);
+
+    console.error(
+      'Get product by id error:',
+      error
+    );
 
     res.status(500).json({
-      message: 'Failed to fetch product'
+      message:
+        'Failed to fetch product'
     });
+
   }
+
 };
 
-export const updateProduct = async (req: Request, res: Response) => {
+/* =========================
+   UPDATE PRODUCT
+========================= */
+
+export const updateProduct = async (
+  req: any,
+  res: Response
+) => {
+
   try {
+
     const { id } = req.params;
 
-    const { name, description, price, quantity } = req.body;
+    const {
+      name,
+      description,
+      price,
+      quantity
+    } = req.body;
 
-    let image = req.file ? req.file.filename : null;
+    let image = null;
 
-    // If no new file uploaded, keep existing image
-    if (!req.file) {
-      const [rows]: any = await pool.query(
-        'SELECT image FROM products WHERE id = ?',
-        [id]
-      );
-      image = rows[0]?.image || null;
+    /* =========================
+       CHECK NEW IMAGE
+    ========================= */
+
+    if (req.file) {
+
+      image = req.file.filename;
+
     }
 
+    /* =========================
+       KEEP OLD IMAGE
+    ========================= */
+
+    if (!req.file) {
+
+      const [rows]: any =
+        await pool.query(
+
+          `
+          SELECT image
+          FROM products
+          WHERE id = ?
+          `,
+
+          [id]
+
+        );
+
+      image =
+        rows[0]?.image || null;
+
+    }
+
+    /* =========================
+       UPDATE QUERY
+    ========================= */
+
     await pool.query(
-      `UPDATE products
-      SET name = ?, description = ?, price = ?, quantity = ?, image = ?
-      WHERE id = ?`,
-      [name, description, price, quantity, image, id]
+
+      `
+      UPDATE products
+      SET
+        name = ?,
+        description = ?,
+        price = ?,
+        quantity = ?,
+        image = ?
+      WHERE id = ?
+      `,
+
+      [
+        name,
+        description,
+        price,
+        quantity,
+        image,
+        id
+      ]
+
     );
 
     res.status(200).json({
-      message: 'Product updated successfully'
+
+      message:
+        'Product updated successfully'
+
     });
+
   } catch (error) {
-    console.error('Update product error:', error);
+
+    console.error(
+      'UPDATE PRODUCT ERROR:',
+      error
+    );
 
     res.status(500).json({
-      message: 'Failed to update product'
+
+      message:
+        'Failed to update product'
+
     });
+
   }
+
 };
 
-export const deleteProduct = async (req: Request, res: Response) => {
+/* =========================
+   DELETE PRODUCT
+========================= */
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response
+) => {
+
   try {
+
     const { id } = req.params;
 
     await pool.query(
-      'DELETE FROM products WHERE id = ?',
+
+      `
+      DELETE FROM products
+      WHERE id = ?
+      `,
+
       [id]
+
     );
 
     res.status(200).json({
-      message: 'Product deleted successfully'
+
+      message:
+        'Product deleted successfully'
+
     });
+
   } catch (error) {
-    console.error('Delete product error:', error);
+
+    console.error(
+      'Delete product error:',
+      error
+    );
 
     res.status(500).json({
-      message: 'Failed to delete product'
+
+      message:
+        'Failed to delete product'
+
     });
+
   }
+
 };
