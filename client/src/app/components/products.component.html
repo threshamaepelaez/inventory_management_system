@@ -1,42 +1,146 @@
 <section class="space-y-6">
-  <div class="rounded-[2rem] bg-gradient-to-br from-indigo-900 via-slate-950 to-cyan-900 p-8 shadow-2xl ring-1 ring-white/10 text-white">
-    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+
+  <!-- HEADER -->
+  <div
+    class="rounded-[2rem] bg-gradient-to-br from-indigo-900 via-slate-950 to-cyan-900 p-8 shadow-2xl ring-1 ring-white/10 text-white"
+  >
+
+    <div
+      class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+    >
+
       <div>
-        <h1 class="text-4xl font-extrabold tracking-tight">Inventory Showcase</h1>
+
+        <h1 class="text-4xl font-extrabold tracking-tight">
+          Inventory Showcase
+        </h1>
+
         <p class="mt-2 max-w-2xl text-slate-200/80">
-          Browse your latest inventory in a sleek panel with polished details and responsive layout.
+          Browse your latest inventory in a sleek panel with polished details
+          and responsive layout.
         </p>
+
       </div>
+
     </div>
+
   </div>
 
-  <div *ngIf="loading" class="rounded-[2rem] bg-slate-950/90 p-6 text-slate-200 shadow-2xl ring-1 ring-white/10">
+  <!-- LOADING -->
+  <div
+    *ngIf="loading"
+    class="rounded-[2rem] bg-slate-950/90 p-6 text-slate-200 shadow-2xl ring-1 ring-white/10"
+  >
     Loading products...
   </div>
 
-  <div *ngIf="error" class="rounded-[2rem] bg-rose-500/10 p-6 text-rose-200 shadow-lg ring-1 ring-rose-500/20">
+  <!-- ERROR -->
+  <div
+    *ngIf="error"
+    class="rounded-[2rem] bg-rose-500/10 p-6 text-rose-200 shadow-lg ring-1 ring-rose-500/20"
+  >
     {{ error }}
   </div>
 
-  <div *ngIf="!loading && !error" class="overflow-hidden rounded-[2rem] bg-white/95 shadow-2xl ring-1 ring-slate-900/10">
+  <!-- PRODUCTS TABLE -->
+  <div
+    *ngIf="!loading && !error"
+    class="overflow-hidden rounded-[2rem] bg-white/95 shadow-2xl ring-1 ring-slate-900/10"
+  >
+
     <table class="min-w-full divide-y divide-slate-200">
-    <thead class="bg-slate-50 text-left text-sm uppercase tracking-wide text-slate-600">
-      <tr>
-        <th class="px-4 py-3">Name</th>
-        <th class="px-4 py-3">Quantity</th>
-        <th class="px-4 py-3">Price</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-slate-200 bg-white text-sm text-slate-700">
-      <tr *ngFor="let product of products" class="transition hover:bg-slate-50">
-        <td class="px-4 py-4 font-semibold text-slate-900">{{ product.name }}</td>
-        <td class="px-4 py-4 text-slate-700">{{ product.quantity }}</td>
-        <td class="px-4 py-4 text-slate-700">₹ {{ product.price }}</td>
-      </tr>
-      <tr *ngIf="products.length === 0">
-        <td colspan="3" class="px-4 py-6 text-center text-slate-500">No products found.</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+      <!-- TABLE HEADER -->
+      <thead
+        class="bg-slate-50 text-left text-sm uppercase tracking-wide text-slate-600"
+      >
+
+        <tr>
+
+          <th class="px-4 py-3">
+            Image
+          </th>
+
+          <th class="px-4 py-3">
+            Name
+          </th>
+
+          <th class="px-4 py-3">
+            Quantity
+          </th>
+
+          <th class="px-4 py-3">
+            Price
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <!-- TABLE BODY -->
+      <tbody
+        class="divide-y divide-slate-200 bg-white text-sm text-slate-700"
+      >
+
+        <!-- PRODUCT ROW -->
+        <tr
+          *ngFor="let product of products"
+          class="transition hover:bg-slate-50"
+        >
+
+          <!-- PRODUCT IMAGE -->
+          <td class="px-4 py-4">
+
+            <img
+              *ngIf="product.image"
+              [src]="'https://inventory-management-system1-ptf7.onrender.com/uploads/' + product.image"
+              alt="Product Image"
+              class="h-20 w-20 rounded-xl border border-slate-200 object-cover shadow"
+            />
+
+            <!-- NO IMAGE -->
+            <div
+              *ngIf="!product.image"
+              class="flex h-20 w-20 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400"
+            >
+              No Image
+            </div>
+
+          </td>
+
+          <!-- PRODUCT NAME -->
+          <td class="px-4 py-4 font-semibold text-slate-900">
+            {{ product.name }}
+          </td>
+
+          <!-- PRODUCT QUANTITY -->
+          <td class="px-4 py-4 text-slate-700">
+            {{ product.quantity }}
+          </td>
+
+          <!-- PRODUCT PRICE -->
+          <td class="px-4 py-4 text-slate-700">
+            ₹ {{ product.price }}
+          </td>
+
+        </tr>
+
+        <!-- EMPTY STATE -->
+        <tr *ngIf="products.length === 0">
+
+          <td
+            colspan="4"
+            class="px-4 py-6 text-center text-slate-500"
+          >
+            No products found.
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
 </section>
