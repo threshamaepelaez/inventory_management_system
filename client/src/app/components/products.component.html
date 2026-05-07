@@ -1,23 +1,31 @@
-<section class="space-y-6">
+<div class="max-w-7xl mx-auto">
 
   <!-- HEADER -->
-  <div
-    class="rounded-[2rem] bg-gradient-to-br from-indigo-900 via-slate-950 to-cyan-900 p-8 shadow-2xl ring-1 ring-white/10 text-white"
-  >
+  <div class="flex items-center justify-between mb-6">
 
-    <div
-      class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
-    >
+    <!-- LEFT -->
+    <div class="flex items-center gap-4">
+
+      <!-- BACK -->
+      <button
+        routerLink="/dashboard"
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm transition hover:scale-105"
+      >
+        ←
+      </button>
 
       <div>
 
-        <h1 class="text-4xl font-extrabold tracking-tight">
-          Inventory Showcase
+        <h1
+          class="text-3xl font-black text-slate-800"
+        >
+          Products
         </h1>
 
-        <p class="mt-2 max-w-2xl text-slate-200/80">
-          Browse your latest inventory in a sleek panel with polished details
-          and responsive layout.
+        <p
+          class="text-sm text-slate-400"
+        >
+          Inventory product list
         </p>
 
       </div>
@@ -26,134 +34,107 @@
 
   </div>
 
+  <!-- SEARCH -->
+  <div
+    class="mb-6 rounded-2xl bg-white p-4 shadow-sm"
+  >
+
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="searchProducts()"
+      placeholder="Search product or category..."
+      class="w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+    />
+
+  </div>
+
   <!-- LOADING -->
   <div
     *ngIf="loading"
-    class="rounded-[2rem] bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-center shadow-2xl ring-1 ring-white/10"
+    class="rounded-2xl bg-white p-10 text-center shadow-sm"
   >
-    <div class="flex flex-col items-center gap-4">
-      <div class="h-8 w-8 animate-spin rounded-full border-4 border-slate-600 border-t-indigo-500"></div>
-      <p class="text-slate-200">Loading products...</p>
-    </div>
+
+    Loading products...
+
   </div>
 
   <!-- ERROR -->
   <div
     *ngIf="error"
-    class="rounded-[2rem] bg-rose-500/10 p-6 text-rose-200 shadow-lg ring-1 ring-rose-500/20 border border-rose-500/20"
+    class="rounded-2xl bg-red-100 p-4 text-red-600 shadow-sm"
   >
-    <p class="font-semibold">⚠️ Unable to load products</p>
-    <p class="text-sm mt-1">{{ error }}</p>
+
+    {{ error }}
+
   </div>
 
-  <!-- PRODUCTS TABLE -->
+  <!-- PRODUCTS -->
   <div
     *ngIf="!loading && !error"
-    class="overflow-x-auto rounded-[2rem] bg-white/95 shadow-2xl ring-1 ring-slate-900/10"
+    class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
   >
 
-    <table class="w-full divide-y divide-slate-200">
+    <div
+      *ngFor="let product of filteredProducts"
+      class="overflow-hidden rounded-3xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
 
-      <!-- TABLE HEADER -->
-      <thead
-        class="bg-gradient-to-r from-slate-50 to-slate-100 text-left text-xs font-bold uppercase tracking-wider text-slate-600"
-      >
+      <!-- IMAGE -->
+      <img
+        *ngIf="product.image"
+        [src]="product.image"
+        class="h-52 w-full object-cover"
+      />
 
-        <tr>
+      <!-- CONTENT -->
+      <div class="p-5">
 
-          <th class="px-4 py-3 md:px-6">
-            Image
-          </th>
+        <!-- CATEGORY -->
+        <div
+          class="mb-3 inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-600"
+        >
+          {{ product.category || 'General' }}
+        </div>
 
-          <th class="px-4 py-3 md:px-6">
-            Name
-          </th>
+        <!-- NAME -->
+        <h2
+          class="text-2xl font-black text-slate-800"
+        >
+          {{ product.name }}
+        </h2>
 
-          <th class="px-4 py-3 md:px-6">
-            Quantity
-          </th>
+        <!-- DESCRIPTION -->
+        <p
+          class="mt-2 line-clamp-2 text-sm text-slate-500"
+        >
+          {{ product.description }}
+        </p>
 
-          <th class="px-4 py-3 md:px-6">
-            Price
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <!-- TABLE BODY -->
-      <tbody
-        class="divide-y divide-slate-200 bg-white text-sm text-slate-700"
-      >
-
-        <!-- PRODUCT ROW -->
-        <tr
-          *ngFor="let product of products"
-          class="transition hover:bg-indigo-50/50"
+        <!-- PRICE -->
+        <div
+          class="mt-5 flex items-center justify-between"
         >
 
-          <!-- PRODUCT IMAGE -->
-          <td class="px-4 py-4 md:px-6">
-
-            <img
-              *ngIf="product.image"
-              [src]="product.image"
-              alt="{{ product.name }}"
-              class="h-16 w-16 md:h-20 md:w-20 rounded-lg border border-slate-200 object-cover shadow-sm hover:shadow-md transition"
-              loading="lazy"
-            />
-
-            <!-- NO IMAGE -->
-            <div
-              *ngIf="!product.image"
-              class="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400 font-medium"
-            >
-              No Image
-            </div>
-
-          </td>
-
-          <!-- PRODUCT NAME -->
-          <td class="px-4 py-4 md:px-6 font-semibold text-slate-900 truncate">
-            {{ product.name }}
-          </td>
-
-          <!-- PRODUCT QUANTITY -->
-          <td class="px-4 py-4 md:px-6 text-slate-700">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
-                  [ngClass]="product.quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-              {{ product.quantity }}
-            </span>
-          </td>
-
-          <!-- PRODUCT PRICE -->
-          <td class="px-4 py-4 md:px-6 text-slate-700 font-semibold">
-            ₹ {{ product.price | number:'1.2-2' }}
-          </td>
-
-        </tr>
-
-        <!-- EMPTY STATE -->
-        <tr *ngIf="products.length === 0">
-
-          <td
-            colspan="4"
-            class="px-4 py-12 text-center"
+          <h3
+            class="text-2xl font-black text-indigo-600"
           >
-            <div class="flex flex-col items-center gap-2 text-slate-500">
-              <span class="text-4xl">📦</span>
-              <p class="font-medium">No products available</p>
-              <p class="text-sm">Start by creating your first product</p>
-            </div>
-            No products found.
-          </td>
+            ₱{{ product.price | number:'1.2-2' }}
+          </h3>
 
-        </tr>
+          <span
+            class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-600"
+          >
+            Qty:
+            {{ product.quantity }}
+          </span>
 
-      </tbody>
+        </div>
 
-    </table>
+      </div>
+
+    </div>
 
   </div>
 
-</section>
+</div>

@@ -1,164 +1,166 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders
+} from '@angular/common/http';
 
 import {
-  BehaviorSubject,
   Observable,
-  map
+  tap
 } from 'rxjs';
-
-import { environment }
-from '../../environments/environment';
-
-import {
-  AuthResponse,
-  User
-} from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
-  private currentUserSubject =
-    new BehaviorSubject<User | null>(
-      this.getStoredUser()
-    );
-
-  currentUser$ =
-    this.currentUserSubject.asObservable();
-
   private apiUrl =
-    environment.apiUrl;
+    'http://localhost:5000/api/auth';
 
   constructor(
     private http: HttpClient
   ) {}
 
-  private getStoredUser(): User | null {
+  // =========================
+  // LOGIN
+  // =========================
+  login(data: any): Observable<any> {
 
-    const user =
-      localStorage.getItem(
-        'inventory_user'
+    return this.http
+      .post(
+        `${this.apiUrl}/login`,
+        data
+      )
+      .pipe(
+
+        tap((response: any) => {
+
+          console.log(
+            'LOGIN RESPONSE:',
+            response
+          );
+
+          // SAVE TOKEN
+          if (response?.token) {
+
+            localStorage.setItem(
+              'token',
+              response.token
+            );
+
+          }
+
+          // SAVE USER
+          if (response?.user) {
+
+            localStorage.setItem(
+              'user',
+              JSON.stringify(response.user)
+            );
+
+          }
+
+        })
+
       );
 
-    return user
-      ? JSON.parse(user)
-      : null;
   }
 
-  get token(): string | null {
-
-    return localStorage.getItem(
-      'inventory_token'
-    );
-  }
-
-  /* =========================
-     LOGIN
-  ========================= */
-
-  login(
-    email: string,
-    password: string
-  ): Observable<User> {
-
-    return this.http.post<AuthResponse>(
-
-      `${this.apiUrl}/auth/login`,
-
-      {
-        email,
-        password
-      }
-
-    ).pipe(
-
-      map((response: AuthResponse) => {
-
-        localStorage.setItem(
-          'inventory_token',
-          response.token
-        );
-
-        localStorage.setItem(
-          'inventory_user',
-          JSON.stringify(response.user)
-        );
-
-        this.currentUserSubject.next(
-          response.user
-        );
-
-        return response.user;
-
-      })
-
-    );
-  }
-
-  /* =========================
-     REGISTER
-  ========================= */
-
-  register(
-    name: string,
-    email: string,
-    password: string
-  ): Observable<any> {
+  // =========================
+  // REGISTER
+  // =========================
+  register(data: any): Observable<any> {
 
     return this.http.post(
-
-      `${this.apiUrl}/auth/register`,
-
-      {
-        name,
-        email,
-        password
-      }
-
+      `${this.apiUrl}/register`,
+      data
     );
+
   }
 
-  /* =========================
-     LOGOUT
-  ========================= */
-
+  // =========================
+  // LOGOUT
+  // =========================
   logout(): void {
 
-    localStorage.removeItem(
-      'inventory_token'
-    );
+    localStorage.removeItem('token');
 
-    localStorage.removeItem(
-      'inventory_user'
-    );
+    localStorage.removeItem('user');
 
-    this.currentUserSubject.next(
-      null
-    );
   }
 
-  /* =========================
-     AUTH CHECK
-  ========================= */
+  // =========================
+  // TOKEN
+  // =========================
+  getToken(): string | null {
 
-  isAuthenticated(): boolean {
+    return localStorage.getItem('token');
 
-    return !!this.token;
   }
 
-  /* =========================
-     ADMIN CHECK
-  ========================= */
-
-  isAdmin(): boolean {
+  // =========================
+  // USER
+  // =========================
+  getStoredUser(): any {
 
     const user =
-      this.currentUserSubject.value;
+      localStorage.getItem('user');
 
-    return user?.role === 'admin';
+    if (!user) {
+
+      return null;
+
+    }
+
+    try {
+
+      return JSON.parse(user);
+
+    } catch {
+
+      return null;
+
+    }
+
+  }
+
+  // =========================
+  // AUTH CHECK
+  // =========================
+  isAuthenticated(): boolean {
+
+    return !!localStorage.getItem(
+      'token'
+    );
+
+  }
+
+  // =========================
+  // ALIAS
+  // FIX auth.guard.ts
+  // =========================
+  isLoggedIn(): boolean {
+
+    return this.isAuthenticated();
+
+  }
+
+  // =========================
+  // HEADERS
+  // =========================
+  getAuthHeaders(): HttpHeaders {
+
+    const token = this.getToken();
+
+    return new HttpHeaders({
+
+      Authorization:
+        `Bearer ${token}`
+
+    });
+
   }
 
 }

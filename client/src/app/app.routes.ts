@@ -1,25 +1,45 @@
-import { Route } from '@angular/router';
-import { DashboardComponent } from './components/dashboard.component';
-import { LoginComponent } from './components/login.component';
-import { RegisterComponent } from './components/register.component';
-import { ProductsComponent } from './components/products.component';
-import { ProductDetailsComponent } from './components/product-details.component';
-import { AdminProductsComponent } from './components/admin-products.component';
-import { AuthGuard } from './guards/auth.guard';
+import { Routes } from '@angular/router';
 
-export const routes: Route[] = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+import { LoginComponent } from './components/login.component';
+
+import { RegisterComponent } from './components/register.component';
+
+import { DashboardComponent } from './components/dashboard.component';
+
+import { AdminProductsComponent } from './components/admin-products.component';
+
+import { ProductDetailsComponent } from './components/product-details.component';
+
+
+
+export const routes: Routes = [
   {
     path: '',
-    canActivate: [AuthGuard],
-    children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'products', component: ProductsComponent },
-      { path: 'products/:id', component: ProductDetailsComponent },
-      { path: 'admin/products', component: AdminProductsComponent }
-    ]
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
-  { path: '**', redirectTo: 'dashboard' }
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./components/forgot-password.component').then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent
+  },
+  {
+    path: 'products',
+    component: AdminProductsComponent
+  },
+  {
+    path: 'products/:id',
+    component: ProductDetailsComponent
+  }
 ];

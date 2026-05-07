@@ -1,78 +1,147 @@
 import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
+import { RouterModule } from '@angular/router';
+
+import { FormsModule } from '@angular/forms';
+
 import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-products',
+
   standalone: true,
-  imports: [CommonModule],
+
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule
+  ],
+
   templateUrl: './products.component.html',
+
   styleUrls: ['./products.component.css']
 })
+
 export class ProductsComponent implements OnInit {
 
   products: any[] = [];
+
+  filteredProducts: any[] = [];
+
+  searchTerm = '';
+
   loading = false;
-  error: string | null = null;
+
+  error = '';
 
   constructor(
     private productService: ProductService
   ) {}
 
   ngOnInit(): void {
+
     this.loadProducts();
+
   }
 
   loadProducts(): void {
 
     this.loading = true;
-    this.error = null;
 
-    this.productService.getProducts().subscribe({
+    this.error = '';
 
-      next: (response: any) => {
+    this.productService
+      .getProducts()
+      .subscribe({
 
-        const rawProducts = Array.isArray(response)
-          ? response
-          : response.items || response.products || response.data || response || [];
+        next: (response: any) => {
 
-        this.products = rawProducts.map((item: any) => this.normalizeProduct(item));
+          console.log(
+            'PRODUCT RESPONSE:',
+            response
+          );
 
-        this.loading = false;
-      },
+          if (
+            Array.isArray(response)
+          ) {
 
-      error: (error) => {
+            this.products = response;
 
-        console.error(
-          'Error loading products:',
-          error
-        );
+          }
 
-        this.error =
-          error?.error?.message ||
-          error?.message ||
-          'Unable to load products';
+          else if (
+            response?.products
+          ) {
 
-        this.loading = false;
-      }
-    });
+            this.products =
+              response.products;
+
+          }
+
+          else {
+
+            this.products = [];
+
+          }
+
+          this.filteredProducts = [
+            ...this.products
+          ];
+
+          this.loading = false;
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          this.loading = false;
+
+          this.error =
+            'Failed to load products';
+
+        }
+
+      });
+
   }
 
-  private normalizeProduct(item: any): any {
-    const findKey = (keys: string[]) => keys.find(key => item[key] !== undefined && item[key] !== null);
+  searchProducts(): void {
 
-    const nameKey = findKey(['name', 'product_name', 'title', 'Name', 'productName', 'productTitle']);
-    const quantityKey = findKey(['quantity', 'stock', 'qty', 'Quantity', 'stock_quantity', 'qty_count']);
-    const priceKey = findKey(['price', 'product_price', 'amount', 'Price', 'cost']);
-    const imageKey = findKey(['image', 'image_url', 'Image', 'imageUrl']);
-    const idKey = findKey(['id', 'product_id', 'ID']);
+    const search =
+      this.searchTerm
+        .toLowerCase()
+        .trim();
 
-    return {
-      id: item[idKey ?? 'id'] ?? null,
-      name: nameKey ? item[nameKey] : 'Product',
-      quantity: quantityKey ? item[quantityKey] : 0,
-      price: priceKey ? item[priceKey] : 0,
-      image: imageKey ? item[imageKey] : null
-    };
+    if (!search) {
+
+      this.filteredProducts = [
+        ...this.products
+      ];
+
+      return;
+
+    }
+
+    this.filteredProducts =
+      this.products.filter(
+        (product: any) =>
+
+          product.name
+            ?.toLowerCase()
+            .includes(search)
+
+          ||
+
+          product.category
+            ?.toLowerCase()
+            .includes(search)
+
+      );
+
   }
+
 }

@@ -1,6 +1,22 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 
 import pool from '../config/db';
+
+/* =========================
+   IMAGE URL HELPER
+========================= */
+
+const getImageUrl = (image: string | null) => {
+
+  if (!image) {
+    return null;
+  }
+
+  return `http://localhost:5000/uploads/${image}`;
+
+};
 
 /* =========================
    GET ALL PRODUCTS
@@ -13,30 +29,53 @@ export const getProducts = async (
 
   try {
 
-    const [rows]: any = await pool.query(
-      `
-      SELECT *
-      FROM products
-      ORDER BY created_at DESC
-      `
+    const [rows]: any =
+      await pool.query(
+        `
+        SELECT *
+        FROM products
+        ORDER BY created_at DESC
+        `
+      );
+
+    const products = rows.map(
+      (product: any) => ({
+
+        ...product,
+
+        image: getImageUrl(product.image)
+
+      })
     );
 
     res.status(200).json({
-      items: rows,
-      total: rows.length,
+
+      success: true,
+
+      items: products,
+
+      total: products.length,
+
       page: 1,
+
       totalPages: 1
+
     });
 
   } catch (error) {
 
     console.error(
-      'Get products error:',
+      'GET PRODUCTS ERROR:',
       error
     );
 
     res.status(500).json({
-      message: 'Failed to fetch products'
+
+      success: false,
+
+      message:
+        'Failed to fetch products'
+
     });
 
   }
@@ -57,9 +96,28 @@ export const createProduct = async (
     const {
       name,
       description,
+      category,
       price,
       quantity
     } = req.body;
+
+    if (
+      !name ||
+      !category ||
+      !price ||
+      !quantity
+    ) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        message:
+          'Please fill all required fields'
+
+      });
+
+    }
 
     const image =
       req.file?.filename || null;
@@ -72,18 +130,20 @@ export const createProduct = async (
         (
           name,
           description,
+          category,
           price,
           quantity,
           image
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
         `,
 
         [
           name,
-          description,
-          price,
-          quantity,
+          description || '',
+          category,
+          Number(price),
+          Number(quantity),
           image
         ]
 
@@ -91,24 +151,33 @@ export const createProduct = async (
 
     res.status(201).json({
 
+      success: true,
+
       message:
         'Product created successfully',
 
       productId:
-        result.insertId
+        result.insertId,
+
+      image:
+        getImageUrl(image)
 
     });
 
   } catch (error) {
 
     console.error(
-      'Create product error:',
+      'CREATE PRODUCT ERROR:',
       error
     );
 
     res.status(500).json({
+
+      success: false,
+
       message:
         'Failed to create product'
+
     });
 
   }
@@ -141,28 +210,49 @@ export const getProductById = async (
 
       );
 
-    const product = rows[0];
-
-    if (!product) {
+    if (!rows.length) {
 
       return res.status(404).json({
-        message: 'Product not found'
+
+        success: false,
+
+        message:
+          'Product not found'
+
       });
 
     }
 
-    res.status(200).json(product);
+    const product = {
+
+      ...rows[0],
+
+      image: getImageUrl(rows[0].image)
+
+    };
+
+    res.status(200).json({
+
+      success: true,
+
+      product
+
+    });
 
   } catch (error) {
 
     console.error(
-      'Get product by id error:',
+      'GET PRODUCT BY ID ERROR:',
       error
     );
 
     res.status(500).json({
+
+      success: false,
+
       message:
         'Failed to fetch product'
+
     });
 
   }
@@ -185,49 +275,73 @@ export const updateProduct = async (
     const {
       name,
       description,
+      category,
       price,
       quantity
     } = req.body;
 
-    let image = null;
+    const [existingRows]: any =
+      await pool.query(
+
+        `
+        SELECT *
+        FROM products
+        WHERE id = ?
+        `,
+
+        [id]
+
+      );
+
+    if (!existingRows.length) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message:
+          'Product not found'
+
+      });
+
+    }
+
+    const existingProduct =
+      existingRows[0];
+
+    let image =
+      existingProduct.image;
 
     /* =========================
-       CHECK NEW IMAGE
+       NEW IMAGE UPLOAD
     ========================= */
 
     if (req.file) {
 
       image = req.file.filename;
 
-    }
+      /* DELETE OLD IMAGE */
 
-    /* =========================
-       KEEP OLD IMAGE
-    ========================= */
+      if (existingProduct.image) {
 
-    if (!req.file) {
+        const oldImagePath =
+          path.join(
+            __dirname,
+            '../../uploads',
+            existingProduct.image
+          );
 
-      const [rows]: any =
-        await pool.query(
+        if (
+          fs.existsSync(oldImagePath)
+        ) {
 
-          `
-          SELECT image
-          FROM products
-          WHERE id = ?
-          `,
+          fs.unlinkSync(oldImagePath);
 
-          [id]
+        }
 
-        );
-
-      image =
-        rows[0]?.image || null;
+      }
 
     }
-
-    /* =========================
-       UPDATE QUERY
-    ========================= */
 
     await pool.query(
 
@@ -236,6 +350,7 @@ export const updateProduct = async (
       SET
         name = ?,
         description = ?,
+        category = ?,
         price = ?,
         quantity = ?,
         image = ?
@@ -244,9 +359,10 @@ export const updateProduct = async (
 
       [
         name,
-        description,
-        price,
-        quantity,
+        description || '',
+        category,
+        Number(price),
+        Number(quantity),
         image,
         id
       ]
@@ -255,8 +371,13 @@ export const updateProduct = async (
 
     res.status(200).json({
 
+      success: true,
+
       message:
-        'Product updated successfully'
+        'Product updated successfully',
+
+      image:
+        getImageUrl(image)
 
     });
 
@@ -268,6 +389,8 @@ export const updateProduct = async (
     );
 
     res.status(500).json({
+
+      success: false,
 
       message:
         'Failed to update product'
@@ -291,6 +414,58 @@ export const deleteProduct = async (
 
     const { id } = req.params;
 
+    const [rows]: any =
+      await pool.query(
+
+        `
+        SELECT image
+        FROM products
+        WHERE id = ?
+        `,
+
+        [id]
+
+      );
+
+    if (!rows.length) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message:
+          'Product not found'
+
+      });
+
+    }
+
+    const image =
+      rows[0].image;
+
+    /* =========================
+       DELETE IMAGE FILE
+    ========================= */
+
+    if (image) {
+
+      const imagePath =
+        path.join(
+          __dirname,
+          '../../uploads',
+          image
+        );
+
+      if (
+        fs.existsSync(imagePath)
+      ) {
+
+        fs.unlinkSync(imagePath);
+
+      }
+
+    }
+
     await pool.query(
 
       `
@@ -304,6 +479,8 @@ export const deleteProduct = async (
 
     res.status(200).json({
 
+      success: true,
+
       message:
         'Product deleted successfully'
 
@@ -312,11 +489,13 @@ export const deleteProduct = async (
   } catch (error) {
 
     console.error(
-      'Delete product error:',
+      'DELETE PRODUCT ERROR:',
       error
     );
 
     res.status(500).json({
+
+      success: false,
 
       message:
         'Failed to delete product'

@@ -1,8 +1,11 @@
-table {
-  width: 100%;
-  border-collapse: collapse;
+button {
+  transition: all 0.2s ease;
 }
 
-th, td {
-  text-align: left;
+button:hover {
+  transform: translateY(-1px);
+}
+
+img {
+  background: #f1f5f9;
 }

@@ -1,0 +1,487 @@
+<div class="flex min-h-screen bg-slate-100 dark:bg-slate-950">
+
+  <!-- SIDEBAR -->
+  <aside class="hidden w-72 flex-col bg-slate-950 text-white shadow-2xl lg:flex">
+
+    <!-- LOGO -->
+    <div class="border-b border-slate-800 p-6">
+
+      <div class="flex items-center gap-4">
+
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-3xl shadow-lg">
+          📦
+        </div>
+
+        <div>
+
+          <h2 class="text-2xl font-black">
+            Inventory MS
+          </h2>
+
+          <p class="text-sm text-slate-400">
+            Management System
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- MENU -->
+    <div class="flex-1 p-5">
+
+      <p class="mb-4 px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+        Menu
+      </p>
+
+      <div class="space-y-3">
+
+        <!-- DASHBOARD -->
+        <a
+          routerLink="/dashboard"
+          class="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4 font-bold shadow-lg transition hover:scale-[1.02]"
+        >
+          📊 Dashboard
+        </a>
+
+        <!-- PRODUCTS -->
+        <a
+          routerLink="/products"
+          class="flex items-center gap-4 rounded-2xl px-5 py-4 font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white"
+        >
+          📦 Products
+        </a>
+
+      </div>
+
+      <!-- ADMIN -->
+      <div class="mt-10">
+
+        <p class="mb-4 px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+          Admin
+        </p>
+
+        <button
+          routerLink="/products"
+          class="flex w-full items-center gap-4 rounded-2xl px-5 py-4 font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white"
+        >
+          ➕ Add Product
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- USER -->
+    <div class="border-t border-slate-800 p-5">
+
+      <div class="mb-4 flex items-center gap-3">
+
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 font-black">
+          T
+        </div>
+
+        <div>
+
+          <h3 class="font-bold">
+            Thresha
+          </h3>
+
+          <p class="text-xs text-slate-400">
+            Inventory Admin
+          </p>
+
+        </div>
+
+      </div>
+
+      <button
+        (click)="logout()"
+        class="w-full rounded-2xl bg-red-500 py-3 font-bold text-white shadow-lg transition hover:bg-red-600"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 p-6">
+
+    <!-- TOP -->
+    <div class="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+
+      <!-- TITLE -->
+      <!-- TITLE -->
+<div class="flex items-center gap-4">
+
+  
+
+  <div>
+
+    <h1 class="text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+      Dashboard
+    </h1>
+
+    <p class="mt-2 text-slate-500 dark:text-slate-400">
+      Friday, May 1, 2026
+    </p>
+
+  </div>
+
+</div>
+      <!-- ACTIONS -->
+      <div class="flex items-center gap-4">
+
+        
+
+        <!-- PRODUCTS -->
+        <button
+          routerLink="/products"
+          class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-7 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105"
+        >
+          Manage Products
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="mb-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+
+      <!-- TOTAL -->
+      <div class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+
+        <div class="flex items-start justify-between">
+
+          <div>
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Total Products
+            </p>
+
+            <h2 class="mt-4 text-5xl font-black text-slate-900 dark:text-white">
+              {{ products.length }}
+            </h2>
+
+            <p class="mt-2 text-sm text-indigo-500">
+              📦 Inventory Count
+            </p>
+
+          </div>
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-3xl shadow-lg">
+            📦
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LOW STOCK -->
+      <div class="rounded-[28px] border border-red-100 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+
+        <div class="flex items-start justify-between">
+
+          <div>
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Low Stock Items
+            </p>
+
+            <h2 class="mt-4 text-5xl font-black text-slate-900 dark:text-white">
+              {{ lowStockCount }}
+            </h2>
+
+            <p class="mt-2 text-sm text-red-500">
+              ⚠️ Need attention
+            </p>
+
+          </div>
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 text-3xl shadow-lg">
+            ⚠️
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+
+        <div class="flex items-start justify-between">
+
+          <div>
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Categories
+            </p>
+
+            <h2 class="mt-4 text-5xl font-black text-slate-900 dark:text-white">
+              5
+            </h2>
+
+            <p class="mt-2 text-sm text-emerald-500">
+              🏷️ Active categories
+            </p>
+
+          </div>
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-3xl shadow-lg">
+            🏷️
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- VALUE -->
+      <div class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+
+        <div class="flex items-start justify-between">
+
+          <div>
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Total Value (PHP)
+            </p>
+
+            <h2 class="mt-4 text-4xl font-black text-slate-900 dark:text-white">
+              ₱{{ totalValue }}
+            </h2>
+
+            <p class="mt-2 text-sm text-purple-500">
+              💰 Total inventory value
+            </p>
+
+          </div>
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-3xl shadow-lg">
+            💵
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- WELCOME -->
+    <div class="relative mb-10 overflow-hidden rounded-[32px] bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-700 p-10 text-white shadow-2xl">
+
+      <div class="relative z-10">
+
+        <h2 class="text-5xl font-black">
+          Welcome back, Thresha!
+        </h2>
+
+        <p class="mt-4 text-lg text-indigo-100">
+          Here's what's happening with your inventory today.
+        </p>
+
+      </div>
+
+      <!-- DECOR -->
+      <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
+
+      <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-white/10 blur-2xl"></div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="mb-10 rounded-[32px] bg-white p-8 shadow-xl dark:bg-slate-900">
+
+      <h2 class="mb-8 text-3xl font-black text-slate-900 dark:text-white">
+        Quick Actions
+      </h2>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+
+        <!-- VIEW -->
+        <button
+          routerLink="/products"
+          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+        >
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500 text-3xl text-white shadow-lg">
+            📋
+          </div>
+
+          <div class="text-left">
+
+            <h3 class="text-xl font-black">
+              View Products
+            </h3>
+
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Browse inventory
+            </p>
+
+          </div>
+
+        </button>
+
+        <!-- ADD -->
+        <button
+          routerLink="/products"
+          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+        >
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500 text-3xl text-white shadow-lg">
+            ➕
+          </div>
+
+          <div class="text-left">
+
+            <h3 class="text-xl font-black">
+              Add Product
+            </h3>
+
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Create new item
+            </p>
+
+          </div>
+
+        </button>
+
+        <!-- LOW -->
+        <button
+          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+        >
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500 text-3xl text-white shadow-lg">
+            ⚠️
+          </div>
+
+          <div class="text-left">
+
+            <h3 class="text-xl font-black">
+              Low Stock
+            </h3>
+
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              View alerts ({{ lowStockCount }})
+            </p>
+
+          </div>
+
+        </button>
+
+        <!-- REFRESH -->
+        <button
+          (click)="loadProducts()"
+          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+        >
+
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500 text-3xl text-white shadow-lg">
+            🔄
+          </div>
+
+          <div class="text-left">
+
+            <h3 class="text-xl font-black">
+              Refresh
+            </h3>
+
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Update dashboard
+            </p>
+
+          </div>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- RECENT PRODUCTS -->
+    <div class="rounded-[32px] bg-white p-8 shadow-xl dark:bg-slate-900">
+
+      <div class="mb-8 flex items-center justify-between">
+
+        <h2 class="text-3xl font-black text-slate-900 dark:text-white">
+          Recent Products
+        </h2>
+
+        <button
+          routerLink="/products"
+          class="font-bold text-indigo-500 transition hover:text-indigo-700"
+        >
+          View All
+        </button>
+
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="space-y-5">
+
+        <div
+          *ngFor="let product of products.slice(0, 5)"
+          class="flex items-center justify-between rounded-3xl border border-slate-200 p-5 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+        >
+
+          <!-- LEFT -->
+          <div class="flex items-center gap-5">
+
+            <img
+              [src]="product.image || 'assets/no-image.png'"
+              class="h-20 w-20 rounded-2xl border border-slate-200 object-cover shadow-md dark:border-slate-700"
+            />
+
+            <div>
+
+              <h3 class="text-xl font-black text-slate-900 dark:text-white">
+                {{ product.name }}
+              </h3>
+
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {{ product.category }}
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- RIGHT -->
+          <div class="text-right">
+
+            <p class="text-2xl font-black text-slate-900 dark:text-white">
+              ₱{{ product.price }}
+            </p>
+
+            <span
+              class="mt-2 inline-flex rounded-full px-4 py-2 text-sm font-bold"
+              [ngClass]="{
+                'bg-green-100 text-green-700': product.quantity > 10,
+                'bg-orange-100 text-orange-700': product.quantity <= 10 && product.quantity > 0,
+                'bg-red-100 text-red-700': product.quantity <= 0
+              }"
+            >
+
+              {{
+                product.quantity > 10
+                  ? 'In Stock'
+                  : product.quantity > 0
+                  ? 'Low Stock'
+                  : 'Out of Stock'
+              }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

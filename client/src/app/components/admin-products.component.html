@@ -1,0 +1,451 @@
+<div class="min-h-screen bg-slate-100 p-6 text-slate-800 transition-all duration-300 dark:bg-slate-900 dark:text-white">
+
+  <!-- HEADER -->
+  <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+    <!-- LEFT -->
+    <div>
+
+      <h1 class="text-3xl font-black tracking-tight">
+        Product Management
+      </h1>
+
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        Manage your inventory products efficiently
+      </p>
+
+    </div>
+
+    <!-- RIGHT ACTIONS -->
+    <div class="flex flex-wrap items-center gap-3">
+
+      <!-- SEARCH -->
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="searchProducts()"
+        placeholder="Search products..."
+        class="rounded-2xl border border-slate-200 bg-white px-5 py-3 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-800"
+      />
+
+      <!-- DARK MODE -->
+      <button
+        type="button"
+        (click)="toggleDarkMode()"
+        class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-xl text-white shadow-lg transition hover:scale-105 hover:bg-slate-700 active:scale-95 dark:bg-yellow-400 dark:text-slate-900"
+      >
+
+        <span *ngIf="!darkMode">🌙</span>
+
+        <span *ngIf="darkMode">☀️</span>
+
+      </button>
+
+      <!-- ADD PRODUCT -->
+      <button
+        type="button"
+        (click)="openCreateForm()"
+        class="rounded-2xl bg-indigo-600 px-6 py-3 font-bold text-white shadow-lg transition hover:scale-105 hover:bg-indigo-700 active:scale-95"
+      >
+
+        + Add Product
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- LOADING -->
+  <div
+    *ngIf="isLoading"
+    class="flex items-center justify-center py-20"
+  >
+
+    <div class="h-14 w-14 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+
+  </div>
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="!isLoading && filteredProducts.length === 0"
+    class="rounded-3xl bg-white p-16 text-center shadow-xl dark:bg-slate-800"
+  >
+
+    <div class="mb-4 text-7xl">
+      📦
+    </div>
+
+    <h2 class="text-2xl font-black">
+      No Products Found
+    </h2>
+
+    <p class="mt-2 text-slate-500 dark:text-slate-400">
+      Start by adding your first product.
+    </p>
+
+  </div>
+
+  <!-- PRODUCTS TABLE -->
+  <div
+    *ngIf="!isLoading && filteredProducts.length > 0"
+    class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl transition dark:border-slate-700 dark:bg-slate-800"
+  >
+
+    <div class="overflow-x-auto">
+
+      <table class="min-w-full">
+
+        <thead class="bg-slate-100 dark:bg-slate-700">
+
+          <tr>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Image
+            </th>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Product
+            </th>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Category
+            </th>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Price
+            </th>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Quantity
+            </th>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Status
+            </th>
+
+            <th class="px-6 py-5 text-left text-sm font-black uppercase tracking-wider">
+              Actions
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let product of filteredProducts"
+            class="border-t border-slate-100 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-700/40"
+          >
+
+            <!-- IMAGE -->
+            <td class="px-6 py-5">
+
+              <img
+  [src]="product.image || 'assets/no-image.png'"
+                (error)="product.image='assets/no-image.png'"
+                alt="Product"
+                class="h-20 w-20 rounded-2xl border border-slate-200 object-cover shadow-md dark:border-slate-700"
+              />
+
+            </td>
+
+            <!-- PRODUCT -->
+            <td class="px-6 py-5">
+
+              <div class="font-black text-slate-800 dark:text-white">
+                {{ product.name }}
+              </div>
+
+              <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {{ product.description || 'No description' }}
+              </div>
+
+            </td>
+
+            <!-- CATEGORY -->
+            <td class="px-6 py-5">
+
+              <span class="rounded-full bg-indigo-100 px-4 py-2 text-sm font-bold text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                {{ product.category }}
+              </span>
+
+            </td>
+
+            <!-- PRICE -->
+            <td class="px-6 py-5 font-black text-slate-800 dark:text-white">
+
+              ₱{{ product.price }}
+
+            </td>
+
+            <!-- QUANTITY -->
+            <td class="px-6 py-5">
+
+              <span
+                class="font-black"
+                [ngClass]="{
+                  'text-green-600 dark:text-green-400': product.quantity > 10,
+                  'text-orange-500 dark:text-orange-400': product.quantity <= 10 && product.quantity > 0,
+                  'text-red-500 dark:text-red-400': product.quantity <= 0
+                }"
+              >
+
+                {{ product.quantity }}
+
+              </span>
+
+            </td>
+
+            <!-- STATUS -->
+            <td class="px-6 py-5">
+
+              <span
+                class="rounded-full px-4 py-2 text-sm font-black"
+                [ngClass]="{
+                  'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300': product.quantity > 10,
+                  'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300': product.quantity <= 10 && product.quantity > 0,
+                  'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300': product.quantity <= 0
+                }"
+              >
+
+                {{
+                  product.quantity > 10
+                    ? 'In Stock'
+                    : product.quantity > 0
+                    ? 'Low Stock'
+                    : 'Out of Stock'
+                }}
+
+              </span>
+
+            </td>
+
+            <!-- ACTIONS -->
+            <td class="px-6 py-5">
+
+              <div class="flex flex-wrap gap-3">
+
+                <button
+                  type="button"
+                  (click)="editProduct(product)"
+                  class="rounded-xl bg-orange-500 px-5 py-2 font-bold text-white shadow-md transition hover:scale-105 hover:bg-orange-600 active:scale-95"
+                >
+
+                  Edit
+
+                </button>
+
+                <button
+                  type="button"
+                  (click)="deleteProduct(product.id)"
+                  class="rounded-xl bg-red-500 px-5 py-2 font-bold text-white shadow-md transition hover:scale-105 hover:bg-red-600 active:scale-95"
+                >
+
+                  Delete
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- PRODUCT FORM MODAL -->
+  <div
+    *ngIf="showForm"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+  >
+
+    <div class="relative w-full max-w-2xl rounded-3xl bg-white p-8 shadow-2xl dark:bg-slate-800">
+
+      <!-- CLOSE -->
+      <button
+        type="button"
+        (click)="cancelForm()"
+        class="absolute right-5 top-5 text-3xl text-slate-400 transition hover:text-red-500"
+      >
+
+        &times;
+
+      </button>
+
+      <!-- TITLE -->
+      <h2 class="mb-8 text-3xl font-black text-slate-800 dark:text-white">
+
+        {{ isEditing ? 'Edit Product' : 'Add Product' }}
+
+      </h2>
+
+      <!-- FORM -->
+      <form
+        (ngSubmit)="saveProduct()"
+        class="space-y-6"
+      >
+
+        <!-- NAME -->
+        <div>
+
+          <label class="mb-2 block text-sm font-black">
+            Product Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="formData.name"
+            name="name"
+            required
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-700"
+          />
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div>
+
+          <label class="mb-2 block text-sm font-black">
+            Description
+          </label>
+
+          <textarea
+            [(ngModel)]="formData.description"
+            name="description"
+            rows="4"
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-700"
+          ></textarea>
+
+        </div>
+
+        <!-- GRID -->
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+
+          <div>
+
+            <label class="mb-2 block text-sm font-black">
+              Category
+            </label>
+
+            <select
+              [(ngModel)]="formData.category"
+              name="category"
+              class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-700"
+            >
+
+              <option
+                *ngFor="let cat of categories"
+                [value]="cat"
+              >
+
+                {{ cat }}
+
+              </option>
+
+            </select>
+
+          </div>
+
+          <div>
+
+            <label class="mb-2 block text-sm font-black">
+              Price
+            </label>
+
+            <input
+              type="number"
+              [(ngModel)]="formData.price"
+              name="price"
+              min="0"
+              class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-700"
+            />
+
+          </div>
+
+          <div>
+
+            <label class="mb-2 block text-sm font-black">
+              Quantity
+            </label>
+
+            <input
+              type="number"
+              [(ngModel)]="formData.quantity"
+              name="quantity"
+              min="0"
+              class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-700"
+            />
+
+          </div>
+
+        </div>
+
+        <!-- IMAGE -->
+        <div>
+
+          <label class="mb-2 block text-sm font-black">
+            Product Image
+          </label>
+
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 outline-none dark:border-slate-700 dark:bg-slate-700"
+          />
+
+        </div>
+
+        <!-- IMAGE PREVIEW -->
+        <div *ngIf="imagePreview">
+
+          <img
+            [src]="imagePreview"
+            class="h-40 w-40 rounded-2xl border border-slate-200 object-cover shadow-lg dark:border-slate-700"
+          />
+
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="flex flex-col gap-4 pt-4 md:flex-row">
+
+          <button
+            type="submit"
+            class="flex-1 rounded-2xl bg-indigo-600 py-4 text-lg font-black text-white shadow-lg transition hover:scale-[1.02] hover:bg-indigo-700 active:scale-95"
+          >
+
+            {{
+              isEditing
+                ? 'Save Changes'
+                : 'Add Product'
+            }}
+
+          </button>
+
+          <button
+            type="button"
+            (click)="cancelForm()"
+            class="flex-1 rounded-2xl bg-slate-200 py-4 text-lg font-black text-slate-700 shadow-lg transition hover:bg-slate-300 active:scale-95 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+          >
+
+            Cancel
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

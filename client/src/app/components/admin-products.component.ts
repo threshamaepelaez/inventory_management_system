@@ -1,249 +1,119 @@
 import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
-import { ProductFormComponent } from './product-form.component';
+
+import { RouterModule } from '@angular/router';
+
 import { ProductService } from '../services/product.service';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-admin-products',
+
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductFormComponent],
 
-  styles: [`
-    button {
-      pointer-events: auto !important;
-      cursor: pointer !important;
-      position: relative;
-      z-index: 10;
-    }
-  `],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule
+  ],
 
-  template: `
-  <div class="min-h-screen bg-gradient-to-br from-slate-100 via-white to-indigo-100 p-6">
+  templateUrl: './admin-products.component.html',
 
-    <div class="mx-auto max-w-7xl space-y-8">
-
-      <!-- HEADER -->
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-
-        <div>
-          <h1 class="text-4xl font-black tracking-tight text-slate-800">
-            Inventory Management
-          </h1>
-
-          <p class="mt-2 text-slate-500">
-            Manage products beautifully.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          (click)="newProduct()"
-          class="rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-xl transition hover:scale-105"
-        >
-          + Add Product
-        </button>
-
-      </div>
-
-      <!-- FORM -->
-      <section
-        *ngIf="showForm"
-        class="rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl"
-      >
-
-        <app-product-form
-          [product]="activeProduct"
-          (saved)="onSave($event)"
-          (cancel)="cancelEdit()"
-        >
-        </app-product-form>
-
-      </section>
-
-      <!-- TABLE -->
-      <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
-
-        <div class="border-b bg-slate-50 px-6 py-5">
-          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <h2 class="text-xl font-bold text-slate-800">
-              Product Inventory
-            </h2>
-
-            <div class="flex items-center gap-4">
-              <input
-                type="text"
-                [(ngModel)]="searchTerm"
-                placeholder="Search products..."
-                class="rounded-xl border border-slate-300 px-4 py-2 focus:border-indigo-500 focus:outline-none"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-
-          <table class="min-w-full">
-
-            <thead class="bg-slate-100 text-slate-700">
-
-              <tr>
-                <th class="px-6 py-4 text-left font-semibold">Product</th>
-                <th class="px-6 py-4 text-left font-semibold">Quantity</th>
-                <th class="px-6 py-4 text-left font-semibold">Price</th>
-                <th class="px-6 py-4 text-left font-semibold">Image</th>
-                <th class="px-6 py-4 text-left font-semibold">Actions</th>
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              <tr
-                *ngFor="let item of filteredProducts"
-                class="border-b transition hover:bg-indigo-50"
-              >
-
-                <!-- PRODUCT -->
-                <td class="px-6 py-5">
-
-                  <div class="flex items-center gap-4">
-
-                    <div
-                      class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 font-bold text-white"
-                    >
-                      {{ item.name.charAt(0).toUpperCase() }}
-                    </div>
-
-                    <div>
-
-                      <p class="font-bold text-slate-800">
-                        {{ item.name }}
-                      </p>
-
-                      <p class="text-sm text-slate-400">
-                        Inventory Item
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                </td>
-
-                <!-- QUANTITY -->
-                <td class="px-6 py-5">
-
-                  <span
-                    class="rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-700"
-                  >
-                    {{ item.quantity }}
-                  </span>
-
-                </td>
-
-                <!-- PRICE -->
-                <td class="px-6 py-5 font-semibold text-slate-700">
-                  ₱ {{ item.price }}
-                </td>
-
-                <!-- IMAGE -->
-                <td class="px-6 py-5">
-
-                  <img
-                    *ngIf="item.image"
-                    [src]="item.image"
-                    class="h-16 w-16 rounded-2xl object-cover"
-                  />
-
-                  <span
-                    *ngIf="!item.image"
-                    class="text-slate-400"
-                  >
-                    No Image
-                  </span>
-
-                </td>
-
-                <!-- ACTIONS -->
-                <td class="px-6 py-5">
-
-                  <div class="flex gap-3">
-
-                    <button
-                      type="button"
-                      (click)="editProduct(item)"
-                      class="rounded-xl bg-slate-900 px-5 py-2 font-medium text-white"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      type="button"
-                      (click)="removeProduct(item.id)"
-                      class="rounded-xl bg-rose-500 px-5 py-2 font-medium text-white"
-                    >
-                      Delete
-                    </button>
-
-                  </div>
-
-                </td>
-
-              </tr>
-
-              <!-- EMPTY -->
-              <tr *ngIf="filteredProducts.length === 0">
-
-                <td
-                  colspan="5"
-                  class="px-6 py-16 text-center text-slate-400"
-                >
-                  {{ searchTerm ? 'No products match your search.' : 'No products found.' }}
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-  `
+  styleUrls: ['./admin-products.component.css']
 })
-export class AdminProductsComponent implements OnInit {
+
+export class AdminProductsComponent
+implements OnInit {
 
   products: any[] = [];
-  activeProduct: any = null;
-  showForm = false;
+
+  filteredProducts: any[] = [];
+
   searchTerm = '';
+
+  darkMode = false;
+
+  showForm = false;
+
+  isEditing = false;
+
+  isLoading = false;
+
+  selectedFile: File | null = null;
+
+  imagePreview: string | ArrayBuffer | null = null;
+
+  formData: any = {
+
+    id: '',
+
+    name: '',
+
+    description: '',
+
+    category: 'Gadgets',
+
+    price: 0,
+
+    quantity: 0
+
+  };
+
+  categories = [
+
+    'Gadgets',
+
+    'Fashion',
+
+    'Electricity',
+
+    'Home',
+
+    'Sports',
+
+    'Other'
+
+  ];
 
   constructor(
     private productService: ProductService
   ) {}
 
-  get filteredProducts(): any[] {
-    if (!this.searchTerm) {
-      return this.products;
+  ngOnInit(): void {
+
+    this.loadProducts();
+
+  }
+
+  /* =========================================
+     DARK MODE
+  ========================================= */
+
+  toggleDarkMode(): void {
+
+    this.darkMode = !this.darkMode;
+
+    if (this.darkMode) {
+
+      document.documentElement.classList.add('dark');
+
+    } else {
+
+      document.documentElement.classList.remove('dark');
+
     }
 
-    return this.products.filter(product =>
-      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
   }
 
-  ngOnInit(): void {
-    this.loadProducts();
-  }
+  /* =========================================
+     LOAD PRODUCTS
+  ========================================= */
 
   loadProducts(): void {
+
+    this.isLoading = true;
 
     this.productService
       .getProducts()
@@ -251,130 +121,336 @@ export class AdminProductsComponent implements OnInit {
 
         next: (response: any) => {
 
-          const rawProducts = Array.isArray(response)
-            ? response
-            : response.items ||
-              response.products ||
-              [];
+          this.products =
+            response.items || [];
 
-          this.products = rawProducts.map((item: any) => {
-            const normalized = this.normalizeProduct(item);
-            return {
-              ...normalized,
-              image: this.buildImageUrl(normalized.image)
-            };
-          });
+          this.products =
+  this.products.map(
+    (product: any) => ({
+
+      ...product,
+
+      status:
+        product.quantity <= 5
+          ? 'Low Stock'
+          : 'In Stock'
+
+    })
+  );
+
+          this.filteredProducts = [
+            ...this.products
+          ];
+
+          this.isLoading = false;
+
         },
 
-        error: (error: any) => {
-          console.error('LOAD ERROR:', error);
+        error: (err) => {
+
+          console.log(err);
+
+          this.isLoading = false;
+
         }
+
       });
+
   }
 
-  private buildImageUrl(image: string | null): string | null {
-    if (!image) {
-      return null;
-    }
+  /* =========================================
+     SEARCH PRODUCTS
+  ========================================= */
 
-    if (image.startsWith('http')) {
-      return image;
-    }
+  searchProducts(): void {
 
-    return `${environment.apiUrl.replace(/\/api$/, '')}/uploads/${image}`;
+    const search =
+      this.searchTerm.toLowerCase();
+
+    this.filteredProducts =
+      this.products.filter(
+        (product: any) =>
+
+          product.name
+            ?.toLowerCase()
+            .includes(search)
+
+          ||
+
+          product.category
+            ?.toLowerCase()
+            .includes(search)
+
+      );
+
   }
 
-  private normalizeProduct(item: any): any {
-    const findKey = (keys: string[]) => keys.find(key => item[key] !== undefined && item[key] !== null);
+  /* =========================================
+     OPEN CREATE FORM
+  ========================================= */
 
-    const nameKey = findKey(['name', 'product_name', 'title', 'Name', 'productName', 'productTitle']);
-    const quantityKey = findKey(['quantity', 'stock', 'qty', 'Quantity', 'stock_quantity', 'qty_count']);
-    const priceKey = findKey(['price', 'product_price', 'amount', 'Price', 'cost']);
-    const imageKey = findKey(['image', 'image_url', 'Image', 'imageUrl']);
-    const idKey = findKey(['id', 'product_id', 'ID']);
+  openCreateForm(): void {
 
-    return {
-      id: item[idKey ?? 'id'] ?? null,
-      name: nameKey ? item[nameKey] : 'Product',
-      quantity: quantityKey ? item[quantityKey] : 0,
-      price: priceKey ? item[priceKey] : 0,
-      image: imageKey ? item[imageKey] : null
-    };
-  }
-
-  newProduct(): void {
-
-    this.activeProduct = null;
     this.showForm = true;
+
+    this.isEditing = false;
+
+    this.selectedFile = null;
+
+    this.imagePreview = null;
+
+    this.formData = {
+
+      id: '',
+
+      name: '',
+
+      description: '',
+
+      category: 'Gadgets',
+
+      price: 0,
+
+      quantity: 0
+
+    };
+
   }
+
+  /* =========================================
+     EDIT PRODUCT
+  ========================================= */
 
   editProduct(product: any): void {
 
-    this.activeProduct = product;
     this.showForm = true;
+
+    this.isEditing = true;
+
+    this.selectedFile = null;
+
+    this.imagePreview =
+      product.image;
+
+    this.formData = {
+
+      id: product.id,
+
+      name: product.name,
+
+      description: product.description,
+
+      category: product.category,
+
+      price: product.price,
+
+      quantity: product.quantity
+
+    };
+
   }
 
-  cancelEdit(): void {
+  /* =========================================
+     CANCEL FORM
+  ========================================= */
+
+  cancelForm(): void {
 
     this.showForm = false;
-    this.activeProduct = null;
+
+    this.selectedFile = null;
+
+    this.imagePreview = null;
+
   }
 
-  onSave(event: { product: any; file?: File }): void {
+  /* =========================================
+     FILE SELECT
+  ========================================= */
 
-    if (this.activeProduct) {
+  onFileSelected(event: any): void {
+
+    if (
+      event.target.files &&
+      event.target.files.length > 0
+    ) {
+
+      this.selectedFile =
+        event.target.files[0];
+
+      const reader =
+        new FileReader();
+
+      reader.onload = () => {
+
+        this.imagePreview =
+          reader.result;
+
+      };
+
+     if (this.selectedFile !== null) {
+
+  reader.readAsDataURL(
+    this.selectedFile
+  );
+
+}
+
+  }
+
+  /* =========================================
+     SAVE PRODUCT
+  ========================================= */
+  }
+  saveProduct(): void {
+
+    if (
+      !this.formData.name ||
+      !this.formData.category
+    ) {
+
+      alert(
+        'Please fill required fields'
+      );
+
+      return;
+
+    }
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      'name',
+      this.formData.name
+    );
+
+    formData.append(
+      'description',
+      this.formData.description || ''
+    );
+
+    formData.append(
+      'category',
+      this.formData.category
+    );
+
+    formData.append(
+      'price',
+      this.formData.price.toString()
+    );
+
+    formData.append(
+  'quantity',
+  this.formData.quantity.toString()
+);
+
+if (this.selectedFile !== null) {
+
+  formData.append(
+    'image',
+    this.selectedFile as Blob
+  );
+
+}
+
+    /* =========================
+       UPDATE
+    ========================= */
+
+    if (this.isEditing) {
 
       this.productService
         .updateProduct(
-          this.activeProduct.id,
-          event.product,
-          event.file
+          this.formData.id,
+          formData
         )
         .subscribe({
 
-          next: (response: any) => {
+          next: () => {
+
+            this.loadProducts();
 
             this.showForm = false;
-            this.activeProduct = null;
 
-            this.loadProducts();
+            this.selectedFile = null;
+
+            this.imagePreview = null;
+
+            alert(
+              'Product updated successfully'
+            );
+
           },
 
-          error: (error: any) => {
-            console.error('UPDATE ERROR:', error);
+          error: (err) => {
+
+            console.log(err);
+
+            alert(
+              'Failed to update product'
+            );
+
           }
+
         });
 
-    } else {
+    }
+
+    /* =========================
+       CREATE
+    ========================= */
+
+    else {
 
       this.productService
-        .saveProduct(
-          event.product,
-          event.file
-        )
+        .createProduct(formData)
         .subscribe({
 
-          next: (response: any) => {
+          next: () => {
 
             this.loadProducts();
+
+            this.showForm = false;
+
+            this.selectedFile = null;
+
+            this.imagePreview = null;
+
+            alert(
+              'Product created successfully'
+            );
+
           },
 
-          error: (error: any) => {
-            console.error('CREATE ERROR:', error);
+          error: (err) => {
+
+            console.log(err);
+
+            alert(
+              'Failed to create product'
+            );
+
           }
+
         });
+
     }
+
   }
 
-  removeProduct(id: number): void {
+  /* =========================================
+     DELETE PRODUCT
+  ========================================= */
 
-    const confirmDelete = confirm(
-      'Delete this product?'
-    );
+  deleteProduct(id: number): void {
 
-    if (!confirmDelete) {
-      return;
-    }
+    const confirmDelete =
+      confirm(
+        'Delete this product?'
+      );
+
+    if (!confirmDelete) return;
 
     this.productService
       .deleteProduct(id)
@@ -383,11 +459,25 @@ export class AdminProductsComponent implements OnInit {
         next: () => {
 
           this.loadProducts();
+
+          alert(
+            'Product deleted successfully'
+          );
+
         },
 
-        error: (error: any) => {
-          console.error('DELETE ERROR:', error);
+        error: (err) => {
+
+          console.log(err);
+
+          alert(
+            'Failed to delete product'
+          );
+
         }
+
       });
+
   }
+
 }

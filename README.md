@@ -1,454 +1,54 @@
 # Inventory Management System
 
-A full-stack inventory management solution built with modern technologies. This system provides comprehensive product management, user authentication, and real-time inventory tracking.
-
-## 🌟 Features
-
-### Core Functionality
-- **User Authentication**: Secure registration and login with JWT token-based authentication
-- **Product Management**: Create, read, update, and delete products with full CRUD operations
-- **Image Upload**: Upload and manage product images with automatic URL generation
-- **Role-Based Access**: Admin and user roles for controlled access
-- **Real-time Updates**: Instant product quantity and status updates
-- **Responsive Design**: Mobile-friendly interface with Tailwind CSS
-- **API Documentation**: Comprehensive Swagger API documentation
-
-### Security
-- Password hashing with bcrypt
-- JWT token authentication
-- CORS configuration
-- Environment variable protection
-- Role-based authorization middleware
-
-### Database
-- MySQL with connection pooling
-- Automatic table creation with init.sql
-- Optimized queries for performance
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **Angular 17+** - Modern web framework
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **RxJS** - Reactive programming
-- **Angular Router** - Client-side routing
-
-### Backend
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web server framework
-- **TypeScript** - Type-safe backend code
-- **MySQL2/Promise** - Database driver
-- **JWT** - Token-based authentication
-- **bcryptjs** - Password hashing
-- **Multer** - File upload handling
-- **Swagger UI** - API documentation
-
-### DevOps & Deployment
-- **Railway** - Cloud database hosting
-- **Render** - Backend deployment
-- **Vercel** - Frontend deployment
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-- Node.js (v16 or higher)
-- npm or yarn
-- MySQL (for local development) or Railway database credentials
-- Git
-
-## 🚀 Installation & Setup
-
-### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd inventory_management_system2
-```
-
-### 2. Backend Setup
-
-#### Install Dependencies
-```bash
-cd server
-npm install
-```
-
-#### Environment Configuration
-Create a `.env` file in the `server` directory:
-```env
-PORT=5000
-DB_HOST=your_db_host
-DB_PORT=3306
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DB_NAME=inventory_db
-
-JWT_SECRET=your_very_long_and_secure_random_string_here_at_least_32_chars
-JWT_EXPIRES_IN=1d
-```
-
-#### Initialize Database
-```bash
-# Using Railway or your MySQL instance
-mysql -h your_host -u your_user -p < init.sql
-```
-
-#### Start Backend Server
-```bash
-npm run dev
-```
-
-The server will run at `http://localhost:5000`
-
-### 3. Frontend Setup
-
-#### Install Dependencies
-```bash
-cd ../client
-npm install
-```
-
-#### Environment Configuration
-Update `src/environments/environment.ts`:
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:5000/api'
-};
-```
-
-For production, update `src/environments/environment.prod.ts`:
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'https://your-backend-url.com/api'
-};
-```
-
-#### Start Frontend Development Server
-```bash
-ng serve
-```
-
-Navigate to `http://localhost:4200`
-
-## 📚 API Documentation
-
-### Swagger API Docs
-- **Local**: `http://localhost:5000/api-docs`
-- **Production**: Available at deployed backend URL
-
-### Main Endpoints
-
-#### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-
-#### Products
-- `GET /api/products` - Get all products
-- `GET /api/products/:id` - Get product by ID
-- `POST /api/products` - Create new product (requires auth)
-- `PUT /api/products/:id` - Update product (requires auth)
-- `DELETE /api/products/:id` - Delete product (requires auth)
-
-## 🌐 Deployment Links
-
-### Frontend
-- **Production**: https://inventory-management-system-gilt-eight.vercel.app
-- **Repository**: Deployed via Vercel CI/CD
-
-### Backend
-- **Production**: https://inventory-management-system1-ptf7.onrender.com
-- **Repository**: Deployed via Render
-
-### Database
-- **Provider**: Railway
-- **Type**: MySQL 8.0
-- **Status**: Connected and operational
-
-## 🖼️ Screenshots
-
-### Dashboard
-- Main inventory overview page
-- Product statistics and summary
-
-### Products Page
-- Product listing table
-- Search and filter capabilities
-- Edit and delete actions
-
-### Product Form
-- Add new products
-- Update existing products
-- Image upload functionality
-
-### Authentication
-- User registration page
-- Secure login interface
-
-## 🔄 Workflow
-
-1. **User Registration/Login**
-   - Users register with email and password
-   - JWT token is issued upon successful authentication
-   - Token is stored in localStorage
-
-2. **Product Management**
-   - Authenticated users can create products
-   - Image upload is handled via FormData
-   - Products can be edited or deleted
-   - Product images are stored on the server
-
-3. **Database Operations**
-   - All data is persisted in Railway MySQL database
-   - Connection pooling ensures optimal performance
-   - Automatic reconnection on connection loss
-
-## 🔒 Security Considerations
-
-### Best Practices Implemented
-- ✅ Passwords hashed with bcrypt (10 salt rounds)
-- ✅ JWT tokens for stateless authentication
-- ✅ CORS configured for allowed origins
-- ✅ Environment variables for sensitive data
-- ✅ Role-based access control
-- ✅ Input validation on both frontend and backend
-- ✅ SQL injection prevention via parameterized queries
-- ✅ File upload size limits (10MB)
-
-### Production Recommendations
-- Use HTTPS in production
-- Implement rate limiting on auth endpoints
-- Set strong JWT_SECRET (minimum 32 characters)
-- Regularly rotate database credentials
-- Monitor API logs for suspicious activity
-- Keep dependencies updated
-
-## 📦 Project Structure
-
-```
-inventory_management_system2/
-├── client/                          # Angular frontend
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/         # Angular components
-│   │   │   ├── services/           # HTTP and business logic
-│   │   │   ├── models/             # TypeScript interfaces
-│   │   │   ├── guards/             # Route guards
-│   │   │   └── app.routes.ts       # Routing configuration
-│   │   └── environments/           # Environment configs
-│   ├── angular.json                # Angular CLI config
-│   ├── tailwind.config.js          # Tailwind configuration
-│   └── package.json
-│
-├── server/                          # Express backend
-│   ├── src/
-│   │   ├── controllers/            # Request handlers
-│   │   ├── routes/                 # API routes
-│   │   ├── middleware/             # Express middleware
-│   │   ├── models/                 # Data interfaces
-│   │   ├── config/                 # Database config
-│   │   ├── utils/                  # Utilities
-│   │   └── server.ts               # Entry point
-│   ├── init.sql                    # Database schema
-│   ├── tsconfig.json               # TypeScript config
-│   └── package.json
-│
-├── .gitignore                       # Git ignore rules
-└── README.md                        # This file
-```
-
-## 🛠️ Development
-
-### Available Scripts
-
-#### Backend
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm start            # Start production server
-```
-
-#### Frontend
-```bash
-ng serve             # Start dev server
-ng build             # Build for production
-ng build --prod      # Build optimized production bundle
-```
-
-## 🧪 Testing Workflow
-
-1. **Registration**
-   - Navigate to `/register`
-   - Fill in name, email, and password
-   - Submit form
-
-2. **Login**
-   - Navigate to `/login`
-   - Enter email and password
-   - Token is stored and user is authenticated
-
-3. **Create Product**
-   - Click "New Product" button
-   - Fill in product details
-   - Upload product image
-   - Save product
-
-4. **Edit Product**
-   - Click edit icon on product row
-   - Update fields
-   - Save changes
-
-5. **Delete Product**
-   - Click delete icon on product row
-   - Confirm deletion
-
-## 📝 Environment Variables
-
-### Backend (.env)
-```env
-PORT                 # Server port (default: 5000)
-DB_HOST             # Database host
-DB_PORT             # Database port
-DB_USER             # Database username
-DB_PASSWORD         # Database password
-DB_NAME             # Database name
-JWT_SECRET          # Secret key for JWT signing
-JWT_EXPIRES_IN      # Token expiration time
-```
-
-### Frontend (environment.ts)
-```typescript
-production          # Build environment flag
-apiUrl             # Backend API URL
-```
-
-## 🚨 Error Handling
-
-- Backend returns appropriate HTTP status codes
-- Frontend displays user-friendly error messages
-- Console logs cleaned of debug output
-- Production errors logged via console.error
-
-## 📞 Support & Contributing
-
-For issues and feature requests, please create an issue in the repository.
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👨‍💻 Developer
-
-Built with ❤️ for inventory management efficiency.
-
-### Technologies Used
-- Frontend: Angular + Tailwind CSS
-- Backend: Node.js + Express
-- Database: MySQL
-- Deployment: Vercel + Render + Railway
+A full-stack inventory management system built with Angular, Node.js, Express, MySQL, Tailwind CSS, JWT Authentication, and TypeScript.
 
 ---
 
-**Last Updated**: May 2026
-**Version**: 1.0.0
-**Status**: Production Ready ✅ management system built with Angular, Tailwind CSS, Node.js, Express, TypeScript, MySQL, JWT authentication, role-based authorization, file uploads, and Swagger documentation.
+# Features
 
-## Project Structure
+- User Authentication
+- JWT Login System
+- Role-Based Authorization
+- Product CRUD
+- Image Upload
+- Dashboard Analytics
+- Search Products
+- Responsive Design
+- Swagger API Documentation
 
-- `client/` — Angular frontend ready for Vercel
-- `server/` — Express backend ready for Render
-- `README.md` — Project overview and setup instructions
-- `screenshots/` — Placeholder for UI documentation screenshots
+---
 
-## Features
+# Tech Stack
 
-- Login and registration
-- JWT-based authentication
-- Role-based authorization (`admin` and `user`)
-- Product CRUD with image uploads
-- Search, pagination, filtering
-- Responsive Tailwind dashboard
-- Swagger API documentation at `/api-docs`
-- MySQL connection pooling
+## Frontend
+- Angular
+- TypeScript
+- Tailwind CSS
 
-## Getting Started
+## Backend
+- Node.js
+- Express.js
+- TypeScript
+- MySQL
 
-### Backend
-
-1. Open a terminal and navigate to `server`
-2. Copy `.env.example` to `.env`
-3. Install backend dependencies:
-   ```bash
-   npm install
-   ```
-4. Create the MySQL database and tables using `server/init.sql` or run the following SQL commands in your MySQL client:
-   ```sql
-   CREATE DATABASE IF NOT EXISTS inventory_db;
-   USE inventory_db;
-   -- paste the contents of server/init.sql
-   ```
-5. Start the backend server:
-   ```bash
-   npm run dev
-   ```
-
-### Frontend
-
-1. Open a new terminal and navigate to `client`
-2. Install frontend dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run start
-   ```
-4. Open `http://localhost:4200` in your browser.
-
-## Environment Variables
-
-Create a `.env` file in `server/` with:
-
-```env
-PORT=4000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=secret
-DB_NAME=inventory_db
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRES_IN=1d
-```
-
-## API Endpoints
-
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/products`
-- `GET /api/products/:id`
-- `POST /api/products`
-- `PUT /api/products/:id`
-- `DELETE /api/products/:id`
-- `GET /api-docs`
-
-## Admin User
-
-Register a new account using the frontend or API, then update the user role in MySQL:
-
-```sql
-UPDATE users SET role = 'admin' WHERE email = 'admin@example.com';
-```
-
-This enables access to product management features while keeping role-based authorization enforced on the backend.
+## Authentication
+- JWT
+- bcryptjs
 
 ## Deployment
+- Vercel
+- Render
+- Railway
 
-- Frontend: build with `npm run build`; deploy `client` to Vercel
-- Backend: deploy `server` to Render and connect to Railway MySQL
+---
 
-## Notes
+# Project Structure
 
-Use the `uploads/` folder for product images. The backend serves images from `/uploads`.
-#   i n v e n t o r y _ m a n a g e m e n t _ s y s t e m 
- 
- 
+```bash
+inventory_management_system/
+│
+├── client/
+├── server/
+├── README.md
+├── PRESENTATION.md
+└── DEPLOYMENT_CHECKLIST.md

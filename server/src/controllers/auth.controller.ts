@@ -110,29 +110,25 @@ if (!validPassword) {
   });
 }
 
-// Generate JWT token
 const token = jwt.sign(
   {
     id: user.id,
-    email: user.email,
-    role: user.role,
-    name: user.name,
+    role: user.role
   },
-  jwtSecret,
+  process.env.JWT_SECRET!,
   {
-    expiresIn: jwtExpiresIn,
-  } as jwt.SignOptions
+    expiresIn: '7d'
+  }
 );
 
-return res.status(200).json({
-  message: 'Login successful',
+res.status(200).json({
   token,
   user: {
     id: user.id,
     name: user.name,
     email: user.email,
-    role: user.role,
-  },
+    role: user.role
+  }
 });
 
 } catch (error) {

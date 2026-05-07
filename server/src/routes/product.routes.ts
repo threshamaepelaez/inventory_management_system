@@ -1,97 +1,29 @@
 import express from 'express';
 
-import multer from 'multer';
-
-import path from 'path';
-
-import fs from 'fs';
-
 import {
   getProducts,
-  getProductById,
   createProduct,
+  getProductById,
   updateProduct,
   deleteProduct
 } from '../controllers/product.controller';
 
-import {
-  verifyToken
-} from '../middleware/auth.middleware';
+import upload from '../middleware/upload';
 
 const router = express.Router();
 
 /* =========================
-   CREATE UPLOADS FOLDER
-========================= */
-
-const uploadDir = path.join(
-  __dirname,
-  '..',
-  'uploads'
-);
-
-fs.mkdirSync(uploadDir, {
-  recursive: true
-});
-
-/* =========================
-   MULTER STORAGE
-========================= */
-
-const storage = multer.diskStorage({
-
-  destination: (
-    _req,
-    _file,
-    cb
-  ) => {
-
-    cb(null, uploadDir);
-
-  },
-
-  filename: (
-    _req,
-    file,
-    cb
-  ) => {
-
-    const ext =
-      path.extname(
-        file.originalname
-      );
-
-    cb(
-      null,
-      `${Date.now()}${ext}`
-    );
-
-  }
-
-});
-
-/* =========================
-   MULTER CONFIG
-========================= */
-
-const upload = multer({
-
-  storage,
-
-  limits: {
-    fileSize: 10 * 1024 * 1024
-  }
-
-});
-
-/* =========================
-   PUBLIC ROUTES
+   GET ALL PRODUCTS
 ========================= */
 
 router.get(
   '/',
   getProducts
 );
+
+/* =========================
+   GET PRODUCT BY ID
+========================= */
 
 router.get(
   '/:id',
@@ -104,7 +36,6 @@ router.get(
 
 router.post(
   '/',
-  verifyToken,
   upload.single('image'),
   createProduct
 );
@@ -115,7 +46,6 @@ router.post(
 
 router.put(
   '/:id',
-  verifyToken,
   upload.single('image'),
   updateProduct
 );
@@ -126,8 +56,11 @@ router.put(
 
 router.delete(
   '/:id',
-  verifyToken,
   deleteProduct
 );
+
+/* =========================
+   EXPORT ROUTER
+========================= */
 
 export default router;

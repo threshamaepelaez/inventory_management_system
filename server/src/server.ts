@@ -11,20 +11,22 @@ import { requestLogger } from './middleware/logger.middleware';
 
 import swaggerUi from 'swagger-ui-express';
 import { swaggerDocument } from './utils/swagger';
+
 import pool from './config/db';
 
 dotenv.config();
 
 const app = express();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 /* =========================
-   CORS FIX
+   CORS
 ========================= */
 
 app.use(
   cors({
+
     origin: [
       'http://localhost:4200',
       'https://inventory-management-system-gilt-eight.vercel.app'
@@ -44,6 +46,7 @@ app.use(
     ],
 
     credentials: true
+
   })
 );
 
@@ -59,8 +62,8 @@ app.use(
 
 app.use(
   express.urlencoded({
-    limit: '50mb',
-    extended: true
+    extended: true,
+    limit: '50mb'
   })
 );
 
@@ -77,10 +80,9 @@ app.use(requestLogger);
 app.use(
   '/uploads',
   express.static(
-    path.join(__dirname, 'uploads')
+    path.join(process.cwd(), 'uploads')
   )
 );
-
 /* =========================
    ROUTES
 ========================= */
