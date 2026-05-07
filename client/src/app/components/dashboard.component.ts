@@ -43,10 +43,12 @@ implements OnInit {
   categoryCount = 0;
 
   /* =========================
-     DARK MODE
+     USER
   ========================= */
 
-  darkMode = false;
+  userRole = '';
+
+  userName = '';
 
   /* =========================
      LOADING
@@ -62,52 +64,24 @@ implements OnInit {
 
   ) {}
 
+  /* =========================
+     INIT
+  ========================= */
+
   ngOnInit(): void {
-
-    /* =========================
-       DARK MODE STATE
-    ========================= */
-
-    const savedDarkMode =
-      localStorage.getItem(
-        'darkMode'
-      );
-
-    this.darkMode =
-      savedDarkMode === 'true';
-
-    if (this.darkMode) {
-
-      document.documentElement.classList.add('dark');
-
-    }
 
     this.loadProducts();
 
-  }
+    const user =
+      JSON.parse(
+        localStorage.getItem('user') || '{}'
+      );
 
-  /* =========================
-     TOGGLE DARK MODE
-  ========================= */
+    this.userRole =
+      user.role || 'user';
 
-  toggleDarkMode(): void {
-
-    this.darkMode = !this.darkMode;
-
-    if (this.darkMode) {
-
-      document.documentElement.classList.add('dark');
-
-    } else {
-
-      document.documentElement.classList.remove('dark');
-
-    }
-
-    localStorage.setItem(
-      'darkMode',
-      this.darkMode.toString()
-    );
+    this.userName =
+      user.name || 'User';
 
   }
 
@@ -251,6 +225,10 @@ implements OnInit {
 
     localStorage.removeItem(
       'token'
+    );
+
+    localStorage.removeItem(
+      'user'
     );
 
     this.router.navigate([

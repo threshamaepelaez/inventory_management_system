@@ -251,7 +251,7 @@
             </p>
 
             <h2 class="mt-4 text-4xl font-black text-slate-900 dark:text-white">
-              ₱{{ totalValue }}
+              ₱{{ totalValue.toLocaleString() }}
             </h2>
 
             <p class="mt-2 text-sm text-purple-500">
@@ -276,8 +276,14 @@
       <div class="relative z-10">
 
         <h2 class="text-5xl font-black">
-          Welcome back, Thresha!
+          Welcome back, {{ userName }}!
         </h2>
+
+        <div
+  class="inline-flex rounded-full bg-indigo-100 px-4 py-2 text-sm font-bold uppercase text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
+>
+  {{ userRole }}
+</div>
 
         <p class="mt-4 text-lg text-indigo-100">
           Here's what's happening with your inventory today.

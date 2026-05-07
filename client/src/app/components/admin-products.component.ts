@@ -27,11 +27,38 @@ import { ProductService } from '../services/product.service';
 export class AdminProductsComponent
 implements OnInit {
 
+  /* =========================================
+     PRODUCTS
+  ========================================= */
+
   products: any[] = [];
 
   filteredProducts: any[] = [];
 
+  paginatedProducts: any[] = [];
+
+  /* =========================================
+     PAGINATION
+  ========================================= */
+
+  currentPage = 1;
+
+  itemsPerPage = 5;
+
+  totalPages = 1;
+
+  /* =========================================
+     SEARCH
+  ========================================= */
+
   searchTerm = '';
+
+  userRole = '';
+
+isAdmin = false;
+  /* =========================================
+     UI STATES
+  ========================================= */
 
   darkMode = false;
 
@@ -41,9 +68,17 @@ implements OnInit {
 
   isLoading = false;
 
+  /* =========================================
+     IMAGE
+  ========================================= */
+
   selectedFile: File | null = null;
 
   imagePreview: string | ArrayBuffer | null = null;
+
+  /* =========================================
+     FORM DATA
+  ========================================= */
 
   formData: any = {
 
@@ -60,6 +95,10 @@ implements OnInit {
     quantity: 0
 
   };
+
+  /* =========================================
+     CATEGORIES
+  ========================================= */
 
   categories = [
 
@@ -81,12 +120,26 @@ implements OnInit {
     private productService: ProductService
   ) {}
 
+  /* =========================================
+     INIT
+  ========================================= */
+
   ngOnInit(): void {
 
-    this.loadProducts();
+  this.loadProducts();
 
-  }
+  const user =
+    JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
 
+  this.userRole =
+    user.role || 'user';
+
+  this.isAdmin =
+    this.userRole === 'admin';
+
+}
   /* =========================================
      DARK MODE
   ========================================= */
@@ -125,22 +178,28 @@ implements OnInit {
             response.items || [];
 
           this.products =
-  this.products.map(
-    (product: any) => ({
+            this.products.map(
+              (product: any) => ({
 
-      ...product,
+                ...product,
 
-      status:
-        product.quantity <= 5
-          ? 'Low Stock'
-          : 'In Stock'
+                status:
+                  product.quantity <= 5
+                    ? 'Low Stock'
+                    : 'In Stock'
 
-    })
-  );
+              })
+            );
 
           this.filteredProducts = [
             ...this.products
           ];
+
+          /* =========================================
+             PAGINATION
+          ========================================= */
+
+          this.updatePagination();
 
           this.isLoading = false;
 
@@ -183,6 +242,75 @@ implements OnInit {
 
       );
 
+    this.currentPage = 1;
+
+    this.updatePagination();
+
+  }
+
+  /* =========================================
+     PAGINATION
+  ========================================= */
+
+  updatePagination(): void {
+
+    this.totalPages =
+      Math.ceil(
+        this.filteredProducts.length /
+        this.itemsPerPage
+      );
+
+    const startIndex =
+      (this.currentPage - 1) *
+      this.itemsPerPage;
+
+    const endIndex =
+      startIndex +
+      this.itemsPerPage;
+
+    this.paginatedProducts =
+      this.filteredProducts.slice(
+        startIndex,
+        endIndex
+      );
+
+  }
+
+  /* =========================================
+     NEXT PAGE
+  ========================================= */
+
+  nextPage(): void {
+
+    if (
+      this.currentPage <
+      this.totalPages
+    ) {
+
+      this.currentPage++;
+
+      this.updatePagination();
+
+    }
+
+  }
+
+  /* =========================================
+     PREVIOUS PAGE
+  ========================================= */
+
+  previousPage(): void {
+
+    if (
+      this.currentPage > 1
+    ) {
+
+      this.currentPage--;
+
+      this.updatePagination();
+
+    }
+
   }
 
   /* =========================================
@@ -191,32 +319,33 @@ implements OnInit {
 
   openCreateForm(): void {
 
-    this.showForm = true;
+  if (this.showForm) return;
 
-    this.isEditing = false;
+  this.showForm = true;
 
-    this.selectedFile = null;
+  this.isEditing = false;
 
-    this.imagePreview = null;
+  this.selectedFile = null;
 
-    this.formData = {
+  this.imagePreview = null;
 
-      id: '',
+  this.formData = {
 
-      name: '',
+    id: '',
 
-      description: '',
+    name: '',
 
-      category: 'Gadgets',
+    description: '',
 
-      price: 0,
+    category: 'Gadgets',
 
-      quantity: 0
+    price: 0,
 
-    };
+    quantity: 0
 
-  }
+  };
 
+}
   /* =========================================
      EDIT PRODUCT
   ========================================= */
@@ -288,20 +417,22 @@ implements OnInit {
 
       };
 
-     if (this.selectedFile !== null) {
+      if (this.selectedFile !== null) {
 
-  reader.readAsDataURL(
-    this.selectedFile
-  );
+        reader.readAsDataURL(
+          this.selectedFile
+        );
 
-}
+      }
+
+    }
 
   }
 
   /* =========================================
      SAVE PRODUCT
   ========================================= */
-  }
+
   saveProduct(): void {
 
     if (
@@ -341,22 +472,22 @@ implements OnInit {
     );
 
     formData.append(
-  'quantity',
-  this.formData.quantity.toString()
-);
+      'quantity',
+      this.formData.quantity.toString()
+    );
 
-if (this.selectedFile !== null) {
+    if (this.selectedFile !== null) {
 
-  formData.append(
-    'image',
-    this.selectedFile as Blob
-  );
+      formData.append(
+        'image',
+        this.selectedFile as Blob
+      );
 
-}
+    }
 
-    /* =========================
+    /* =========================================
        UPDATE
-    ========================= */
+    ========================================= */
 
     if (this.isEditing) {
 
@@ -397,9 +528,9 @@ if (this.selectedFile !== null) {
 
     }
 
-    /* =========================
+    /* =========================================
        CREATE
-    ========================= */
+    ========================================= */
 
     else {
 
