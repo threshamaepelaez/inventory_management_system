@@ -20,10 +20,10 @@ export class ProductService {
   ========================= */
 
   private apiUrl =
-    'http://localhost:5000/api/products';
+    'https://inventory-management-system1-ptf7.onrender.com/api/products';
 
   private imageBaseUrl =
-    'http://localhost:5000/uploads/';
+    'https://inventory-management-system1-ptf7.onrender.com/uploads/';
 
   constructor(
     private http: HttpClient

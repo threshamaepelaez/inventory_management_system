@@ -17,7 +17,7 @@ import {
 export class AuthService {
 
   private apiUrl =
-    'http://localhost:5000/api/auth';
+    'https://inventory-management-system1-ptf7.onrender.com/api/auth';
 
   constructor(
     private http: HttpClient
