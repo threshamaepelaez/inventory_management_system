@@ -20,35 +20,99 @@ A full-stack inventory management system built with Angular, Node.js, Express, M
 
 # Tech Stack
 
-## Frontend
-- Angular
-- TypeScript
-- Tailwind CSS
+```
 
-## Backend
-- Node.js
-- Express.js
-- TypeScript
-- MySQL
-
-## Authentication
-- JWT
-- bcryptjs
-
-## Deployment
-- Vercel
-- Render
-- Railway
+Frontend runs on:
+http://localhost:4200
 
 ---
 
-# Project Structure
+## Backend Setup
 
 ```bash
-inventory_management_system/
-│
-├── client/
-├── server/
-├── README.md
-├── PRESENTATION.md
-└── DEPLOYMENT_CHECKLIST.md
+cd server
+npm install
+npm run dev
+```
+
+Backend runs on:
+http://localhost:5000
+
+---
+
+# Environment Variables
+
+Create a `.env` file inside `/server`
+
+Example:
+
+```env
+PORT=5000
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=yourpassword
+DB_NAME=inventory_db
+
+JWT_SECRET=your_secret_key
+```
+
+---
+
+# API Overview
+
+## Authentication
+
+| Method | Endpoint |
+|---|---|
+| POST | /api/auth/login |
+| POST | /api/auth/register |
+
+---
+
+## Products
+
+| Method | Endpoint |
+|---|---|
+| GET | /api/products |
+| GET | /api/products/:id |
+| POST | /api/products |
+| PUT | /api/products/:id |
+| DELETE | /api/products/:id |
+
+---
+
+# Screenshots
+
+## Login Page
+(Add screenshot here)
+
+## Dashboard
+(Add screenshot here)
+
+## Product Management
+(Add screenshot here)
+
+## Swagger Documentation
+(Add screenshot here)
+
+## API Testing (Postman)
+(Add screenshot here)
+
+---
+
+# Deployment
+
+## Frontend
+Deployed using Vercel
+
+## Backend
+Deployed using Render / Railway
+
+---
+
+# Authors
+
+- Thresha Mae Pelaez
+- Leilanie Javellana
+- Jepte Solinap
