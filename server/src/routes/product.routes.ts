@@ -1,6 +1,10 @@
 import express from 'express';
+
 import multer from 'multer';
+
 import path from 'path';
+
+import fs from 'fs';
 
 import {
   getProducts,
@@ -11,38 +15,91 @@ import {
 } from '../controllers/product.controller';
 
 import {
-  verifyToken,
-  authorizeRoles
+  verifyToken
 } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
 /* =========================
-   MULTER CONFIG
+   CREATE UPLOADS FOLDER
+========================= */
+
+const uploadDir = path.join(
+  __dirname,
+  '..',
+  'uploads'
+);
+
+fs.mkdirSync(uploadDir, {
+  recursive: true
+});
+
+/* =========================
+   MULTER STORAGE
 ========================= */
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads'));
+
+  destination: (
+    _req,
+    _file,
+    cb
+  ) => {
+
+    cb(null, uploadDir);
+
   },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+
+  filename: (
+    _req,
+    file,
+    cb
+  ) => {
+
+    const ext =
+      path.extname(
+        file.originalname
+      );
+
+    cb(
+      null,
+      `${Date.now()}${ext}`
+    );
+
   }
+
 });
 
-const upload = multer({ storage });
+/* =========================
+   MULTER CONFIG
+========================= */
+
+const upload = multer({
+
+  storage,
+
+  limits: {
+    fileSize: 10 * 1024 * 1024
+  }
+
+});
 
 /* =========================
    PUBLIC ROUTES
 ========================= */
 
-router.get('/', getProducts);
+router.get(
+  '/',
+  getProducts
+);
 
-router.get('/:id', getProductById);
+router.get(
+  '/:id',
+  getProductById
+);
 
 /* =========================
-   PROTECTED ROUTES
+   CREATE PRODUCT
 ========================= */
 
 router.post(
@@ -52,12 +109,20 @@ router.post(
   createProduct
 );
 
+/* =========================
+   UPDATE PRODUCT
+========================= */
+
 router.put(
   '/:id',
   verifyToken,
   upload.single('image'),
   updateProduct
 );
+
+/* =========================
+   DELETE PRODUCT
+========================= */
 
 router.delete(
   '/:id',
