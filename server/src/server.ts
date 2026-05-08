@@ -25,7 +25,9 @@ const PORT = process.env.PORT || 5000;
 ========================= */
 
 app.use(cors({
+
   origin: [
+
     'http://localhost:4200',
 
     'https://inventory-management-system-qjmd.vercel.app',
@@ -34,7 +36,8 @@ app.use(cors({
 
     'https://inventory-management-system-hxx9xey8i.vercel.app',
 
-    'https://inventory-management-system-9fgy18nfa.vercel.app'
+    'https://inventory-management-system-cbz01ehne.vercel.app'
+
   ],
 
   methods: [
@@ -51,6 +54,7 @@ app.use(cors({
   ],
 
   credentials: true
+
 }));
 
 /* =========================
