@@ -1,22 +1,24 @@
-import { Request, Response, NextFunction } from 'express';
+import {
+  Request,
+  Response,
+  NextFunction
+} from 'express';
 
-export const adminOnly = (
+export const isAdmin = (
   req: any,
   res: Response,
   next: NextFunction
 ) => {
 
-  if (!req.user) {
-    return res.status(401).json({
-      message: 'Unauthorized'
-    });
-  }
+  if (req.user?.role !== 'admin') {
 
-  if (req.user.role !== 'admin') {
     return res.status(403).json({
-      message: 'Admin access only'
+      success: false,
+      message: 'Access denied'
     });
+
   }
 
   next();
+
 };

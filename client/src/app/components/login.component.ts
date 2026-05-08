@@ -53,7 +53,7 @@ export class LoginComponent {
         this.isLoading = false;
 
         localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('role', response.user.role);
 
         this.router.navigate(['/dashboard']);
       },
