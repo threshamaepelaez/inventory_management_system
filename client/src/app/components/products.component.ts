@@ -26,7 +26,7 @@ import { ProductService } from '../services/product.service';
       <button
         type="button"
         (click)="goBack()"
-        class="mb-4 inline-flex items-center rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm transition hover:bg-slate-50"
+        class="relative z-50 mb-4 inline-flex items-center rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm transition hover:bg-slate-50 pointer-events-auto"
       >
         ← Back to dashboard
       </button>
@@ -58,16 +58,6 @@ import { ProductService } from '../services/product.service';
       </div>
 
     </div>
-
-    <!-- ADD PRODUCT BUTTON -->
-    <button
-  *ngIf="userRole?.toLowerCase() === 'admin'"
-  type="button"
-  (click)="openAddProduct()"
-      class="rounded-2xl bg-indigo-600 px-6 py-4 text-white font-bold shadow-lg transition hover:bg-indigo-700"
-    >
-      + Add Product
-    </button>
 
   </div>
 
