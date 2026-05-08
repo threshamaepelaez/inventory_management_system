@@ -1,20 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
-
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  FormsModule
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-product-form',
@@ -26,102 +14,158 @@ import {
 
   template: `
 
-  <div class="space-y-4">
+<div class="min-h-screen bg-slate-100 p-6">
 
-    <h2 class="text-2xl font-bold">
+  <!-- HEADER -->
+  <div class="mb-8">
 
-      {{ product ? 'Edit Product' : 'Create Product' }}
+    <button
+      type="button"
+      (click)="goBack()"
+      class="mb-5 inline-flex items-center rounded-2xl bg-white px-5 py-3 text-slate-700 shadow transition hover:bg-slate-50"
+    >
+      ← Back to Products
+    </button>
 
-    </h2>
+    <h1 class="text-4xl font-black text-slate-900">
 
-    <!-- NAME -->
-    <div>
+      {{ isEditMode ? 'Edit Product' : 'Add Product' }}
 
-      <label>Name</label>
+    </h1>
+
+    <p class="mt-2 text-slate-500">
+
+      {{
+        isEditMode
+          ? 'Update product information.'
+          : 'Create a new inventory item.'
+      }}
+
+    </p>
+
+  </div>
+
+  <!-- FORM -->
+  <div class="rounded-3xl bg-white p-8 shadow-lg">
+
+    <!-- PRODUCT NAME -->
+    <div class="mb-6">
+
+      <label class="mb-2 block text-lg font-bold text-slate-700">
+        Product Name
+      </label>
 
       <input
         type="text"
-        [(ngModel)]="form.name"
-        name="name"
-        class="w-full border p-3 rounded"
+        [(ngModel)]="product.name"
+        class="w-full rounded-2xl border px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500"
+        placeholder="Enter product name"
       />
 
     </div>
 
     <!-- DESCRIPTION -->
-    <div>
+    <div class="mb-6">
 
-      <label>Description</label>
+      <label class="mb-2 block text-lg font-bold text-slate-700">
+        Description
+      </label>
 
       <textarea
-        [(ngModel)]="form.description"
-        name="description"
-        class="w-full border p-3 rounded"
+        [(ngModel)]="product.description"
+        rows="5"
+        class="w-full rounded-2xl border px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500"
+        placeholder="Enter product description"
       ></textarea>
 
     </div>
 
-    <!-- PRICE -->
-    <div>
+    <!-- CATEGORY / PRICE / QUANTITY -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 
-      <label>Price</label>
+      <!-- CATEGORY -->
+      <div>
 
-      <input
-        type="number"
-        [(ngModel)]="form.price"
-        name="price"
-        class="w-full border p-3 rounded"
-      />
+        <label class="mb-2 block text-lg font-bold text-slate-700">
+          Category
+        </label>
 
-    </div>
+        <select
+          [(ngModel)]="product.category"
+          class="w-full rounded-2xl border px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="Gadgets">Gadgets</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Office">Office</option>
+        </select>
 
-    <!-- QUANTITY -->
-    <div>
+      </div>
 
-      <label>Quantity</label>
+      <!-- PRICE -->
+      <div>
 
-      <input
-        type="number"
-        [(ngModel)]="form.quantity"
-        name="quantity"
-        class="w-full border p-3 rounded"
-      />
+        <label class="mb-2 block text-lg font-bold text-slate-700">
+          Price
+        </label>
+
+        <input
+          type="number"
+          [(ngModel)]="product.price"
+          class="w-full rounded-2xl border px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+
+      </div>
+
+      <!-- QUANTITY -->
+      <div>
+
+        <label class="mb-2 block text-lg font-bold text-slate-700">
+          Quantity
+        </label>
+
+        <input
+          type="number"
+          [(ngModel)]="product.quantity"
+          class="w-full rounded-2xl border px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+
+      </div>
 
     </div>
 
     <!-- IMAGE -->
-    <div>
+    <div class="mt-6">
 
-      <label>Image</label>
+      <label class="mb-2 block text-lg font-bold text-slate-700">
+        Product Image
+      </label>
 
       <input
         type="file"
         (change)="onFileSelected($event)"
-        accept="image/*"
-        class="w-full border p-3 rounded"
+        class="w-full rounded-2xl border px-5 py-4"
       />
-
-      <p class="text-sm text-gray-500 mt-1">
-        {{ selectedFile ? selectedFile.name : 'No file selected' }}
-      </p>
 
     </div>
 
     <!-- BUTTONS -->
-    <div class="flex gap-3">
+    <div class="mt-8 flex flex-col gap-4 md:flex-row">
 
       <button
         type="button"
-        (click)="submitForm()"
-        class="bg-blue-600 text-white px-6 py-3 rounded"
+        (click)="saveProduct()"
+        class="flex-1 rounded-2xl bg-indigo-600 py-4 text-lg font-bold text-white transition hover:bg-indigo-700"
       >
-        {{ product ? 'Update' : 'Create' }}
+
+        {{ isEditMode ? 'Update Product' : 'Save Product' }}
+
       </button>
 
       <button
         type="button"
-        (click)="cancel.emit()"
-        class="bg-gray-300 px-6 py-3 rounded"
+        (click)="goBack()"
+        class="flex-1 rounded-2xl bg-slate-200 py-4 text-lg font-bold text-slate-700 transition hover:bg-slate-300"
       >
         Cancel
       </button>
@@ -130,72 +174,210 @@ import {
 
   </div>
 
-  `
+</div>
+
+`
 })
-export class ProductFormComponent implements OnInit, OnChanges {
+export class ProductFormComponent implements OnInit {
 
-  @Input() product: any;
+  isEditMode = false;
 
-  @Output() saved =
-    new EventEmitter<any>();
+  productId: number | null = null;
 
-  @Output() cancel =
-    new EventEmitter<void>();
+  selectedFile: File | null = null;
 
-  form = {
+  userRole: string = '';
+
+  product: any = {
     name: '',
     description: '',
+    category: 'Gadgets',
     price: 0,
     quantity: 0
   };
 
-  selectedFile: File | null = null;
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.syncFormWithProduct();
+
+    this.userRole =
+      localStorage.getItem('role') || '';
+
+    // BLOCK USERS
+    if (this.userRole !== 'admin') {
+
+      alert('Access denied');
+
+      this.router.navigate(['/products']);
+
+      return;
+
+    }
+
+    const id =
+      this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+
+      this.isEditMode = true;
+
+      this.productId = Number(id);
+
+      this.loadProduct();
+
+    }
+
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['product']) {
-      this.syncFormWithProduct();
-    }
-  }
+  loadProduct(): void {
 
-  private syncFormWithProduct(): void {
-    if (this.product) {
-      this.form = {
-        name: this.product.name || '',
-        description: this.product.description || '',
-        price: this.product.price || 0,
-        quantity: this.product.quantity || 0
-      };
-    } else {
-      this.form = {
-        name: '',
-        description: '',
-        price: 0,
-        quantity: 0
-      };
-      this.selectedFile = null;
-    }
+    if (!this.productId) return;
+
+    this.productService.getProduct(this.productId)
+      .subscribe({
+
+        next: (res: any) => {
+
+          this.product = res;
+
+        },
+
+        error: (err) => {
+
+          console.error(
+            'Load product failed',
+            err
+          );
+
+        }
+
+      });
+
   }
 
   onFileSelected(event: any): void {
 
-    const file = event.target.files[0];
+    const file =
+      event.target.files[0];
 
     if (file) {
 
       this.selectedFile = file;
+
     }
+
   }
 
-  submitForm(): void {
+  saveProduct(): void {
 
-    this.saved.emit({
-      product: this.form,
-      file: this.selectedFile
-    });
+    const formData = new FormData();
+
+    formData.append(
+      'name',
+      this.product.name
+    );
+
+    formData.append(
+      'description',
+      this.product.description
+    );
+
+    formData.append(
+      'category',
+      this.product.category
+    );
+
+    formData.append(
+      'price',
+      this.product.price
+    );
+
+    formData.append(
+      'quantity',
+      this.product.quantity
+    );
+
+    if (this.selectedFile) {
+
+      formData.append(
+        'image',
+        this.selectedFile
+      );
+
+    }
+
+    // EDIT
+    if (this.isEditMode && this.productId) {
+
+      this.productService.updateProduct(
+        this.productId,
+        formData
+      ).subscribe({
+
+        next: () => {
+
+          alert('Product updated');
+
+          this.router.navigate(['/products']);
+
+        },
+
+        error: (err) => {
+
+          console.error(
+            'Update failed',
+            err
+          );
+
+          alert('Update failed');
+
+        }
+
+      });
+
+    }
+
+    // ADD
+    else {
+
+      this.productService.createProduct(formData)
+        .subscribe({
+
+          next: () => {
+
+            alert('Product added');
+
+            this.router.navigate(['/products']);
+
+          },
+
+          error: (err) => {
+
+            console.error(
+              'Add product failed',
+              err
+            );
+
+            alert(
+              'Failed to save product. Please try again.'
+            );
+
+          }
+
+        });
+
+    }
+
+  }
+
+  goBack(): void {
+
+    this.router.navigate(['/products']);
+
   }
 
 }
