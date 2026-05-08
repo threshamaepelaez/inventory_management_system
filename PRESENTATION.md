@@ -1,5 +1,21 @@
 # Inventory Management System - Presentation Guide
 
+# GROUP COMPOSITION
+
+## Members and Roles
+
+### 1. Thresha Mae Pelaez
+- Frontend Developer
+- UI/UX Designer
+
+### 2. Leilanie Javellana
+- Backend Developer
+- Security/Auth Lead
+
+### 3. Jepte Solinap
+- Repository & Documentation Manager
+- Database Administrator
+
 ## 📊 Executive Summary
 
 A production-ready full-stack inventory management solution that demonstrates modern web development best practices with Angular, Node.js, Express, MySQL, and cloud deployment.
