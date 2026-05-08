@@ -61,7 +61,7 @@ import { ProductService } from '../services/product.service';
 
     <!-- ADD PRODUCT BUTTON -->
     <button
-  *ngIf="userRole === 'Admin'"
+  *ngIf="userRole?.toLowerCase() === 'admin'"
   type="button"
   (click)="openAddProduct()"
       class="rounded-2xl bg-indigo-600 px-6 py-4 font-bold text-white shadow-lg transition hover:bg-indigo-700"
@@ -158,7 +158,7 @@ import { ProductService } from '../services/product.service';
 
       <!-- ADMIN BUTTONS -->
       <div
-  *ngIf="userRole === 'Admin'"
+  *ngIf="userRole?.toLowerCase() === 'admin'"
   class="mt-5 flex flex-wrap gap-3"
 >
 
@@ -180,7 +180,7 @@ import { ProductService } from '../services/product.service';
     Delete
   </button>
 
-</div>  
+</div>
 
     </div>
 
@@ -212,7 +212,7 @@ export class ProductsComponent implements OnInit {
   this.userRole =
     localStorage.getItem('role') || '';
 
-  console.log('USER ROLE:', this.userRole);
+  console.log('ROLE:', this.userRole);
 
   this.route.queryParams.subscribe((params) => {
 
