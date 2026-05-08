@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
 import authRoutes from './routes/auth.routes';
 import productRoutes from './routes/product.routes';
@@ -76,9 +77,17 @@ app.use(express.urlencoded({
   limit: '50mb'
 }));
 
-/* =========================
-   STATIC FILES
-========================= */
+const uploadsPath = path.join(process.cwd(), 'uploads');
+
+if (!fs.existsSync(uploadsPath)) {
+
+  fs.mkdirSync(uploadsPath, {
+    recursive: true
+  });
+
+  console.log('✅ Uploads folder created');
+
+}
 
 app.use(
   '/uploads',
