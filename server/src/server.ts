@@ -25,7 +25,6 @@ const PORT = process.env.PORT || 5000;
 ========================= */
 
 app.use(cors({
-
   origin: [
     'http://localhost:4200',
 
@@ -33,7 +32,9 @@ app.use(cors({
 
     'https://inventory-management-system-navy-xi.vercel.app',
 
-    'https://inventory-management-system-hxx9xey8i.vercel.app'
+    'https://inventory-management-system-hxx9xey8i.vercel.app',
+
+    'https://inventory-management-system-9fgy18nfa.vercel.app'
   ],
 
   methods: [
@@ -50,8 +51,13 @@ app.use(cors({
   ],
 
   credentials: true
-
 }));
+
+/* =========================
+   HANDLE PREFLIGHT REQUESTS
+========================= */
+
+app.options('*', cors());
 
 /* =========================
    BODY PARSER
