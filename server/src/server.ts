@@ -28,8 +28,12 @@ app.use(cors({
 
   origin: [
     'http://localhost:4200',
+
     'https://inventory-management-system-qjmd.vercel.app',
-    'https://inventory-management-system-navy-xi.vercel.app'
+
+    'https://inventory-management-system-navy-xi.vercel.app',
+
+    'https://inventory-management-system-hxx9xey8i.vercel.app'
   ],
 
   methods: [
@@ -169,11 +173,11 @@ pool.getConnection()
 app.listen(PORT, () => {
 
   console.log(
-    `🚀 Server running on http://localhost:${PORT}`
+    `🚀 Server running on port ${PORT}`
   );
 
   console.log(
-    `📘 Swagger docs available at http://localhost:${PORT}/api-docs`
+    `📘 Swagger docs available at /api-docs`
   );
 
 });
