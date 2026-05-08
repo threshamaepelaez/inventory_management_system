@@ -158,7 +158,7 @@ import { ProductService } from '../services/product.service';
 
       <!-- ADMIN BUTTONS -->
       <div
-        *ngIf="userRole === 'admin'"
+        *ngIf="userRole === 'Admin'"
         class="mt-5 flex flex-wrap gap-3"
       >
 
@@ -282,7 +282,7 @@ export class ProductsComponent implements OnInit {
 
   openAddProduct(): void {
 
-    if (this.userRole !== 'admin') {
+    if (this.userRole !== 'Admin') {
 
       alert('Access denied');
 
@@ -302,7 +302,7 @@ export class ProductsComponent implements OnInit {
 
   deleteProduct(id: number): void {
 
-    if (this.userRole !== 'admin') {
+    if (this.userRole !== 'Admin') {
 
       alert('Access denied');
 
@@ -372,7 +372,7 @@ export class ProductsComponent implements OnInit {
 
   editProduct(id: number): void {
 
-    if (this.userRole !== 'admin') {
+    if (this.userRole !== 'Admin') {
 
       alert('Access denied');
 

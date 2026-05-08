@@ -14,16 +14,16 @@ import { ProductService } from '../services/product.service';
 
   template: `
 
-<div class="min-h-screen bg-slate-100 p-6">
+<div class="relative min-h-screen bg-slate-100 p-6">
 
   <!-- HEADER -->
   <div class="mb-8">
 
     <button
-      type="button"
-      (click)="goBack()"
-      class="mb-5 inline-flex items-center rounded-2xl bg-white px-5 py-3 text-slate-700 shadow transition hover:bg-slate-50"
-    >
+  type="button"
+  (click)="goBack()"
+  class="relative z-50 mb-5 inline-flex items-center rounded-2xl bg-white px-5 py-3 text-slate-700 shadow transition hover:bg-slate-50"
+  >
       ← Back to Products
     </button>
 
@@ -208,7 +208,7 @@ export class ProductFormComponent implements OnInit {
       localStorage.getItem('role') || '';
 
     // BLOCK USERS
-    if (this.userRole !== 'admin') {
+    if (this.userRole !== 'Admin') {
 
       alert('Access denied');
 
