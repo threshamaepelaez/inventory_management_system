@@ -23,12 +23,7 @@ import { ProductService } from '../services/product.service';
   <div class="mx-auto max-w-5xl space-y-6">
 
     <!-- BACK BUTTON -->
-    <button
-      routerLink="/products"
-      class="rounded-2xl bg-white px-5 py-3 text-slate-700 shadow hover:bg-slate-50"
-    >
-      ← Back to products
-    </button>
+    <button type="button" routerLink="/products" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-800 shadow-md transition duration-200 hover:scale-105 hover:bg-slate-100 active:scale-95" > ← Back to Products </button>
 
     <!-- PRODUCT CARD -->
     <section

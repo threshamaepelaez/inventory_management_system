@@ -42,21 +42,29 @@ export const register = async (
     const userRole = role || 'user';
 
     // INSERT USER
-    await pool.execute(
-      'INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())',
+    const [result]: any = await pool.execute(
+      `
+      INSERT INTO users 
+      (name, email, password, role, created_at) 
+      VALUES (?, ?, ?, ?, NOW())
+      `,
       [name, email, hashedPassword, userRole]
     );
 
     return res.status(201).json({
-      message: 'Registration successful'
+      success: true,
+      message: 'Registration successful',
+      userId: result.insertId
     });
 
-  } catch (error) {
+  } catch (error: any) {
 
-    console.error(error);
+    console.error('REGISTER ERROR:', error);
 
     return res.status(500).json({
-      message: 'Registration failed'
+      success: false,
+      message: 'Registration failed',
+      error: error.message
     });
 
   }
@@ -78,6 +86,7 @@ export const login = async (
     // CHECK REQUIRED FIELDS
     if (!email || !password) {
       return res.status(400).json({
+        success: false,
         message: 'Email and password are required'
       });
     }
@@ -91,11 +100,14 @@ export const login = async (
     // USER NOT FOUND
     if (rows.length === 0) {
       return res.status(401).json({
+        success: false,
         message: 'Invalid email or password'
       });
     }
 
     const user = rows[0];
+
+    console.log('USER FOUND:', user);
 
     // CHECK PASSWORD
     const validPassword = await bcrypt.compare(
@@ -103,9 +115,21 @@ export const login = async (
       user.password
     );
 
+    console.log('PASSWORD MATCH:', validPassword);
+
+    // INVALID PASSWORD
     if (!validPassword) {
       return res.status(401).json({
+        success: false,
         message: 'Invalid email or password'
+      });
+    }
+
+    // CHECK JWT SECRET
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message: 'JWT_SECRET is missing in environment variables'
       });
     }
 
@@ -115,7 +139,7 @@ export const login = async (
         id: user.id,
         role: user.role
       },
-      process.env.JWT_SECRET as string,
+      process.env.JWT_SECRET,
       {
         expiresIn: '7d'
       }
@@ -123,6 +147,7 @@ export const login = async (
 
     // SUCCESS LOGIN
     return res.status(200).json({
+      success: true,
       message: 'Login successful',
       token,
       user: {
@@ -133,12 +158,14 @@ export const login = async (
       }
     });
 
-  } catch (error) {
+  } catch (error: any) {
 
-    console.error(error);
+    console.error('LOGIN ERROR:', error);
 
     return res.status(500).json({
-      message: 'An unexpected error occurred'
+      success: false,
+      message: 'An unexpected error occurred',
+      error: error.message
     });
 
   }

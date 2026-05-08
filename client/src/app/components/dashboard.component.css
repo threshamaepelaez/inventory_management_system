@@ -1,1 +1,7 @@
-/* All dashboard styles are now handled by Tailwind CSS utility classes. */
+/* Dashboard Styles */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}

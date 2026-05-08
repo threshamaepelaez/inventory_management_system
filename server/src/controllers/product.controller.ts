@@ -3,6 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import pool from '../config/db';
 
+// =======================
+// GET ALL PRODUCTS
+// =======================
 export const getProducts = async (
   req: Request,
   res: Response
@@ -21,6 +24,7 @@ export const getProducts = async (
     console.log(err);
 
     return res.status(500).json({
+      success: false,
       message: 'Error fetching products'
     });
 
@@ -28,6 +32,9 @@ export const getProducts = async (
 
 };
 
+// =======================
+// GET PRODUCT BY ID
+// =======================
 export const getProductById = async (
   req: Request,
   res: Response
@@ -47,6 +54,7 @@ export const getProductById = async (
     console.log(err);
 
     return res.status(500).json({
+      success: false,
       message: 'Error fetching product'
     });
 
@@ -54,56 +62,94 @@ export const getProductById = async (
 
 };
 
+// =======================
+// CREATE PRODUCT
+// =======================
 export const createProduct = async (
   req: Request,
   res: Response
 ) => {
+
   try {
+
     const {
       name,
       description,
+      category,
       price,
       quantity
     } = req.body;
 
-    // Handle image upload
+    console.log('BODY:', req.body);
+    console.log('FILE:', req.file);
+
+    // VALIDATION
+    if (
+      !name ||
+      !description ||
+      !category ||
+      !price ||
+      !quantity
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required'
+      });
+    }
+
+    // HANDLE IMAGE
     let image = null;
+
     if (req.file) {
       image = req.file.filename;
     }
 
+    // INSERT PRODUCT
     await pool.query(
       `
       INSERT INTO products
       (
         name,
         description,
+        category,
         price,
         quantity,
         image
       )
-      VALUES (?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
       `,
       [
         name,
         description,
+        category,
         price,
         quantity,
         image
       ]
     );
 
-    return res.json({
-      message: 'Product added'
+    return res.status(201).json({
+      success: true,
+      message: 'Product added successfully'
     });
-  } catch (err) {
-    console.log(err);
+
+  } catch (err: any) {
+
+    console.log('CREATE PRODUCT ERROR:', err);
+
     return res.status(500).json({
-      message: 'Error creating product'
+      success: false,
+      message: 'Error creating product',
+      error: err.message
     });
+
   }
+
 };
 
+// =======================
+// UPDATE PRODUCT
+// =======================
 export const updateProduct = async (
   req: Request,
   res: Response
@@ -114,6 +160,7 @@ export const updateProduct = async (
     const {
       name,
       description,
+      category,
       price,
       quantity
     } = req.body;
@@ -124,12 +171,17 @@ export const updateProduct = async (
     );
 
     const existingProduct = rows[0] || {};
+
     let image = existingProduct.image || null;
 
+    // HANDLE NEW IMAGE
     if (req.file) {
+
       image = req.file.filename;
 
+      // DELETE OLD IMAGE
       if (existingProduct.image) {
+
         const oldImagePath = path.join(
           process.cwd(),
           'uploads',
@@ -139,49 +191,57 @@ export const updateProduct = async (
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
         }
+
       }
+
     }
 
+    // UPDATE PRODUCT
     await pool.query(
-
       `
       UPDATE products
       SET
         name = ?,
         description = ?,
+        category = ?,
         price = ?,
         quantity = ?,
         image = ?
       WHERE id = ?
       `,
-
       [
         name,
         description,
+        category,
         price,
         quantity,
         image,
         req.params.id
       ]
-
     );
 
     return res.json({
-      message: 'Product updated'
+      success: true,
+      message: 'Product updated successfully'
     });
 
-  } catch (err) {
+  } catch (err: any) {
 
-    console.log(err);
+    console.log('UPDATE PRODUCT ERROR:', err);
 
     return res.status(500).json({
-      message: 'Error updating product'
+      success: false,
+      message: 'Error updating product',
+      error: err.message
     });
 
   }
 
 };
 
+// =======================
+// DELETE PRODUCT
+// =======================
 export const deleteProduct = async (
   req: Request,
   res: Response
@@ -189,21 +249,48 @@ export const deleteProduct = async (
 
   try {
 
+    // GET PRODUCT IMAGE
+    const [rows]: any = await pool.query(
+      'SELECT image FROM products WHERE id = ?',
+      [req.params.id]
+    );
+
+    const product = rows[0];
+
+    // DELETE IMAGE FILE
+    if (product?.image) {
+
+      const imagePath = path.join(
+        process.cwd(),
+        'uploads',
+        product.image
+      );
+
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+
+    }
+
+    // DELETE PRODUCT
     await pool.query(
       'DELETE FROM products WHERE id = ?',
       [req.params.id]
     );
 
     return res.json({
-      message: 'Product deleted'
+      success: true,
+      message: 'Product deleted successfully'
     });
 
-  } catch (err) {
+  } catch (err: any) {
 
-    console.log(err);
+    console.log('DELETE PRODUCT ERROR:', err);
 
     return res.status(500).json({
-      message: 'Error deleting product'
+      success: false,
+      message: 'Error deleting product',
+      error: err.message
     });
 
   }

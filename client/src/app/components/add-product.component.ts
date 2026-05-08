@@ -21,11 +21,11 @@ import { ProductService } from '../services/product.service';
       </p>
     </div>
     <button
-      (click)="goBack()"
-      class="rounded-2xl border border-slate-300 bg-white px-6 py-4 text-slate-700 font-bold shadow-sm transition hover:bg-slate-50"
-    >
-      ← Back to Products
-    </button>
+  routerLink="/products"
+  class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-800 rounded-xl shadow hover:bg-gray-100 transition"
+>
+  ← Back to Products
+</button>
   </div>
 
   <div class="rounded-3xl bg-white p-8 shadow-xl">
@@ -103,21 +103,26 @@ import { ProductService } from '../services/product.service';
         />
       </div>
 
-      <div class="flex flex-col gap-4 pt-4 md:flex-row">
-        <button
-          type="submit"
-          class="flex-1 rounded-2xl bg-indigo-600 py-4 text-lg font-black text-white shadow-lg transition hover:scale-[1.02] hover:bg-indigo-700"
-        >
-          {{ isEditMode ? 'Update Product' : 'Save Product' }}
-        </button>
-        <button
-          type="button"
-          (click)="goBack()"
-          class="flex-1 rounded-2xl border border-slate-200 bg-slate-100 py-4 text-lg font-black text-slate-800 shadow-sm transition hover:bg-slate-200"
-        >
-          Cancel
-        </button>
-      </div>
+      <div class="mt-8 flex flex-col gap-4 md:flex-row">
+
+  <!-- SAVE -->
+  <button
+    type="submit"
+    class="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4 text-lg font-bold text-white shadow-xl transition duration-200 hover:scale-[1.01] hover:shadow-2xl active:scale-95"
+  >
+    Save Product
+  </button>
+
+  <!-- CANCEL -->
+  <button
+    type="button"
+    routerLink="/products"
+    class="w-full rounded-2xl border border-slate-300 bg-white px-6 py-4 text-lg font-bold text-slate-700 shadow-md transition duration-200 hover:bg-slate-100 hover:scale-[1.01] active:scale-95"
+  >
+    Cancel
+  </button>
+
+</div>
     </form>
   </div>
 </div>

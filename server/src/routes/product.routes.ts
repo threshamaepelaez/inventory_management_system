@@ -15,7 +15,11 @@ router.get('/', getProducts);
 router.get('/:id', getProductById);
 
 // Add multer upload middleware for image upload
-router.post('/', upload.single('image'), createProduct);
+router.post(
+  '/',
+  upload.single('image'),
+  createProduct
+);
 
 router.put('/:id', upload.single('image'), updateProduct);
 

@@ -247,8 +247,10 @@ implements OnInit {
   }
 
   refreshDashboard(): void {
-    this.loadProducts();
-  }
+
+  window.location.reload();
+
+}
 
   viewLowStock(): void {
     this.router.navigate(['/products'], {
