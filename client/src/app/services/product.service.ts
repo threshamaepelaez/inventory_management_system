@@ -12,8 +12,8 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  // LOCAL API
-  private apiUrl = 'http://localhost:5000/api/products';
+  // LIVE API
+  private apiUrl = 'https://inventory-management-system1-ptf7.onrender.com/api/products';
 
   constructor(private http: HttpClient) {}
 
