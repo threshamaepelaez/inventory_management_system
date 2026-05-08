@@ -61,9 +61,9 @@ import { ProductService } from '../services/product.service';
 
     <!-- ADD PRODUCT BUTTON -->
     <button
-      *ngIf="userRole === 'admin'"
-      type="button"
-      (click)="openAddProduct()"
+  *ngIf="userRole === 'Admin'"
+  type="button"
+  (click)="openAddProduct()"
       class="rounded-2xl bg-indigo-600 px-6 py-4 font-bold text-white shadow-lg transition hover:bg-indigo-700"
     >
       + Add Product
@@ -158,29 +158,29 @@ import { ProductService } from '../services/product.service';
 
       <!-- ADMIN BUTTONS -->
       <div
-        *ngIf="userRole === 'Admin'"
-        class="mt-5 flex flex-wrap gap-3"
-      >
+  *ngIf="userRole === 'Admin'"
+  class="mt-5 flex flex-wrap gap-3"
+>
 
-        <!-- EDIT -->
-        <button
-          type="button"
-          (click)="editProduct(item.id)"
-          class="flex-1 rounded-xl bg-indigo-600 py-3 font-bold text-white transition hover:bg-indigo-700"
-        >
-          Edit
-        </button>
+  <!-- EDIT -->
+  <button
+    type="button"
+    (click)="editProduct(item.id)"
+    class="flex-1 rounded-xl bg-indigo-600 py-3 font-bold text-white transition hover:bg-indigo-700"
+  >
+    Edit
+  </button>
 
-        <!-- DELETE -->
-        <button
-          type="button"
-          (click)="deleteProduct(item.id)"
-          class="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white transition hover:bg-red-600"
-        >
-          Delete
-        </button>
+  <!-- DELETE -->
+  <button
+    type="button"
+    (click)="deleteProduct(item.id)"
+    class="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white transition hover:bg-red-600"
+  >
+    Delete
+  </button>
 
-      </div>
+</div>  
 
     </div>
 
@@ -209,20 +209,21 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.userRole =
-      localStorage.getItem('role') || '';
+  this.userRole =
+    localStorage.getItem('role') || '';
 
-    this.route.queryParams.subscribe((params) => {
+  console.log('USER ROLE:', this.userRole);
 
-      this.lowStockFilter =
-        params['lowStock'] === 'true';
+  this.route.queryParams.subscribe((params) => {
 
-      this.loadProducts();
+    this.lowStockFilter =
+      params['lowStock'] === 'true';
 
-    });
+    this.loadProducts();
 
-  }
+  });
 
+}
   loadProducts(): void {
 
     this.productService.getProducts().subscribe({
