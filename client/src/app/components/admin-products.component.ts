@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+
+import { environment } from '../../environments/environment';
 
 import { ProductService } from '../services/product.service';
 
@@ -117,7 +119,8 @@ isAdmin = false;
   ];
 
   constructor(
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router
   ) {}
 
   /* =========================================
@@ -174,22 +177,30 @@ isAdmin = false;
 
         next: (response: any) => {
 
-          this.products =
-            response.items || [];
+          const items = Array.isArray(response)
+            ? response
+            : response.items || response.data || [];
 
-          this.products =
-            this.products.map(
-              (product: any) => ({
+          this.products = items.map(
+            (product: any) => ({
 
-                ...product,
+              ...product,
 
-                status:
-                  product.quantity <= 5
-                    ? 'Low Stock'
-                    : 'In Stock'
+              category:
+                product.category || 'Other',
 
-              })
-            );
+              imageUrl:
+                product.image
+                  ? `${environment.apiUrl}/uploads/${product.image}`
+                  : 'assets/no-image.png',
+
+              status:
+                product.quantity <= 5
+                  ? 'Low Stock'
+                  : 'In Stock'
+
+            })
+          );
 
           this.filteredProducts = [
             ...this.products
@@ -359,7 +370,7 @@ isAdmin = false;
     this.selectedFile = null;
 
     this.imagePreview =
-      product.image;
+      product.imageUrl || product.image;
 
     this.formData = {
 
@@ -391,6 +402,14 @@ isAdmin = false;
 
     this.imagePreview = null;
 
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /* =========================================

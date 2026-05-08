@@ -11,10 +11,17 @@ import { AuthService } from '../services/auth.service';
     <div class="h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-6 shadow-sm w-[250px]">
       <!-- LOGO -->
       <div class="flex items-center gap-4 mb-12">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">IM</div>
+        <div class="w-14 h-14 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-600 to-violet-500 p-3 shadow-2xl">
+          <svg viewBox="0 0 64 64" class="h-full w-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="12" y="20" width="40" height="28" rx="7" fill="white" />
+            <path d="M12 20L32 8L52 20" stroke="#4338ca" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M32 8V28" stroke="#4338ca" stroke-width="4" stroke-linecap="round" />
+            <path d="M12 20L32 32L52 20" stroke="#4338ca" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
         <div>
-          <h1 class="font-bold text-xl text-slate-900 dark:text-white">Inventory MS</h1>
-          <p class="text-sm text-slate-500">Smart Inventory System</p>
+          <h1 class="font-bold text-xl text-slate-900 dark:text-white">Inventory Management System</h1>
+          <p class="text-sm text-slate-500">Modern stock control</p>
         </div>
       </div>
       <!-- NAVIGATION -->

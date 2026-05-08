@@ -28,7 +28,17 @@
         class="rounded-2xl border border-slate-200 bg-white px-5 py-3 outline-none transition focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-800"
       />
 
-      
+      <!-- BACK BUTTON -->
+      <button
+        type="button"
+        (click)="goBack()"
+        class="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 shadow transition hover:bg-slate-200 active:scale-95 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </button>
 
       <!-- ADD PRODUCT -->
       <button
@@ -135,8 +145,8 @@
             <td class="px-6 py-5">
 
               <img
-  [src]="product.image || 'assets/no-image.png'"
-                (error)="product.image='assets/no-image.png'"
+                [src]="product.imageUrl || 'assets/no-image.png'"
+                (error)="product.imageUrl='assets/no-image.png'"
                 alt="Product"
                 class="h-20 w-20 rounded-2xl border border-slate-200 object-cover shadow-md dark:border-slate-700"
               />
@@ -252,6 +262,31 @@
 
       </table>
 
+    </div>
+
+    <div class="flex flex-col items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
+      <div>
+        Showing page {{ currentPage }} of {{ totalPages }}
+        ({{ filteredProducts.length }} products)
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+          class="rounded-2xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="rounded-2xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        >
+          Next
+        </button>
+      </div>
     </div>
 
   </div>
@@ -442,5 +477,16 @@
     </div>
 
   </div>
+
+  <button
+    type="button"
+    (click)="scrollToTop()"
+    aria-label="Scroll to top"
+    class="fixed bottom-6 right-6 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-2xl transition hover:bg-indigo-700"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 15l-6-6-6 6" />
+    </svg>
+  </button>
 
 </div>

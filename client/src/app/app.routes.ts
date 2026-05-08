@@ -6,7 +6,9 @@ import { RegisterComponent } from './components/register.component';
 
 import { DashboardComponent } from './components/dashboard.component';
 
-import { AdminProductsComponent } from './components/admin-products.component';
+import { ProductsComponent } from './components/products.component';
+
+import { AddProductComponent } from './components/add-product.component';
 
 import { ProductDetailsComponent } from './components/product-details.component';
 
@@ -35,8 +37,17 @@ export const routes: Routes = [
     component: DashboardComponent
   },
   {
+    path: 'products/add',
+    component: AddProductComponent
+  },
+  {
+    path: 'products/:id/edit',
+    component: AddProductComponent
+  },
+  {
     path: 'products',
-    component: AdminProductsComponent
+    component: ProductsComponent,
+    pathMatch: 'full'
   },
   {
     path: 'products/:id',

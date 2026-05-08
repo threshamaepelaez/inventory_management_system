@@ -14,7 +14,7 @@ export const register = async (
 
   try {
 
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // CHECK REQUIRED FIELDS
     if (!name || !email || !password) {
@@ -38,10 +38,13 @@ export const register = async (
     // HASH PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // DEFAULT ROLE
+    const userRole = role || 'user';
+
     // INSERT USER
     await pool.execute(
       'INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())',
-      [name, email, hashedPassword, 'user']
+      [name, email, hashedPassword, userRole]
     );
 
     return res.status(201).json({
@@ -51,7 +54,10 @@ export const register = async (
   } catch (error) {
 
     console.error(error);
-    next(error);
+
+    return res.status(500).json({
+      message: 'Registration failed'
+    });
 
   }
 };
@@ -115,7 +121,7 @@ export const login = async (
       }
     );
 
-    // SUCCESS
+    // SUCCESS LOGIN
     return res.status(200).json({
       message: 'Login successful',
       token,
@@ -130,7 +136,10 @@ export const login = async (
   } catch (error) {
 
     console.error(error);
-    next(error);
+
+    return res.status(500).json({
+      message: 'An unexpected error occurred'
+    });
 
   }
 };

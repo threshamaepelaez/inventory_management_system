@@ -25,52 +25,42 @@ const PORT = process.env.PORT || 5000;
 ========================= */
 
 app.use(cors({
+
   origin: [
     'http://localhost:4200',
-    'https://inventory-management-system-qjmd.vercel.app'
+    'https://inventory-management-system-qjmd.vercel.app',
+    'https://inventory-management-system-navy-xi.vercel.app'
   ],
-methods: [
-      'GET',
-      'POST',
-      'PUT',
-      'DELETE',
-      'OPTIONS'
-    ],
 
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization'
-    ],
+  methods: [
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE',
+    'OPTIONS'
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization'
+  ],
 
   credentials: true
+
 }));
-
-    
-
-    
 
 /* =========================
    BODY PARSER
 ========================= */
 
-app.use(
-  express.json({
-    limit: '50mb'
-  })
-);
+app.use(express.json({
+  limit: '50mb'
+}));
 
-app.use(
-  express.urlencoded({
-    extended: true,
-    limit: '50mb'
-  })
-);
-
-/* =========================
-   LOGGER
-========================= */
-
-app.use(requestLogger);
+app.use(express.urlencoded({
+  extended: true,
+  limit: '50mb'
+}));
 
 /* =========================
    STATIC FILES
@@ -82,14 +72,37 @@ app.use(
     path.join(process.cwd(), 'uploads')
   )
 );
+
 /* =========================
-   ROUTES
+   LOGGER
+========================= */
+
+app.use(requestLogger);
+
+/* =========================
+   TEST ROUTE
+========================= */
+
+app.get('/api/test', (_req, res) => {
+
+  return res.status(200).json({
+    message: 'API Working Successfully'
+  });
+
+});
+
+/* =========================
+   AUTH ROUTES
 ========================= */
 
 app.use(
   '/api/auth',
   authRoutes
 );
+
+/* =========================
+   PRODUCT ROUTES
+========================= */
 
 app.use(
   '/api/products',
@@ -112,7 +125,7 @@ app.use(
 
 app.get('/', (_req, res) => {
 
-  res.send(
+  return res.send(
     'Inventory Management API Running'
   );
 

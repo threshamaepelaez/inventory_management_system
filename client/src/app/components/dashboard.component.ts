@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 
 import { RouterModule, Router } from '@angular/router';
 
+import { environment } from '../../environments/environment';
+
 import { ProductService } from '../services/product.service';
 
 @Component({
@@ -29,6 +31,10 @@ implements OnInit {
   ========================= */
 
   products: any[] = [];
+  dashboardRecentProducts: any[] = [];
+  dashboardCurrentPage = 1;
+  dashboardItemsPerPage = 5;
+  dashboardTotalPages = 1;
 
   /* =========================
      DASHBOARD STATS
@@ -124,12 +130,15 @@ implements OnInit {
 
                 ...product,
 
-                image:
-                  product.image ||
-                  'assets/no-image.png'
+                imageUrl:
+                  product.image
+                    ? `${environment.apiUrl}/uploads/${product.image}`
+                    : 'assets/no-image.png'
 
               })
             );
+
+          this.updateDashboardPagination();
 
           /* =========================
              LOW STOCK
@@ -235,6 +244,72 @@ implements OnInit {
       '/login'
     ]);
 
+  }
+
+  refreshDashboard(): void {
+    this.loadProducts();
+  }
+
+  viewLowStock(): void {
+    this.router.navigate(['/products'], {
+      queryParams: { lowStock: 'true' }
+    });
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateDashboardPagination(): void {
+    this.dashboardTotalPages =
+      Math.max(
+        1,
+        Math.ceil(
+          this.products.length /
+          this.dashboardItemsPerPage
+        )
+      );
+
+    if (this.dashboardCurrentPage > this.dashboardTotalPages) {
+      this.dashboardCurrentPage = this.dashboardTotalPages;
+    }
+
+    if (this.dashboardCurrentPage < 1) {
+      this.dashboardCurrentPage = 1;
+    }
+
+    const startIndex =
+      (this.dashboardCurrentPage - 1) *
+      this.dashboardItemsPerPage;
+
+    const endIndex =
+      startIndex +
+      this.dashboardItemsPerPage;
+
+    this.dashboardRecentProducts =
+      this.products.slice(
+        startIndex,
+        endIndex
+      );
+  }
+
+  dashboardNextPage(): void {
+    if (
+      this.dashboardCurrentPage <
+      this.dashboardTotalPages
+    ) {
+      this.dashboardCurrentPage++;
+      this.updateDashboardPagination();
+    }
+  }
+
+  dashboardPreviousPage(): void {
+    if (
+      this.dashboardCurrentPage > 1
+    ) {
+      this.dashboardCurrentPage--;
+      this.updateDashboardPagination();
+    }
   }
 
 }

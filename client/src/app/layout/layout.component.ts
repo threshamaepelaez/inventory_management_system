@@ -37,9 +37,15 @@ import {
         >
 
           <div
-            class="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-r from-indigo-600 to-violet-600 text-2xl font-black text-white shadow-lg"
+            class="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-600 to-violet-500 p-3 shadow-2xl"
           >
-            I
+            <svg viewBox="0 0 64 64" class="h-full w-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="22" width="44" height="28" rx="6" fill="white" />
+              <path d="M10 22L32 10L54 22" stroke="#eef2ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M32 10V38" stroke="#eef2ff" stroke-width="4" stroke-linecap="round" />
+              <path d="M32 38L54 22" stroke="#eef2ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M32 38L10 22" stroke="#eef2ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
 
           <div>
@@ -53,7 +59,7 @@ import {
             <p
               class="text-slate-400"
             >
-              Smart Management System
+              Professional inventory dashboard
             </p>
 
           </div>

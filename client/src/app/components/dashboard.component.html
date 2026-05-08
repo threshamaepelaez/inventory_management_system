@@ -8,20 +8,22 @@
 
       <div class="flex items-center gap-4">
 
-        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-3xl shadow-lg">
-          📦
-        </div>
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
+            <svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 8L12 3L20 8V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 8L12 13L20 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 20V12H15V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
 
-        <div>
+          <div>
 
-          <h2 class="text-2xl font-black">
-            Inventory MS
-          </h2>
+            <h2 class="text-2xl font-black">
+              Inventory Management System
+            </h2>
 
-          <p class="text-sm text-slate-400">
-            Management System
-          </p>
-
+            <p class="text-sm text-slate-400">
+              Modern stock control
         </div>
 
       </div>
@@ -142,7 +144,13 @@
           routerLink="/products"
           class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-7 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105"
         >
-          Manage Products
+          View Products
+        </button>
+        <button
+          routerLink="/products/add"
+          class="rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-7 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105"
+        >
+          Add Product
         </button>
 
       </div>
@@ -309,6 +317,7 @@
 
         <!-- VIEW -->
         <button
+          type="button"
           routerLink="/products"
           class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
@@ -333,7 +342,8 @@
 
         <!-- ADD -->
         <button
-          routerLink="/products"
+          type="button"
+          routerLink="/products/add"
           class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
 
@@ -357,6 +367,8 @@
 
         <!-- LOW -->
         <button
+          type="button"
+          (click)="viewLowStock()"
           class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
 
@@ -380,12 +392,18 @@
 
         <!-- REFRESH -->
         <button
-          (click)="loadProducts()"
+          type="button"
+          (click)="refreshDashboard()"
           class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500 text-3xl text-white shadow-lg">
-            🔄
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500 text-white shadow-lg">
+            <svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 4V10H10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M20 20V14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M20 11C20 15.4183 16.4183 19 12 19C8.07107 19 4.72752 16.1316 4.17157 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M4 13C4 8.58172 7.58172 5 12 5C15.9289 5 19.2725 7.86844 19.8284 11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
 
           <div class="text-left">
@@ -428,7 +446,7 @@
       <div class="space-y-5">
 
         <div
-          *ngFor="let product of products.slice(0, 5)"
+          *ngFor="let product of dashboardRecentProducts"
           class="flex items-center justify-between rounded-3xl border border-slate-200 p-5 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
         >
 
@@ -436,7 +454,8 @@
           <div class="flex items-center gap-5">
 
             <img
-              [src]="product.image || 'assets/no-image.png'"
+              [src]="product.imageUrl || 'assets/no-image.png'"
+              (error)="product.imageUrl='assets/no-image.png'"
               class="h-20 w-20 rounded-2xl border border-slate-200 object-cover shadow-md dark:border-slate-700"
             />
 
@@ -486,7 +505,42 @@
 
       </div>
 
+      <div class="mt-6 flex flex-col items-center justify-between gap-3 rounded-3xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
+        <div>
+          Page {{ dashboardCurrentPage }} of {{ dashboardTotalPages }}
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            (click)="dashboardPreviousPage()"
+            [disabled]="dashboardCurrentPage === 1"
+            class="rounded-2xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            (click)="dashboardNextPage()"
+            [disabled]="dashboardCurrentPage === dashboardTotalPages"
+            class="rounded-2xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
     </div>
+
+    <button
+      type="button"
+      (click)="scrollToTop()"
+      aria-label="Scroll to top"
+      class="fixed bottom-6 right-6 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-2xl transition hover:bg-indigo-700"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 15l-6-6-6 6" />
+      </svg>
+    </button>
 
   </main>
 

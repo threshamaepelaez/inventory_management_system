@@ -5,166 +5,94 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 
-import {
-  Observable
-} from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class ProductService {
 
-  /* =========================
-     API URL
-  ========================= */
+  // LOCAL API
+  private apiUrl = 'http://localhost:5000/api/products';
 
-  private apiUrl =
-    'https://inventory-management-system1-ptf7.onrender.com/api/products';
+  constructor(private http: HttpClient) {}
 
-  private imageBaseUrl =
-    'https://inventory-management-system1-ptf7.onrender.com/uploads/';
+  // =========================
+  // GET TOKEN
+  // =========================
+  private getHeaders() {
 
-  constructor(
-    private http: HttpClient
-  ) {}
+    const token = localStorage.getItem('token');
 
-  /* =========================
-     TOKEN HEADER
-  ========================= */
-
-  private getHeaders(): HttpHeaders {
-
-    const token =
-      localStorage.getItem('token');
-
-    return new HttpHeaders({
-
-      Authorization:
-        `Bearer ${token}`
-
-    });
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      })
+    };
 
   }
 
-  /* =========================
-     GET IMAGE URL
-  ========================= */
-
-  getImageUrl(
-    image: string
-  ): string {
-
-    if (!image) {
-
-      return 'assets/no-image.png';
-
-    }
-
-    /* ALREADY FULL URL */
-
-    if (
-      image.startsWith('http')
-    ) {
-
-      return image;
-
-    }
-
-    return `${this.imageBaseUrl}${image}`;
-
-  }
-
-  /* =========================
-     GET PRODUCTS
-  ========================= */
-
+  // =========================
+  // GET ALL PRODUCTS
+  // =========================
   getProducts(): Observable<any> {
 
-    return this.http.get<any>(
-      this.apiUrl
-    );
-
-  }
-
-  /* =========================
-     GET SINGLE PRODUCT
-  ========================= */
-
-  getProduct(
-    id: number
-  ): Observable<any> {
-
-    return this.http.get<any>(
-      `${this.apiUrl}/${id}`
-    );
-
-  }
-
-  /* =========================
-     CREATE PRODUCT
-  ========================= */
-
-  createProduct(
-    data: FormData
-  ): Observable<any> {
-
-    return this.http.post<any>(
-
+    return this.http.get(
       this.apiUrl,
-
-      data,
-
-      {
-        headers:
-          this.getHeaders()
-      }
-
+      this.getHeaders()
     );
 
   }
 
-  /* =========================
-     UPDATE PRODUCT
-  ========================= */
+  // =========================
+  // GET SINGLE PRODUCT
+  // =========================
+  getProduct(id: number): Observable<any> {
 
+    return this.http.get(
+      `${this.apiUrl}/${id}`,
+      this.getHeaders()
+    );
+
+  }
+
+  // =========================
+  // CREATE PRODUCT
+  // =========================
+  createProduct(data: any): Observable<any> {
+
+    return this.http.post(
+      this.apiUrl,
+      data,
+      this.getHeaders()
+    );
+
+  }
+
+  // =========================
+  // UPDATE PRODUCT
+  // =========================
   updateProduct(
     id: number,
-    data: FormData
+    data: any
   ): Observable<any> {
 
-    return this.http.put<any>(
-
+    return this.http.put(
       `${this.apiUrl}/${id}`,
-
       data,
-
-      {
-        headers:
-          this.getHeaders()
-      }
-
+      this.getHeaders()
     );
 
   }
 
-  /* =========================
-     DELETE PRODUCT
-  ========================= */
+  // =========================
+  // DELETE PRODUCT
+  // =========================
+  deleteProduct(id: number): Observable<any> {
 
-  deleteProduct(
-    id: number
-  ): Observable<any> {
-
-    return this.http.delete<any>(
-
+    return this.http.delete(
       `${this.apiUrl}/${id}`,
-
-      {
-        headers:
-          this.getHeaders()
-      }
-
+      this.getHeaders()
     );
 
   }

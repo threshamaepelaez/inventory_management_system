@@ -1,66 +1,24 @@
 import express from 'express';
-
+import upload from '../middleware/upload';
 import {
   getProducts,
-  createProduct,
   getProductById,
+  createProduct,
   updateProduct,
   deleteProduct
 } from '../controllers/product.controller';
 
-import upload from '../middleware/upload';
-
 const router = express.Router();
 
-/* =========================
-   GET ALL PRODUCTS
-========================= */
+router.get('/', getProducts);
 
-router.get(
-  '/',
-  getProducts
-);
+router.get('/:id', getProductById);
 
-/* =========================
-   GET PRODUCT BY ID
-========================= */
+// Add multer upload middleware for image upload
+router.post('/', upload.single('image'), createProduct);
 
-router.get(
-  '/:id',
-  getProductById
-);
+router.put('/:id', upload.single('image'), updateProduct);
 
-/* =========================
-   CREATE PRODUCT
-========================= */
-
-router.post(
-  '/',
-  upload.single('image'),
-  createProduct
-);
-
-/* =========================
-   UPDATE PRODUCT
-========================= */
-
-router.put(
-  '/:id',
-  upload.single('image'),
-  updateProduct
-);
-
-/* =========================
-   DELETE PRODUCT
-========================= */
-
-router.delete(
-  '/:id',
-  deleteProduct
-);
-
-/* =========================
-   EXPORT ROUTER
-========================= */
+router.delete('/:id', deleteProduct);
 
 export default router;
