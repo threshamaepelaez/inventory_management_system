@@ -51,8 +51,6 @@ router.get(
 
 router.post(
   '/',
-  verifyToken,
-  isAdmin,
   upload.single('image'),
   createProduct
 );

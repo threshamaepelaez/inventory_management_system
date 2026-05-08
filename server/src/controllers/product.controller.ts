@@ -66,11 +66,14 @@ export const getProductById = async (
 // CREATE PRODUCT
 // =======================
 export const createProduct = async (
-  req: Request,
-  res: Response
+  req: any,
+  res: any
 ) => {
 
   try {
+
+    console.log('BODY:', req.body);
+    console.log('FILE:', req.file);
 
     const {
       name,
@@ -80,8 +83,9 @@ export const createProduct = async (
       quantity
     } = req.body;
 
-    console.log('BODY:', req.body);
-    console.log('FILE:', req.file);
+    const image = req.file
+      ? req.file.filename
+      : 'no-image.png';
 
     // VALIDATION
     if (
@@ -91,24 +95,16 @@ export const createProduct = async (
       !price ||
       !quantity
     ) {
+
       return res.status(400).json({
         success: false,
         message: 'All fields are required'
       });
+
     }
 
-    // HANDLE IMAGE
-    let image = null;
-
-    if (req.file) {
-      image = req.file.filename;
-    }
-
-    // INSERT PRODUCT
-    await pool.query(
-      `
-      INSERT INTO products
-      (
+    const query = `
+      INSERT INTO products (
         name,
         description,
         category,
@@ -117,30 +113,39 @@ export const createProduct = async (
         image
       )
       VALUES (?, ?, ?, ?, ?, ?)
-      `,
-      [
-        name,
-        description,
-        category,
-        price,
-        quantity,
-        image
-      ]
+    `;
+
+    const values = [
+      name,
+      description,
+      category,
+      price,
+      quantity,
+      image
+    ];
+
+    const [result]: any = await pool.query(
+      query,
+      values
     );
 
     return res.status(201).json({
       success: true,
-      message: 'Product added successfully'
+      message: 'Product created successfully',
+      productId: result.insertId
     });
 
-  } catch (err: any) {
+  } catch (error: any) {
 
-    console.log('CREATE PRODUCT ERROR:', err);
+    console.error(
+      'CREATE PRODUCT ERROR:',
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: 'Error creating product',
-      error: err.message
+      message: 'Failed to create product',
+      error: error.message
     });
 
   }
