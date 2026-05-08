@@ -3,135 +3,134 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool from '../config/db';
 
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) {
-  throw new Error('JWT_SECRET environment variable is required');
-}
-const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1d';
-
 // =======================
 // REGISTER USER
 // =======================
 export const register = async (
-req: Request,
-res: Response,
-next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-try {
-const requestBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body;
-const name = requestBody.name || req.query.name;
-const email = requestBody.email || req.query.email;
-const password = requestBody.password || req.query.password;
 
-// Validate required fields
-if (!name || !email || !password) {
-  return res.status(400).json({
-    message: 'Name, email and password are required',
-  });
-}
+  try {
 
-// Check if email already exists
-const [existingRows] = await pool.execute(
-  'SELECT id FROM users WHERE email = ?',
-  [email]
-);
+    const { name, email, password } = req.body;
 
-const existingUsers = existingRows as any[];
+    // CHECK REQUIRED FIELDS
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: 'Name, email and password are required'
+      });
+    }
 
-if (existingUsers.length > 0) {
-  return res.status(400).json({
-    message: 'Email already registered',
-  });
-}
+    // CHECK IF EMAIL EXISTS
+    const [existingRows]: any = await pool.execute(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
 
-// Hash password
-const hashedPassword = await bcrypt.hash(password, 10);
+    if (existingRows.length > 0) {
+      return res.status(400).json({
+        message: 'Email already registered'
+      });
+    }
 
-// Insert user
-await pool.execute(
-  'INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())',
-  [name, email, hashedPassword, 'user']
-);
+    // HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-return res.status(201).json({
-  message: 'User registered successfully',
-});
+    // INSERT USER
+    await pool.execute(
+      'INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())',
+      [name, email, hashedPassword, 'user']
+    );
 
-} catch (error) {
-next(error);
-}
+    return res.status(201).json({
+      message: 'Registration successful'
+    });
+
+  } catch (error) {
+
+    console.error(error);
+    next(error);
+
+  }
 };
 
 // =======================
 // LOGIN USER
 // =======================
 export const login = async (
-req: Request,
-res: Response,
-next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-try {
-const requestBody = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body;
-const email = requestBody.email || req.query.email;
-const password = requestBody.password || req.query.password;
 
-// Validate fields
-if (!email || !password) {
-  return res.status(400).json({
-    message: 'Email and password are required',
-  });
-}
+  try {
 
-// Find user
-const [rows] = await pool.execute(
-  'SELECT * FROM users WHERE email = ?',
-  [email]
-);
+    const { email, password } = req.body;
 
-const users = rows as any[];
+    // CHECK REQUIRED FIELDS
+    if (!email || !password) {
+      return res.status(400).json({
+        message: 'Email and password are required'
+      });
+    }
 
-if (users.length === 0) {
-  return res.status(401).json({
-    message: 'Invalid credentials',
-  });
-}
+    // FIND USER
+    const [rows]: any = await pool.execute(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
 
-const user = users[0];
+    // USER NOT FOUND
+    if (rows.length === 0) {
+      return res.status(401).json({
+        message: 'Invalid email or password'
+      });
+    }
 
-// Compare password
-const validPassword = await bcrypt.compare(
-  password,
-  user.password
-);
+    const user = rows[0];
 
-if (!validPassword) {
-  return res.status(401).json({
-    message: 'Invalid credentials',
-  });
-}
+    // CHECK PASSWORD
+    const validPassword = await bcrypt.compare(
+      password,
+      user.password
+    );
 
-const token = jwt.sign(
-  {
-    id: user.id,
-    role: user.role
-  },
-  process.env.JWT_SECRET!,
-  {
-    expiresIn: '7d'
+    if (!validPassword) {
+      return res.status(401).json({
+        message: 'Invalid email or password'
+      });
+    }
+
+    // CREATE TOKEN
+    const token = jwt.sign(
+      {
+        id: user.id,
+        role: user.role
+      },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: '7d'
+      }
+    );
+
+    // SUCCESS
+    return res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+
+    console.error(error);
+    next(error);
+
   }
-);
-
-res.status(200).json({
-  token,
-  user: {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role
-  }
-});
-
-} catch (error) {
-next(error);
-}
 };
