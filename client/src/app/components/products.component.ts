@@ -64,7 +64,7 @@ import { ProductService } from '../services/product.service';
   *ngIf="userRole?.toLowerCase() === 'admin'"
   type="button"
   (click)="openAddProduct()"
-      class="rounded-2xl bg-indigo-600 px-6 py-4 font-bold text-white shadow-lg transition hover:bg-indigo-700"
+      class="rounded-2xl bg-indigo-600 px-6 py-4 text-white font-bold shadow-lg transition hover:bg-indigo-700"
     >
       + Add Product
     </button>
@@ -283,7 +283,7 @@ export class ProductsComponent implements OnInit {
 
   openAddProduct(): void {
 
-    if (this.userRole !== 'Admin') {
+    if (this.userRole?.toLowerCase() !== 'admin') {
 
       alert('Access denied');
 
@@ -303,7 +303,7 @@ export class ProductsComponent implements OnInit {
 
   deleteProduct(id: number): void {
 
-    if (this.userRole !== 'Admin') {
+    if (this.userRole?.toLowerCase() !== 'admin') {
 
       alert('Access denied');
 
@@ -373,7 +373,7 @@ export class ProductsComponent implements OnInit {
 
   editProduct(id: number): void {
 
-    if (this.userRole !== 'Admin') {
+    if (this.userRole?.toLowerCase() !== 'admin') {
 
       alert('Access denied');
 

@@ -204,19 +204,14 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.userRole =
-      localStorage.getItem('role') || '';
+    const role = localStorage.getItem('role');
 
-    // BLOCK USERS
-    if (this.userRole !== 'Admin') {
-
-      alert('Access denied');
-
+    if (role?.toLowerCase() !== 'admin') {
       this.router.navigate(['/products']);
-
       return;
-
     }
+
+    this.userRole = role || '';
 
     const id =
       this.route.snapshot.paramMap.get('id');

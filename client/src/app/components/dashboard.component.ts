@@ -78,13 +78,15 @@ implements OnInit {
 
     this.loadProducts();
 
+    this.userRole =
+      localStorage.getItem('role') || '';
+
+    console.log('ROLE:', this.userRole);
+
     const user =
       JSON.parse(
         localStorage.getItem('user') || '{}'
       );
-
-    this.userRole =
-      user.role || 'user';
 
     this.userName =
       user.name || 'User';

@@ -66,6 +66,7 @@
 
         <button
           routerLink="/products"
+          *ngIf="userRole?.toLowerCase() === 'admin'"
           class="flex w-full items-center gap-4 rounded-2xl px-5 py-4 font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white"
         >
           ➕ Add Product
@@ -148,6 +149,7 @@
         </button>
         <button
           routerLink="/products/add"
+          *ngIf="userRole?.toLowerCase() === 'admin'"
           class="rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-7 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105"
         >
           Add Product
@@ -344,6 +346,7 @@
         <button
           type="button"
           routerLink="/products/add"
+          *ngIf="userRole?.toLowerCase() === 'admin'"
           class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
 
