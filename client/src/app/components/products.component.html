@@ -1,28 +1,29 @@
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto dark:text-white">
 
   <!-- HEADER -->
-  <div class="flex items-center justify-between mb-6">
+  <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
     <!-- LEFT -->
     <div class="flex items-center gap-4">
 
       <button
-  type="button"
-  routerLink="/products"
-  class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-800 shadow-md transition duration-200 hover:scale-105 hover:bg-slate-100 active:scale-95"
->
-  ← Back to Products
-</button>
+        type="button"
+        routerLink="/products"
+        class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-800 shadow-md transition duration-200 hover:scale-105 hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+      >
+        ← Back to Products
+      </button>
+
       <div>
 
         <h1
-          class="text-3xl font-black text-slate-800"
+          class="text-3xl font-black text-slate-800 dark:text-white"
         >
           Products
         </h1>
 
         <p
-          class="text-sm text-slate-400"
+          class="text-sm text-slate-400 dark:text-slate-500"
         >
           Inventory product list
         </p>
@@ -31,11 +32,35 @@
 
     </div>
 
+    <!-- RIGHT -->
+    <div class="flex items-center gap-3">
+
+      <!-- DARK MODE TOGGLE -->
+      <button
+        type="button"
+        (click)="toggleDarkMode()"
+        class="flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-md transition duration-200 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+      >
+
+        <span *ngIf="!isDarkMode">
+          🌙
+        </span>
+
+        <span *ngIf="isDarkMode">
+          ☀️
+        </span>
+
+        {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+
+      </button>
+
+    </div>
+
   </div>
 
   <!-- SEARCH -->
   <div
-    class="mb-6 rounded-2xl bg-white p-4 shadow-sm"
+    class="mb-6 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900"
   >
 
     <input
@@ -43,7 +68,7 @@
       [(ngModel)]="searchTerm"
       (input)="searchProducts()"
       placeholder="Search product or category..."
-      class="w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+      class="w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-400"
     />
 
   </div>
@@ -51,7 +76,7 @@
   <!-- LOADING -->
   <div
     *ngIf="loading"
-    class="rounded-2xl bg-white p-10 text-center shadow-sm"
+    class="rounded-2xl bg-white p-10 text-center shadow-sm dark:bg-slate-900 dark:text-white"
   >
 
     Loading products...
@@ -76,7 +101,7 @@
 
     <div
       *ngFor="let product of filteredProducts"
-      class="overflow-hidden rounded-3xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+      class="overflow-hidden rounded-3xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900"
     >
 
       <!-- IMAGE -->
@@ -91,21 +116,21 @@
 
         <!-- CATEGORY -->
         <div
-          class="mb-3 inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-600"
+          class="mb-3 inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
         >
           {{ product.category || 'General' }}
         </div>
 
         <!-- NAME -->
         <h2
-          class="text-2xl font-black text-slate-800"
+          class="text-2xl font-black text-slate-800 dark:text-white"
         >
           {{ product.name }}
         </h2>
 
         <!-- DESCRIPTION -->
         <p
-          class="mt-2 line-clamp-2 text-sm text-slate-500"
+          class="mt-2 line-clamp-2 text-sm text-slate-500 dark:text-slate-400"
         >
           {{ product.description }}
         </p>
@@ -116,13 +141,13 @@
         >
 
           <h3
-            class="text-2xl font-black text-indigo-600"
+            class="text-2xl font-black text-indigo-600 dark:text-indigo-400"
           >
             ₱{{ product.price | number:'1.2-2' }}
           </h3>
 
           <span
-            class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-600"
+            class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-white"
           >
             Qty:
             {{ product.quantity }}

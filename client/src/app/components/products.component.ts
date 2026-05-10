@@ -7,7 +7,9 @@ import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-products',
+
   standalone: true,
+
   imports: [
     CommonModule,
     FormsModule
@@ -15,7 +17,7 @@ import { ProductService } from '../services/product.service';
 
   template: `
 
-<div class="min-h-screen bg-slate-100 p-6">
+<div class="min-h-screen bg-slate-100 p-6 dark:bg-slate-950">
 
   <!-- HEADER -->
   <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -26,16 +28,16 @@ import { ProductService } from '../services/product.service';
       <button
         type="button"
         (click)="goBack()"
-        class="relative z-50 mb-4 inline-flex items-center rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm transition hover:bg-slate-50 pointer-events-auto"
+        class="relative z-50 mb-4 inline-flex items-center rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm transition hover:bg-slate-50 pointer-events-auto dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
       >
         ← Back to dashboard
       </button>
 
-      <h1 class="text-4xl font-black text-slate-900">
+      <h1 class="text-4xl font-black text-slate-900 dark:text-white">
         Products
       </h1>
 
-      <p class="mt-1 text-slate-500">
+      <p class="mt-1 text-slate-500 dark:text-slate-400">
         Browse inventory and manage stock.
       </p>
 
@@ -59,17 +61,51 @@ import { ProductService } from '../services/product.service';
 
     </div>
 
+    <!-- ACTIONS -->
+    <div class="flex items-center gap-3">
+
+      <!-- DARK MODE TOGGLE -->
+      <button
+        type="button"
+        (click)="toggleDarkMode()"
+        class="flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-md transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+      >
+
+        <span *ngIf="!isDarkMode">
+          🌙
+        </span>
+
+        <span *ngIf="isDarkMode">
+          ☀️
+        </span>
+
+        {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+
+      </button>
+
+      <!-- ADD PRODUCT -->
+      <button
+        *ngIf="userRole?.toLowerCase() === 'admin'"
+        type="button"
+        (click)="openAddProduct()"
+        class="rounded-2xl bg-indigo-600 px-6 py-3 font-bold text-white shadow-lg transition hover:bg-indigo-700"
+      >
+        + Add Product
+      </button>
+
+    </div>
+
   </div>
 
   <!-- SEARCH -->
-  <div class="mb-6 rounded-2xl bg-white p-4 shadow-sm">
+  <div class="mb-6 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
 
     <input
       type="text"
       [(ngModel)]="searchTerm"
       (input)="searchProducts()"
       placeholder="Search product or category..."
-      class="w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+      class="w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
     />
 
   </div>
@@ -77,18 +113,18 @@ import { ProductService } from '../services/product.service';
   <!-- EMPTY -->
   <div
     *ngIf="filteredProducts.length === 0"
-    class="rounded-3xl bg-white p-20 text-center shadow"
+    class="rounded-3xl bg-white p-20 text-center shadow dark:bg-slate-900"
   >
 
     <div class="mb-4 text-7xl">
       📦
     </div>
 
-    <h2 class="text-3xl font-black text-slate-800">
+    <h2 class="text-3xl font-black text-slate-800 dark:text-white">
       No products found
     </h2>
 
-    <p class="mt-3 text-slate-500">
+    <p class="mt-3 text-slate-500 dark:text-slate-400">
 
       {{
         lowStockFilter
@@ -108,7 +144,7 @@ import { ProductService } from '../services/product.service';
 
     <div
       *ngFor="let item of filteredProducts"
-      class="rounded-3xl bg-white p-5 shadow-lg"
+      class="rounded-3xl bg-white p-5 shadow-lg dark:bg-slate-900"
     >
 
       <!-- IMAGE -->
@@ -120,17 +156,17 @@ import { ProductService } from '../services/product.service';
 
       <div
         *ngIf="!item.imageUrl"
-        class="flex h-52 w-full items-center justify-center rounded-2xl bg-slate-200 text-6xl"
+        class="flex h-52 w-full items-center justify-center rounded-2xl bg-slate-200 text-6xl dark:bg-slate-800"
       >
         📦
       </div>
 
       <!-- INFO -->
-      <h2 class="mt-4 text-2xl font-black text-slate-800">
+      <h2 class="mt-4 text-2xl font-black text-slate-800 dark:text-white">
         {{ item.name }}
       </h2>
 
-      <p class="mt-2 text-slate-500">
+      <p class="mt-2 text-slate-500 dark:text-slate-400">
         {{ item.description }}
       </p>
 
@@ -140,7 +176,7 @@ import { ProductService } from '../services/product.service';
           ₱{{ item.price }}
         </span>
 
-        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-bold">
+        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-bold dark:bg-slate-800 dark:text-white">
           Qty: {{ item.quantity }}
         </span>
 
@@ -148,29 +184,29 @@ import { ProductService } from '../services/product.service';
 
       <!-- ADMIN BUTTONS -->
       <div
-  *ngIf="userRole?.toLowerCase() === 'admin'"
-  class="mt-5 flex flex-wrap gap-3"
->
+        *ngIf="userRole?.toLowerCase() === 'admin'"
+        class="mt-5 flex flex-wrap gap-3"
+      >
 
-  <!-- EDIT -->
-  <button
-    type="button"
-    (click)="editProduct(item.id)"
-    class="flex-1 rounded-xl bg-indigo-600 py-3 font-bold text-white transition hover:bg-indigo-700"
-  >
-    Edit
-  </button>
+        <!-- EDIT -->
+        <button
+          type="button"
+          (click)="editProduct(item.id)"
+          class="flex-1 rounded-xl bg-indigo-600 py-3 font-bold text-white transition hover:bg-indigo-700"
+        >
+          Edit
+        </button>
 
-  <!-- DELETE -->
-  <button
-    type="button"
-    (click)="deleteProduct(item.id)"
-    class="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white transition hover:bg-red-600"
-  >
-    Delete
-  </button>
+        <!-- DELETE -->
+        <button
+          type="button"
+          (click)="deleteProduct(item.id)"
+          class="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white transition hover:bg-red-600"
+        >
+          Delete
+        </button>
 
-</div>
+      </div>
 
     </div>
 
@@ -179,6 +215,7 @@ import { ProductService } from '../services/product.service';
 </div>
 `
 })
+
 export class ProductsComponent implements OnInit {
 
   userRole: string = '';
@@ -191,6 +228,8 @@ export class ProductsComponent implements OnInit {
 
   searchTerm = '';
 
+  isDarkMode = false;
+
   constructor(
     private productService: ProductService,
     private router: Router,
@@ -199,21 +238,66 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
 
-  this.userRole =
-    localStorage.getItem('role') || '';
+    const savedTheme =
+      localStorage.getItem('theme');
 
-  console.log('ROLE:', this.userRole);
+    if (savedTheme === 'dark') {
 
-  this.route.queryParams.subscribe((params) => {
+      this.isDarkMode = true;
 
-    this.lowStockFilter =
-      params['lowStock'] === 'true';
+      document.documentElement.classList.add(
+        'dark'
+      );
 
-    this.loadProducts();
+    }
 
-  });
+    this.userRole =
+      localStorage.getItem('role') || '';
 
-}
+    console.log('ROLE:', this.userRole);
+
+    this.route.queryParams.subscribe((params) => {
+
+      this.lowStockFilter =
+        params['lowStock'] === 'true';
+
+      this.loadProducts();
+
+    });
+
+  }
+
+  toggleDarkMode(): void {
+
+    this.isDarkMode =
+      !this.isDarkMode;
+
+    if (this.isDarkMode) {
+
+      document.documentElement.classList.add(
+        'dark'
+      );
+
+      localStorage.setItem(
+        'theme',
+        'dark'
+      );
+
+    } else {
+
+      document.documentElement.classList.remove(
+        'dark'
+      );
+
+      localStorage.setItem(
+        'theme',
+        'light'
+      );
+
+    }
+
+  }
+
   loadProducts(): void {
 
     this.productService.getProducts().subscribe({
