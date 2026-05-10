@@ -31,9 +31,13 @@ implements OnInit {
   ========================= */
 
   products: any[] = [];
+
   dashboardRecentProducts: any[] = [];
+
   dashboardCurrentPage = 1;
+
   dashboardItemsPerPage = 5;
+
   dashboardTotalPages = 1;
 
   /* =========================
@@ -62,6 +66,12 @@ implements OnInit {
 
   isLoading = false;
 
+  /* =========================
+     DARK MODE
+  ========================= */
+
+  isDarkMode = false;
+
   constructor(
 
     private productService: ProductService,
@@ -76,12 +86,44 @@ implements OnInit {
 
   ngOnInit(): void {
 
+    /* =========================
+       DARK MODE
+    ========================= */
+
+    const savedTheme =
+      localStorage.getItem('theme');
+
+    if (savedTheme === 'dark') {
+
+      this.isDarkMode = true;
+
+      document.documentElement.classList.add(
+        'dark'
+      );
+
+    }
+
+    /* =========================
+       LOAD PRODUCTS
+    ========================= */
+
     this.loadProducts();
+
+    /* =========================
+       USER ROLE
+    ========================= */
 
     this.userRole =
       localStorage.getItem('role') || '';
 
-    console.log('ROLE:', this.userRole);
+    console.log(
+      'ROLE:',
+      this.userRole
+    );
+
+    /* =========================
+       USER INFO
+    ========================= */
 
     const user =
       JSON.parse(
@@ -242,29 +284,97 @@ implements OnInit {
       'user'
     );
 
+    localStorage.removeItem(
+      'theme'
+    );
+
     this.router.navigate([
       '/login'
     ]);
 
   }
 
+  /* =========================
+     REFRESH
+  ========================= */
+
   refreshDashboard(): void {
 
-  window.location.reload();
+    window.location.reload();
 
-}
+  }
+
+  /* =========================
+     DARK MODE TOGGLE
+  ========================= */
+
+  toggleDarkMode(): void {
+
+    this.isDarkMode =
+      !this.isDarkMode;
+
+    if (this.isDarkMode) {
+
+      document.documentElement.classList.add(
+        'dark'
+      );
+
+      localStorage.setItem(
+        'theme',
+        'dark'
+      );
+
+    } else {
+
+      document.documentElement.classList.remove(
+        'dark'
+      );
+
+      localStorage.setItem(
+        'theme',
+        'light'
+      );
+
+    }
+
+  }
+
+  /* =========================
+     LOW STOCK
+  ========================= */
 
   viewLowStock(): void {
-    this.router.navigate(['/products'], {
-      queryParams: { lowStock: 'true' }
-    });
+
+    this.router.navigate(
+      ['/products'],
+      {
+        queryParams: {
+          lowStock: 'true'
+        }
+      }
+    );
+
   }
+
+  /* =========================
+     SCROLL TOP
+  ========================= */
 
   scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
   }
 
+  /* =========================
+     PAGINATION
+  ========================= */
+
   updateDashboardPagination(): void {
+
     this.dashboardTotalPages =
       Math.max(
         1,
@@ -274,46 +384,79 @@ implements OnInit {
         )
       );
 
-    if (this.dashboardCurrentPage > this.dashboardTotalPages) {
-      this.dashboardCurrentPage = this.dashboardTotalPages;
+    if (
+      this.dashboardCurrentPage >
+      this.dashboardTotalPages
+    ) {
+
+      this.dashboardCurrentPage =
+        this.dashboardTotalPages;
+
     }
 
-    if (this.dashboardCurrentPage < 1) {
+    if (
+      this.dashboardCurrentPage < 1
+    ) {
+
       this.dashboardCurrentPage = 1;
+
     }
 
     const startIndex =
-      (this.dashboardCurrentPage - 1) *
+
+      (
+        this.dashboardCurrentPage - 1
+      ) *
+
       this.dashboardItemsPerPage;
 
     const endIndex =
+
       startIndex +
+
       this.dashboardItemsPerPage;
 
     this.dashboardRecentProducts =
+
       this.products.slice(
         startIndex,
         endIndex
       );
+
   }
 
   dashboardNextPage(): void {
+
     if (
+
       this.dashboardCurrentPage <
+
       this.dashboardTotalPages
+
     ) {
+
       this.dashboardCurrentPage++;
+
       this.updateDashboardPagination();
+
     }
+
   }
 
   dashboardPreviousPage(): void {
+
     if (
+
       this.dashboardCurrentPage > 1
+
     ) {
+
       this.dashboardCurrentPage--;
+
       this.updateDashboardPagination();
+
     }
+
   }
 
 }
