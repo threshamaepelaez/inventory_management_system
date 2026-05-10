@@ -1,50 +1,50 @@
 <div class="flex min-h-screen bg-slate-100 dark:bg-slate-950">
 
   <!-- SIDEBAR -->
-  <aside class="hidden w-72 flex-col bg-slate-950 text-white shadow-2xl lg:flex">
+  <aside class="hidden w-64 flex-col bg-slate-950 text-white shadow-2xl lg:flex">
 
     <!-- LOGO -->
-    <div class="border-b border-slate-800 p-6">
+    <div class="border-b border-slate-800 px-6 py-5">
 
-      <div class="flex flex-wrap items-center gap-4">
+      <div class="flex items-center gap-4">
 
-          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
-            <svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 8L12 3L20 8V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M4 8L12 13L20 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 20V12H15V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 8L12 3L20 8V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 8L12 13L20 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 20V12H15V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
 
-          <div>
+        <div>
 
-            <h2 class="text-2xl font-black">
-              Inventory Management System
-            </h2>
+          <h2 class="text-lg font-extrabold tracking-tight">
+            Inventory System
+          </h2>
 
-            <p class="text-sm text-slate-400">
-              Modern stock control
-            </p>
+          <p class="mt-1 text-xs text-slate-400">
+            Modern stock control
+          </p>
 
-          </div>
+        </div>
 
       </div>
 
     </div>
 
     <!-- MENU -->
-    <div class="flex-1 p-5">
+    <div class="flex-1 px-4 py-5">
 
-      <p class="mb-4 px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+      <p class="mb-3 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
         Menu
       </p>
 
-      <div class="space-y-3">
+      <div class="space-y-2">
 
         <!-- DASHBOARD -->
         <a
           routerLink="/dashboard"
-          class="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4 font-bold shadow-lg transition hover:scale-[1.02]"
+          class="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-sm font-semibold shadow-md transition duration-200 hover:translate-x-1"
         >
           📊 Dashboard
         </a>
@@ -52,7 +52,7 @@
         <!-- PRODUCTS -->
         <a
           routerLink="/products"
-          class="flex items-center gap-4 rounded-2xl px-5 py-4 font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white"
+          class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition duration-200 hover:bg-slate-800 hover:text-white"
         >
           📦 Products
         </a>
@@ -60,16 +60,16 @@
       </div>
 
       <!-- ADMIN -->
-      <div class="mt-10">
+      <div class="mt-8">
 
-        <p class="mb-4 px-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+        <p class="mb-3 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
           Admin
         </p>
 
         <button
           routerLink="/products"
           *ngIf="userRole?.toLowerCase() === 'admin'"
-          class="flex w-full items-center gap-4 rounded-2xl px-5 py-4 font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white"
+          class="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition duration-200 hover:bg-slate-800 hover:text-white"
         >
           ➕ Add Product
         </button>
@@ -79,18 +79,18 @@
     </div>
 
     <!-- USER -->
-    <div class="border-t border-slate-800 p-5">
+    <div class="border-t border-slate-800 px-5 py-5">
 
       <div class="mb-4 flex items-center gap-3">
 
-        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 font-black">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-sm font-bold shadow-md">
           T
         </div>
 
         <div>
 
-          <h3 class="font-bold">
-            Thresha
+          <h3 class="text-sm font-semibold text-white">
+            {{ userName }}
           </h3>
 
           <p class="text-xs text-slate-400">
@@ -103,7 +103,7 @@
 
       <button
         (click)="logout()"
-        class="w-full rounded-2xl bg-red-500 py-3 font-bold text-white shadow-lg transition hover:bg-red-600"
+        class="w-full rounded-2xl bg-red-500 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-red-600"
       >
         Logout
       </button>
@@ -113,43 +113,39 @@
   </aside>
 
   <!-- MAIN -->
-  <main class="flex-1 p-6">
+  <main class="flex-1 p-5 lg:p-7">
 
     <!-- TOP -->
-    <div class="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+    <div class="mb-7 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
       <!-- TITLE -->
-      <div class="flex items-center gap-4">
+      <div>
 
-        <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          Dashboard
+        </h1>
 
-          <h1 class="text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-            Dashboard
-          </h1>
-
-          <p class="mt-2 text-slate-500 dark:text-slate-400">
-            Friday, May 1, 2026
-          </p>
-
-        </div>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Friday, May 1, 2026
+        </p>
 
       </div>
-      <!-- ACTIONS -->
-      <div class="flex items-center gap-4">
 
-        
+      <!-- ACTIONS -->
+      <div class="flex flex-wrap items-center gap-3">
 
         <!-- PRODUCTS -->
         <button
           routerLink="/products"
-          class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-7 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105"
+          class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition duration-200 hover:scale-[1.02]"
         >
           View Products
         </button>
+
         <button
           routerLink="/products/add"
           *ngIf="userRole?.toLowerCase() === 'admin'"
-          class="rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-7 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105"
+          class="rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition duration-200 hover:scale-[1.02]"
         >
           Add Product
         </button>
@@ -158,31 +154,58 @@
 
     </div>
 
+    <!-- WELCOME -->
+    <div class="relative mb-7 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-700 px-8 py-7 text-white shadow-xl">
+
+      <div class="relative z-10">
+
+        <h2 class="text-3xl font-extrabold">
+          Welcome back, {{ userName }}!
+        </h2>
+
+        <div
+          class="mt-4 inline-flex rounded-full bg-white/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm"
+        >
+          {{ userRole }}
+        </div>
+
+        <p class="mt-4 max-w-xl text-sm text-indigo-100">
+          Here's what's happening with your inventory today.
+        </p>
+
+      </div>
+
+      <!-- DECOR -->
+      <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-white/10 blur-3xl"></div>
+
+    </div>
+
     <!-- STATS -->
-   <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
 
       <!-- TOTAL -->
-      <div class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
 
         <div class="flex items-start justify-between">
 
           <div>
 
-            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Total Products
             </p>
 
-            <h2 class="mt-4 text-5xl font-black text-slate-900 dark:text-white">
+            <h2 class="mt-3 text-3xl font-extrabold text-slate-900 dark:text-white">
               {{ products.length }}
             </h2>
 
-            <p class="mt-2 text-sm text-indigo-500">
+            <p class="mt-2 text-xs text-indigo-500">
               📦 Inventory Count
             </p>
 
           </div>
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-3xl shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-xl text-white shadow-md">
             📦
           </div>
 
@@ -191,27 +214,27 @@
       </div>
 
       <!-- LOW STOCK -->
-      <div class="rounded-[28px] border border-red-100 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="rounded-3xl border border-red-100 bg-white p-5 shadow-sm transition hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
 
         <div class="flex items-start justify-between">
 
           <div>
 
-            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Low Stock Items
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Low Stock
             </p>
 
-            <h2 class="mt-4 text-5xl font-black text-slate-900 dark:text-white">
+            <h2 class="mt-3 text-3xl font-extrabold text-slate-900 dark:text-white">
               {{ lowStockCount }}
             </h2>
 
-            <p class="mt-2 text-sm text-red-500">
+            <p class="mt-2 text-xs text-red-500">
               ⚠️ Need attention
             </p>
 
           </div>
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 text-3xl shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 text-xl text-white shadow-md">
             ⚠️
           </div>
 
@@ -220,27 +243,27 @@
       </div>
 
       <!-- CATEGORIES -->
-      <div class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
 
         <div class="flex items-start justify-between">
 
           <div>
 
-            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Categories
             </p>
 
-            <h2 class="mt-4 text-5xl font-black text-slate-900 dark:text-white">
+            <h2 class="mt-3 text-3xl font-extrabold text-slate-900 dark:text-white">
               5
             </h2>
 
-            <p class="mt-2 text-sm text-emerald-500">
+            <p class="mt-2 text-xs text-emerald-500">
               🏷️ Active categories
             </p>
 
           </div>
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-3xl shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-xl text-white shadow-md">
             🏷️
           </div>
 
@@ -249,27 +272,27 @@
       </div>
 
       <!-- VALUE -->
-      <div class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
 
         <div class="flex items-start justify-between">
 
           <div>
 
-            <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Total Value (PHP)
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Total Value
             </p>
 
-            <h2 class="mt-4 text-4xl font-black text-slate-900 dark:text-white">
+            <h2 class="mt-3 text-2xl font-extrabold text-slate-900 dark:text-white">
               ₱{{ totalValue.toLocaleString() }}
             </h2>
 
-            <p class="mt-2 text-sm text-purple-500">
-              💰 Total inventory value
+            <p class="mt-2 text-xs text-purple-500">
+              💰 Inventory value
             </p>
 
           </div>
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-3xl shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-xl text-white shadow-md">
             💵
           </div>
 
@@ -279,61 +302,33 @@
 
     </div>
 
-    <!-- WELCOME -->
-    <div class="relative mb-10 overflow-hidden rounded-[32px] bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-700 p-10 text-white shadow-2xl">
-
-      <div class="relative z-10">
-
-        <h2 class="text-5xl font-black">
-          Welcome back, {{ userName }}!
-        </h2>
-
-        <div
-  class="inline-flex rounded-full bg-indigo-100 px-4 py-2 text-sm font-bold uppercase text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
->
-  {{ userRole }}
-</div>
-
-        <p class="mt-4 text-lg text-indigo-100">
-          Here's what's happening with your inventory today.
-        </p>
-
-      </div>
-
-      <!-- DECOR -->
-      <div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-
-      <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-white/10 blur-2xl"></div>
-
-    </div>
-
     <!-- QUICK ACTIONS -->
-    <div class="mb-10 rounded-[32px] bg-white p-8 shadow-xl dark:bg-slate-900">
+    <div class="mt-7 rounded-3xl bg-white p-6 shadow-sm dark:bg-slate-900">
 
-      <h2 class="mb-8 text-3xl font-black text-slate-900 dark:text-white">
+      <h2 class="mb-5 text-2xl font-extrabold text-slate-900 dark:text-white">
         Quick Actions
       </h2>
 
-      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
 
         <!-- VIEW -->
         <button
           type="button"
           routerLink="/products"
-          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
         >
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500 text-3xl text-white shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-xl text-white shadow-md">
             📋
           </div>
 
           <div class="text-left">
 
-            <h3 class="text-xl font-black">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">
               View Products
             </h3>
 
-            <p class="text-sm text-slate-500 dark:text-slate-400">
+            <p class="text-xs text-slate-500 dark:text-slate-400">
               Browse inventory
             </p>
 
@@ -346,21 +341,21 @@
           type="button"
           routerLink="/products/add"
           *ngIf="userRole?.toLowerCase() === 'admin'"
-          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
         >
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500 text-3xl text-white shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500 text-xl text-white shadow-md">
             ➕
           </div>
 
           <div class="text-left">
 
-            <h3 class="text-xl font-black">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">
               Add Product
             </h3>
 
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              Create new item
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Create item
             </p>
 
           </div>
@@ -371,21 +366,21 @@
         <button
           type="button"
           (click)="viewLowStock()"
-          class="flex items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:scale-[1.02] hover:shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
         >
 
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500 text-3xl text-white shadow-lg">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500 text-xl text-white shadow-md">
             ⚠️
           </div>
 
           <div class="text-left">
 
-            <h3 class="text-xl font-black">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">
               Low Stock
             </h3>
 
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              View alerts ({{ lowStockCount }})
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Alerts ({{ lowStockCount }})
             </p>
 
           </div>
@@ -393,48 +388,46 @@
         </button>
 
         <!-- REFRESH -->
-<button
-  type="button"
-  (click)="refreshDashboard()"
-  class="flex w-full items-center gap-5 rounded-3xl border border-slate-200 bg-slate-50 p-6 transition duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-95 dark:border-slate-700 dark:bg-slate-800"
->
+        <button
+          type="button"
+          (click)="refreshDashboard()"
+          class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+        >
 
-  <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500 text-white shadow-lg">
-    🔄
-  </div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500 text-xl text-white shadow-md">
+            🔄
+          </div>
 
-  <div class="text-left">
+          <div class="text-left">
 
-    <h3 class="text-xl font-black text-slate-900 dark:text-white">
-      Refresh
-    </h3>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">
+              Refresh
+            </h3>
 
-    <p class="text-sm text-slate-500 dark:text-slate-400">
-      Update dashboard
-    </p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Update dashboard
+            </p>
 
-  </div>
+          </div>
 
-
-
-</button>
+        </button>
 
       </div>
 
     </div>
 
     <!-- RECENT PRODUCTS -->
-    <div class="rounded-[32px] bg-white p-8 shadow-xl dark:bg-slate-900">
+    <div class="mt-7 rounded-3xl bg-white p-6 shadow-sm dark:bg-slate-900">
 
-      <div class="mb-8 flex items-center justify-between">
+      <div class="mb-6 flex items-center justify-between">
 
-        <h2 class="text-3xl font-black text-slate-900 dark:text-white">
+        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">
           Recent Products
         </h2>
 
         <button
           routerLink="/products"
-          class="font-bold text-indigo-500 transition hover:text-indigo-700"
+          class="text-sm font-semibold text-indigo-500 transition hover:text-indigo-700"
         >
           View All
         </button>
@@ -442,29 +435,29 @@
       </div>
 
       <!-- PRODUCTS -->
-      <div class="space-y-5">
+      <div class="space-y-4">
 
         <div
           *ngFor="let product of dashboardRecentProducts"
-          class="flex items-center justify-between rounded-3xl border border-slate-200 p-5 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+          class="flex items-center justify-between rounded-2xl border border-slate-200 p-4 transition duration-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
         >
 
           <!-- LEFT -->
-          <div class="flex items-center gap-5">
+          <div class="flex items-center gap-4">
 
             <img
               [src]="product.imageUrl || 'assets/no-image.png'"
               (error)="product.imageUrl='assets/no-image.png'"
-              class="h-20 w-20 rounded-2xl border border-slate-200 object-cover shadow-md dark:border-slate-700"
+              class="h-16 w-16 rounded-2xl border border-slate-200 object-cover shadow-sm dark:border-slate-700"
             />
 
             <div>
 
-              <h3 class="text-xl font-black text-slate-900 dark:text-white">
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">
                 {{ product.name }}
               </h3>
 
-              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {{ product.category }}
               </p>
 
@@ -475,12 +468,12 @@
           <!-- RIGHT -->
           <div class="text-right">
 
-            <p class="text-2xl font-black text-slate-900 dark:text-white">
+            <p class="text-lg font-extrabold text-slate-900 dark:text-white">
               ₱{{ product.price }}
             </p>
 
             <span
-              class="mt-2 inline-flex rounded-full px-4 py-2 text-sm font-bold"
+              class="mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold"
               [ngClass]="{
                 'bg-green-100 text-green-700': product.quantity > 10,
                 'bg-orange-100 text-orange-700': product.quantity <= 10 && product.quantity > 0,
@@ -504,39 +497,47 @@
 
       </div>
 
-      <div class="mt-6 flex flex-col items-center justify-between gap-3 rounded-3xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
+      <!-- PAGINATION -->
+      <div class="mt-5 flex flex-col items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 md:flex-row">
+
         <div>
           Page {{ dashboardCurrentPage }} of {{ dashboardTotalPages }}
         </div>
+
         <div class="flex items-center gap-2">
+
           <button
             type="button"
             (click)="dashboardPreviousPage()"
             [disabled]="dashboardCurrentPage === 1"
-            class="rounded-2xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           >
             Previous
           </button>
+
           <button
             type="button"
             (click)="dashboardNextPage()"
             [disabled]="dashboardCurrentPage === dashboardTotalPages"
-            class="rounded-2xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           >
             Next
           </button>
+
         </div>
+
       </div>
 
     </div>
 
+    <!-- SCROLL -->
     <button
       type="button"
       (click)="scrollToTop()"
       aria-label="Scroll to top"
-      class="fixed bottom-6 right-6 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-2xl transition hover:bg-indigo-700"
+      class="fixed bottom-6 right-6 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl transition duration-200 hover:bg-indigo-700"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 15l-6-6-6 6" />
       </svg>
     </button>

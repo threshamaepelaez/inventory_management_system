@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 
+dotenv.config();
+
 import authRoutes from './routes/auth.routes';
 import productRoutes from './routes/product.routes';
 
@@ -13,9 +15,12 @@ import { requestLogger } from './middleware/logger.middleware';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerDocument } from './utils/swagger';
 
-import pool from './config/db';
+console.log('CWD:', process.cwd());
+console.log('DB_HOST:', process.env.DB_HOST);
 
-dotenv.config();
+import { getPool } from './config/db';
+
+const pool = getPool();
 
 const app = express();
 

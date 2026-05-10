@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import pool from '../config/db';
+import { getPool } from '../config/db';
+
+const pool = getPool();
 
 // =======================
 // REGISTER USER

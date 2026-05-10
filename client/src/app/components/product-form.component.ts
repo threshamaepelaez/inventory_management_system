@@ -17,12 +17,12 @@ import { ProductService } from '../services/product.service';
 <div class="relative min-h-screen bg-slate-100 p-6">
 
   <!-- HEADER -->
-  <div class="mb-5">
+  <div class="mb-8">
 
     <button
   type="button"
   (click)="goBack()"
-  class="relative z-50 pointer-events-auto mb-4 inline-flex items-center rounded-2xl bg-white px-5 py-3 text-slate-700 shadow transition hover:bg-slate-50"
+  class="relative z-50 mb-5 inline-flex items-center rounded-2xl bg-white px-5 py-3 text-slate-700 shadow transition hover:bg-slate-50"
   >
       ← Back to Products
     </button>
@@ -46,10 +46,10 @@ import { ProductService } from '../services/product.service';
   </div>
 
   <!-- FORM -->
-  <div class="rounded-3xl bg-white p-5 shadow-lg">
+  <div class="rounded-3xl bg-white p-8 shadow-lg">
 
     <!-- PRODUCT NAME -->
-    <div class="mb-4">
+    <div class="mb-6">
 
       <label class="mb-2 block text-lg font-bold text-slate-700">
         Product Name
@@ -65,9 +65,9 @@ import { ProductService } from '../services/product.service';
     </div>
 
     <!-- DESCRIPTION -->
-    <div class="mb-4">
+    <div class="mb-6">
 
-      <label class="mb-2 block text-base font-bold text-slate-700">
+      <label class="mb-2 block text-lg font-bold text-slate-700">
         Description
       </label>
 
@@ -81,7 +81,7 @@ import { ProductService } from '../services/product.service';
     </div>
 
     <!-- CATEGORY / PRICE / QUANTITY -->
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 
       <!-- CATEGORY -->
       <div>
@@ -135,9 +135,9 @@ import { ProductService } from '../services/product.service';
     </div>
 
     <!-- IMAGE -->
-    <div class="mt-4">
+    <div class="mt-6">
 
-      <label class="mb-2 block text-base font-bold text-slate-700">
+      <label class="mb-2 block text-lg font-bold text-slate-700">
         Product Image
       </label>
 
@@ -150,12 +150,12 @@ import { ProductService } from '../services/product.service';
     </div>
 
     <!-- BUTTONS -->
-    <div class="mt-6 flex flex-col gap-3 md:flex-row">
+    <div class="mt-8 flex flex-col gap-4 md:flex-row">
 
       <button
         type="button"
         (click)="saveProduct()"
-        class="relative z-50 pointer-events-auto flex-1 rounded-2xl bg-indigo-600 py-3 font-bold text-white transition hover:bg-indigo-700"
+        class="flex-1 rounded-2xl bg-indigo-600 py-4 text-lg font-bold text-white transition hover:bg-indigo-700"
       >
 
         {{ isEditMode ? 'Update Product' : 'Save Product' }}
@@ -165,7 +165,7 @@ import { ProductService } from '../services/product.service';
       <button
         type="button"
         (click)="goBack()"
-        class="relative z-50 pointer-events-auto flex-1 rounded-2xl bg-slate-200 py-3 font-bold text-slate-700 transition hover:bg-slate-300"
+        class="flex-1 rounded-2xl bg-slate-200 py-4 text-lg font-bold text-slate-700 transition hover:bg-slate-300"
       >
         Cancel
       </button>

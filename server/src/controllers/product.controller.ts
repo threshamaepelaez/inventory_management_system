@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
-import pool from '../config/db';
+import { getPool } from '../config/db';
+
+const pool = getPool();
 
 // =======================
 // GET ALL PRODUCTS
