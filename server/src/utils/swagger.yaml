@@ -6,7 +6,7 @@ info:
   description: API documentation for Inventory Management System
 
 servers:
-  - url: http://localhost:5000
+   url: "https://inventory-management-system1-ptf7.onrender.com",
 
 paths:
   /api/auth/register:
