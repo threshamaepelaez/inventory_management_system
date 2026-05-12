@@ -6,6 +6,18 @@ This project allows administrators to manage products, inventory stock, categori
 
 ---
 
+# Live Preview
+
+## Frontend
+
+🔗 https://inventory-management-system-hxx9xey8i.vercel.app
+
+## Backend API
+
+🔗 https://inventory-management-system1-ptf7.onrender.com
+
+---
+
 # Features
 
 ## Authentication System
@@ -88,15 +100,43 @@ This project allows administrators to manage products, inventory stock, categori
 
 ---
 
-# Live Deployment
+# System Screenshots
 
-## Frontend
+---
 
-[https://inventory-management-system-hxx9xey8i.vercel.app](https://inventory-management-system-hxx9xey8i.vercel.app)
+## Authentication Pages
 
-## Backend API
+| Page | Preview |
+|---|---|
+| Login Page | <img src="./screenshots/login.png" width="900"/> |
+| Register Page | <img src="./screenshots/register.png" width="900"/> |
 
-[https://inventory-management-system1-ptf7.onrender.com](https://inventory-management-system1-ptf7.onrender.com)
+---
+
+## Admin Dashboard
+
+| Page | Preview |
+|---|---|
+| Admin Dashboard Light Mode | <img src="./screenshots/admin-dashboard-light.png" width="900"/> |
+| Admin Dashboard Dark Mode | <img src="./screenshots/admin-dashboard-dark.png" width="900"/> |
+
+---
+
+## Products Page
+
+| Page | Preview |
+|---|---|
+| Products Page Light Mode | <img src="./screenshots/products-light.png" width="900"/> |
+| Products Page Dark Mode | <img src="./screenshots/products-dark.png" width="900"/> |
+| Low Stock Filter | <img src="./screenshots/low-stock.png" width="900"/> |
+
+---
+
+## Swagger API Documentation
+
+| API Endpoint | Preview |
+|---|---|
+| POST `/api/auth/register` | <img src="./screenshots/swagger-register.png" width="900"/> |
 
 ---
 
@@ -188,6 +228,16 @@ inventory_management_system/
 │   ├── uploads/
 │   └── utils/
 │
+├── screenshots/
+│   ├── login.png
+│   ├── register.png
+│   ├── admin-dashboard-light.png
+│   ├── admin-dashboard-dark.png
+│   ├── products-light.png
+│   ├── products-dark.png
+│   ├── low-stock.png
+│   └── swagger-register.png
+│
 └── README.md
 ```
 
@@ -220,12 +270,14 @@ inventory_management_system/
 
 # Author
 
-Thresha Mae Pelaez
-Leilanie Javellana
-Jepte Solinap
+## Developers
+
+* Thresha Mae Pelaez
+* Leilanie Javellana
+* Jepte Solinap
 
 GitHub:
-[https://github.com/threshamaepelaez](https://github.com/threshamaepelaez)
+https://github.com/threshamaepelaez
 
 ---
 
