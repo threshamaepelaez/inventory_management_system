@@ -9,7 +9,18 @@ servers:
   - url: https://inventory-management-system1-ptf7.onrender.com
     description: Production Server
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
 paths:
+
   /api/auth/register:
     post:
       summary: Register User
@@ -18,6 +29,7 @@ paths:
 
       requestBody:
         required: true
+
         content:
           application/json:
             schema:
@@ -54,6 +66,7 @@ paths:
 
       requestBody:
         required: true
+
         content:
           application/json:
             schema:
@@ -84,9 +97,15 @@ paths:
       tags:
         - Products
 
+      security:
+        - bearerAuth: []
+
       responses:
         '200':
           description: List of products
+
+        '401':
+          description: Unauthorized
 
         '500':
           description: Server error
@@ -137,10 +156,3 @@ paths:
 
         '500':
           description: Server error
-
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
