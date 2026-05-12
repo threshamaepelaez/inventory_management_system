@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-The Inventory Management System is a modern full-stack web application designed to help businesses manage products, inventory stock, categories, and users efficiently.
+The Inventory Management System is a modern full-stack web application designed to help businesses manage products, monitor inventory stock, organize categories, and control user access efficiently.
 
-The system includes secure authentication, role-based access control, inventory monitoring, product management, and responsive dashboard analytics.
+The system features secure authentication, role-based access control, inventory monitoring, responsive dashboards, and product management functionalities for both administrators and users.
 
-This project was built using Angular, Tailwind CSS, Node.js, Express.js, TypeScript, and MySQL.
+Built using Angular, Tailwind CSS, Node.js, Express.js, TypeScript, and MySQL.
 
 ---
 
@@ -206,41 +206,39 @@ inventory_management_system/
 
 ---
 
-# Screenshots
+# 📸 Screenshots
 
 ## Authentication Pages
 
-| Feature | Screenshot |
-|---|---|
-| Login Page | <img src="./screenshots/login.png" width="900"/> |
-| Register Page | <img src="./screenshots/register.png" width="900"/> |
+| Feature | Screenshot | Description |
+|---|---|---|
+| Login Page | <img src="./screenshots/login.png" width="700"/> | User login page with secure JWT authentication and responsive UI design. |
+| Register Page | <img src="./screenshots/register.png" width="700"/> | User registration form with role selection and validation system. |
 
 ---
 
 ## Dashboard Pages
 
-| Feature | Screenshot |
-|---|---|
-| Dashboard Light Mode | <img src="./screenshots/admin-dashboard-light.png" width="900"/> |
-| Dashboard Dark Mode | <img src="./screenshots/admin-dashboard-dark.png" width="900"/> |
+| Feature | Screenshot | Description |
+|---|---|---|
+| Admin Dashboard | <img src="./screenshots/admin.png" width="700"/> | Main dashboard showing inventory statistics, low stock alerts, and quick actions. |
 
 ---
 
-## Products Pages
+## Product Management Pages
 
-| Feature | Screenshot |
-|---|---|
-| Products Light Mode | <img src="./screenshots/products-light.png" width="900"/> |
-| Products Dark Mode | <img src="./screenshots/products-dark.png" width="900"/> |
-| Low Stock Filter | <img src="./screenshots/low-stock.png" width="900"/> |
+| Feature | Screenshot | Description |
+|---|---|---|
+| Admin View Products | <img src="./screenshots/admin-view-products.png" width="700"/> | Product management page where admins can add, edit, delete, and monitor products. |
+| Low Stock Monitoring | <img src="./screenshots/view_low_stock.png" width="700"/> | Displays products with low inventory stock for easier monitoring and management. |
 
 ---
 
 ## API Testing
 
-| Endpoint | Preview |
-|---|---|
-| POST `/api/auth/register` | <img src="./screenshots/swagger-register.png" width="900"/> |
+| Endpoint | Screenshot | Description |
+|---|---|---|
+| POST `/api/auth/register` | <img src="./screenshots/swagger-register.png" width="700"/> | Swagger API documentation testing for user registration endpoint. |
 
 ---
 
