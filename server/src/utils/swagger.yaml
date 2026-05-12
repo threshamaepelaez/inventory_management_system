@@ -6,7 +6,8 @@ info:
   description: API documentation for Inventory Management System
 
 servers:
-   url: "https://inventory-management-system1-ptf7.onrender.com",
+  - url: https://inventory-management-system1-ptf7.onrender.com
+    description: Production Server
 
 paths:
   /api/auth/register:
@@ -14,80 +15,128 @@ paths:
       summary: Register User
       tags:
         - Auth
+
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+
               properties:
                 name:
                   type: string
+                  example: Thresha Mae
+
                 email:
                   type: string
+                  example: pelaezthreshamae18@gmail.com
+
                 password:
                   type: string
+                  example: 101804
+
       responses:
         '201':
           description: User registered successfully
+
+        '400':
+          description: Bad request
+
+        '500':
+          description: Server error
 
   /api/auth/login:
     post:
       summary: Login User
       tags:
         - Auth
+
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+
               properties:
                 email:
                   type: string
+                  example: pelaezthreshamae18@gmail.com
+
                 password:
                   type: string
+                  example: 101804
+
       responses:
         '200':
           description: Auth successful
+
         '401':
           description: Invalid credentials
+
+        '500':
+          description: Server error
 
   /api/products:
     get:
       summary: Get All Products
       tags:
         - Products
+
       responses:
         '200':
           description: List of products
+
+        '500':
+          description: Server error
 
     post:
       summary: Create Product
       tags:
         - Products
+
       security:
         - bearerAuth: []
+
       requestBody:
         required: true
+
         content:
           application/json:
             schema:
               type: object
+
               properties:
                 name:
                   type: string
+                  example: Laptop
+
                 description:
                   type: string
+                  example: Gaming Laptop
+
                 price:
                   type: number
+                  example: 45000
+
                 quantity:
                   type: integer
+                  example: 5
+
                 image:
                   type: string
+                  example: https://example.com/laptop.jpg
+
       responses:
         '201':
           description: Product created successfully
+
+        '401':
+          description: Unauthorized
+
+        '500':
+          description: Server error
 
 components:
   securitySchemes:
