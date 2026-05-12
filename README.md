@@ -1,14 +1,18 @@
 # Inventory Management System
 
-A modern full-stack Inventory Management System built using Angular, Node.js, Express, MySQL, and Tailwind CSS.
+## Project Overview
 
-This project allows administrators to manage products, inventory stock, categories, and users through a responsive dashboard interface.
+The Inventory Management System is a modern full-stack web application designed to help businesses manage products, inventory stock, categories, and users efficiently.
+
+The system includes secure authentication, role-based access control, inventory monitoring, product management, and responsive dashboard analytics.
+
+This project was built using Angular, Tailwind CSS, Node.js, Express.js, TypeScript, and MySQL.
 
 ---
 
-# Live Preview
+# Live Links
 
-## Frontend
+## Frontend Deployment
 
 🔗 https://inventory-management-system-hxx9xey8i.vercel.app
 
@@ -16,57 +20,9 @@ This project allows administrators to manage products, inventory stock, categori
 
 🔗 https://inventory-management-system1-ptf7.onrender.com
 
----
+## Swagger API Documentation
 
-# Features
-
-## Authentication System
-
-* User Registration
-* User Login
-* JWT Authentication
-* Role-Based Access Control
-* Admin and User Roles
-* Protected Routes
-* Forgot Password UI
-* Show/Hide Password
-
-## Dashboard
-
-* Total Products Overview
-* Low Stock Monitoring
-* Category Counter
-* Inventory Value Tracking
-* Quick Action Cards
-* Responsive Design
-* Modern Tailwind CSS UI
-
-## Product Management
-
-### Admin Features
-
-* Add Products
-* Edit Products
-* Delete Products
-* Upload Product Images
-* Search Products
-* Low Stock Filtering
-
-### User Features
-
-* View Products Only
-* Search Products
-* Cannot Access CRUD Operations
-
-## Backend API
-
-* REST API with Express.js
-* MySQL Database Integration
-* Multer Image Upload
-* Swagger API Documentation
-* Request Logging
-* Error Handling Middleware
-* CORS Configuration
+🔗 https://inventory-management-system1-ptf7.onrender.com/api-docs
 
 ---
 
@@ -92,55 +48,66 @@ This project allows administrators to manage products, inventory stock, categori
 * MySQL
 * Railway MySQL Hosting
 
-## Deployment
+## Deployment Platforms
 
-* Frontend: Vercel
-* Backend: Render
-* Database: Railway
-
----
-
-# System Screenshots
+* Vercel
+* Render
+* Railway
 
 ---
 
-## Authentication Pages
+# Features Implemented
 
-| Page | Preview |
-|---|---|
-| Login Page | <img src="./screenshots/login.png" width="900"/> |
-| Register Page | <img src="./screenshots/register.png" width="900"/> |
+## Authentication Features
+
+* User Registration
+* User Login
+* JWT Authentication
+* Role-Based Access Control
+* Protected Routes
+* Forgot Password UI
+* Show/Hide Password
+
+## Dashboard Features
+
+* Total Products Overview
+* Low Stock Monitoring
+* Category Counter
+* Inventory Value Tracking
+* Quick Action Cards
+* Responsive Dashboard
+* Dark Mode and Light Mode
+
+## Product Management Features
+
+### Admin Features
+
+* Add Products
+* Edit Products
+* Delete Products
+* Upload Product Images
+* Search Products
+* Low Stock Filtering
+
+### User Features
+
+* View Products
+* Search Products
+* Restricted CRUD Access
+
+## Backend Features
+
+* RESTful API
+* MySQL Integration
+* Multer File Upload
+* Swagger API Documentation
+* Error Handling Middleware
+* Request Logging
+* CORS Configuration
 
 ---
 
-## Admin Dashboard
-
-| Page | Preview |
-|---|---|
-| Admin Dashboard Light Mode | <img src="./screenshots/admin-dashboard-light.png" width="900"/> |
-| Admin Dashboard Dark Mode | <img src="./screenshots/admin-dashboard-dark.png" width="900"/> |
-
----
-
-## Products Page
-
-| Page | Preview |
-|---|---|
-| Products Page Light Mode | <img src="./screenshots/products-light.png" width="900"/> |
-| Products Page Dark Mode | <img src="./screenshots/products-dark.png" width="900"/> |
-| Low Stock Filter | <img src="./screenshots/low-stock.png" width="900"/> |
-
----
-
-## Swagger API Documentation
-
-| API Endpoint | Preview |
-|---|---|
-| POST `/api/auth/register` | <img src="./screenshots/swagger-register.png" width="900"/> |
-
----
-
-# Installation Guide
+# Setup Instructions
 
 ## Clone Repository
 
@@ -198,13 +165,17 @@ MYSQLPORT=3306
 
 ---
 
-# API Documentation
+# API Overview
 
-Swagger API Documentation:
-
-```bash
-http://localhost:5000/api-docs
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | User login |
+| GET | `/api/products` | Get all products |
+| POST | `/api/products` | Create new product |
+| PUT | `/api/products/:id` | Update product |
+| DELETE | `/api/products/:id` | Delete product |
+| GET | `/api/dashboard/stats` | Dashboard statistics |
 
 ---
 
@@ -229,23 +200,53 @@ inventory_management_system/
 │   └── utils/
 │
 ├── screenshots/
-│   ├── login.png
-│   ├── register.png
-│   ├── admin-dashboard-light.png
-│   ├── admin-dashboard-dark.png
-│   ├── products-light.png
-│   ├── products-dark.png
-│   ├── low-stock.png
-│   └── swagger-register.png
 │
 └── README.md
 ```
 
 ---
 
+# Screenshots
+
+## Authentication Pages
+
+| Feature | Screenshot |
+|---|---|
+| Login Page | <img src="./screenshots/login.png" width="900"/> |
+| Register Page | <img src="./screenshots/register.png" width="900"/> |
+
+---
+
+## Dashboard Pages
+
+| Feature | Screenshot |
+|---|---|
+| Dashboard Light Mode | <img src="./screenshots/admin-dashboard-light.png" width="900"/> |
+| Dashboard Dark Mode | <img src="./screenshots/admin-dashboard-dark.png" width="900"/> |
+
+---
+
+## Products Pages
+
+| Feature | Screenshot |
+|---|---|
+| Products Light Mode | <img src="./screenshots/products-light.png" width="900"/> |
+| Products Dark Mode | <img src="./screenshots/products-dark.png" width="900"/> |
+| Low Stock Filter | <img src="./screenshots/low-stock.png" width="900"/> |
+
+---
+
+## API Testing
+
+| Endpoint | Preview |
+|---|---|
+| POST `/api/auth/register` | <img src="./screenshots/swagger-register.png" width="900"/> |
+
+---
+
 # Security Features
 
-* JWT Token Authentication
+* JWT Authentication
 * Role-Based Authorization
 * Protected API Routes
 * Admin Middleware
@@ -254,23 +255,7 @@ inventory_management_system/
 
 ---
 
-# Recent Updates
-
-* Added role-based access control
-* Hidden CRUD operations for users
-* Added image upload support
-* Fixed CORS issues
-* Connected Railway MySQL database
-* Improved responsive dashboard design
-* Added low stock monitoring
-* Added protected admin routes
-* Fixed back button navigation
-
----
-
-# Author
-
-## Developers
+# Developers
 
 * Thresha Mae Pelaez
 * Leilanie Javellana
